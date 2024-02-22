@@ -1,0 +1,184 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		// #ifdef WEB
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "首页",
+				"navigationStyle": "custom",
+				"app-plus": {
+				          "bounce": "none"
+				        }
+			}
+		},
+		// #endif
+		// #ifndef WEB
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "首页"
+			}
+		},
+		// #endif
+		{
+			"path" : "pages/action/action",
+			"style" : 
+			{
+				"navigationBarTitleText" : "动态",
+				"enablePullDownRefresh" : false
+			}
+		},
+		{
+			"path" : "pages/message/message",
+			"style" : 
+			{
+				"navigationBarTitleText" : "信息",
+				"enablePullDownRefresh" : false
+			}
+		},
+		// #ifdef WEB
+		{
+			"path": "pages/user/user",
+			"style": {
+				"navigationBarTitleText": "我的",
+				"enablePullDownRefresh" : true,
+				"navigationStyle": "custom",
+				"app-plus": {
+				          "bounce": "none"
+				        }
+			}
+		},
+		// #endif
+		// #ifndef WEB
+		{
+			"path": "pages/user/user",
+			"style": {
+				"navigationBarTitleText": "个人中心",
+				"enablePullDownRefresh" : true
+			}
+		},
+		// #endif
+		{
+			"path" : "pages/post/post",
+			"style" : 
+			{
+				"navigationBarTitleText" : "发贴",
+				"enablePullDownRefresh" : false
+			}
+		}
+	],
+	"subPackages" :[
+		{
+			"root": "subPackages",
+			"pages": [
+				// #ifdef WEB
+				{
+					"path" : "search/search",
+					"style" : 
+					{
+						"navigationBarTitleText" : "",
+						"enablePullDownRefresh" : false,
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path" : "postReplay/postReplay",
+					"style" : 
+					{
+						"navigationBarTitleText" : "",
+						"enablePullDownRefresh" : false,
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path" : "artical/artical",
+					"style" : 
+					{
+						"navigationBarTitleText" : "",
+						"enablePullDownRefresh" : false,
+						"navigationStyle": "custom"
+					}
+				},
+				// #endif
+				// #ifndef WEB 
+				{
+					"path" : "search/search",
+					"style" : 
+					{
+						"navigationBarTitleText" : "",
+						"enablePullDownRefresh" : false
+					}
+				},
+				{
+					"path" : "postReplay/postReplay",
+					"style" : 
+					{
+						"navigationBarTitleText" : "",
+						"enablePullDownRefresh" : false
+					}
+				},
+				{
+					"path" : "artical/artical",
+					"style" : 
+					{
+						"navigationBarTitleText" : "",
+						"enablePullDownRefresh" : false
+					}
+				},
+				// #endif
+				{
+					"path": "webview/webview"
+				}
+				]
+		}
+	]
+	,
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#ffffff",
+		"backgroundColor": "#F8F8F8"
+	},
+	"uniIdRouter": {},
+	"easycom": {
+		// 下载安装的方式需要前面的"@/"，npm安装的方式无需"@/"
+		// "^u-(.*)": "@/uview-ui/components/u-$1/u-$1.vue"
+		// npm安装方式
+		"^u-(.*)": "uview-ui/components/u-$1/u-$1.vue",
+		"^uv-(.*)": "@climblee/uv-ui/components/uv-$1/uv-$1.vue"
+	},
+	"tabBar": {
+		"color": "#cccccc",
+		"selectedColor": "#71e0fe",
+		"list": [
+			{
+				"iconPath": "static/index.png",
+				"selectedIconPath": "static/index-sel.png",
+				"pagePath": "pages/index/index",
+				"text": "首页",
+				"visible": true
+			},
+			{
+				"iconPath": "static/trends.png",
+				"selectedIconPath": "static/trends_sel.png",
+				"pagePath": "pages/action/action",
+				"text": "动态",
+				"visible": true
+			},
+			{
+				"iconPath": "static/message.png",
+				"selectedIconPath": "static/message-sel.png",
+				"pagePath": "pages/message/message",
+				"text": "信息",
+				"visible": true
+			},
+			{
+				"iconPath": "static/self.png",
+				"selectedIconPath": "static/self-sel.png",
+				"pagePath": "pages/user/user",
+				"text": "我的",
+				"visible": true
+			}
+		]
+	}
+}
