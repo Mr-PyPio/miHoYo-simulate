@@ -11,37 +11,33 @@
 				        }
 			}
 		},
-		// #endif
-		// #ifndef WEB
 		{
-			"path": "pages/index/index",
-			"style": {
-				"navigationBarTitleText": "首页"
-			}
-		},
-		// #endif
-		{
-			"path" : "pages/action/action",
-			"style" : 
-			{
-				"navigationBarTitleText" : "动态",
-				"enablePullDownRefresh" : false
-			}
-		},
-		{
-			"path" : "pages/message/message",
-			"style" : 
-			{
-				"navigationBarTitleText" : "信息",
-				"enablePullDownRefresh" : false
-			}
-		},
-		// #ifdef WEB
-		{
-			"path": "pages/user/user",
+			"path": "pages/self/self",
 			"style": {
 				"navigationBarTitleText": "我的",
-				"enablePullDownRefresh" : true,
+				"enablePullDownRefresh" : false,
+				"navigationStyle": "custom",
+				"app-plus": {
+				          "bounce": "none"
+				        }
+			}
+		},
+		{
+			"path": "pages/action/action",
+			"style": {
+				"navigationBarTitleText": "动态",
+				"enablePullDownRefresh" : false,
+				"navigationStyle": "custom",
+				"app-plus": {
+				          "bounce": "none"
+				        }
+			}
+		},
+		{
+			"path": "pages/message/message",
+			"style": {
+				"navigationBarTitleText": "信息",
+				"enablePullDownRefresh" : false,
 				"navigationStyle": "custom",
 				"app-plus": {
 				          "bounce": "none"
@@ -51,10 +47,30 @@
 		// #endif
 		// #ifndef WEB
 		{
-			"path": "pages/user/user",
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "首页"
+			}
+		},
+		{
+			"path": "pages/self/self",
 			"style": {
 				"navigationBarTitleText": "个人中心",
-				"enablePullDownRefresh" : true
+				"enablePullDownRefresh" : false
+			}
+		},
+		{
+			"path": "pages/action/action",
+			"style": {
+				"navigationBarTitleText": "动态",
+				"enablePullDownRefresh" : false
+			}
+		},
+		{
+			"path": "pages/message/message",
+			"style": {
+				"navigationBarTitleText": "信息",
+				"enablePullDownRefresh" : false
 			}
 		},
 		// #endif
@@ -99,6 +115,17 @@
 						"navigationStyle": "custom"
 					}
 				},
+				{
+					"path": "user/user",
+					"style": {
+						"navigationBarTitleText": "",
+						"enablePullDownRefresh" : false,
+						"navigationStyle": "custom",
+						"app-plus": {
+						          "bounce": "none"
+						        }
+					}
+				},
 				// #endif
 				// #ifndef WEB 
 				{
@@ -125,11 +152,18 @@
 						"enablePullDownRefresh" : false
 					}
 				},
+				{
+					"path": "user/user",
+					"style": {
+						"navigationBarTitleText": "",
+						"enablePullDownRefresh" : false
+					}
+				},
 				// #endif
 				{
 					"path": "webview/webview"
 				}
-				]
+			]
 		}
 	]
 	,
@@ -146,39 +180,39 @@
 		// npm安装方式
 		"^u-(.*)": "uview-ui/components/u-$1/u-$1.vue",
 		"^uv-(.*)": "@climblee/uv-ui/components/uv-$1/uv-$1.vue"
-	},
-	"tabBar": {
-		"color": "#cccccc",
-		"selectedColor": "#71e0fe",
-		"list": [
-			{
-				"iconPath": "static/index.png",
-				"selectedIconPath": "static/index-sel.png",
-				"pagePath": "pages/index/index",
-				"text": "首页",
-				"visible": true
-			},
-			{
-				"iconPath": "static/trends.png",
-				"selectedIconPath": "static/trends_sel.png",
-				"pagePath": "pages/action/action",
-				"text": "动态",
-				"visible": true
-			},
-			{
-				"iconPath": "static/message.png",
-				"selectedIconPath": "static/message-sel.png",
-				"pagePath": "pages/message/message",
-				"text": "信息",
-				"visible": true
-			},
-			{
-				"iconPath": "static/self.png",
-				"selectedIconPath": "static/self-sel.png",
-				"pagePath": "pages/user/user",
-				"text": "我的",
-				"visible": true
-			}
-		]
 	}
+	// "tabBar": {
+	// 	"color": "#cccccc",
+	// 	"selectedColor": "#71e0fe",
+	// 	"list": [
+	// 		{
+	// 			"iconPath": "static/index.png",
+	// 			"selectedIconPath": "static/index-sel.png",
+	// 			"pagePath": "pages/index/index",
+	// 			"text": "首页",
+	// 			"visible": true
+	// 		},
+	// 		{
+	// 			"iconPath": "static/trends.png",
+	// 			"selectedIconPath": "static/trends_sel.png",
+	// 			"pagePath": "pages/action/action",
+	// 			"text": "动态",
+	// 			"visible": true
+	// 		},
+	// 		{
+	// 			"iconPath": "static/message.png",
+	// 			"selectedIconPath": "static/message-sel.png",
+	// 			"pagePath": "pages/message/message",
+	// 			"text": "信息",
+	// 			"visible": true
+	// 		},
+	// 		{
+	// 			"iconPath": "static/self.png",
+	// 			"selectedIconPath": "static/self-sel.png",
+	// 			"pagePath": "pages/self/self",
+	// 			"text": "我的",
+	// 			"visible": true
+	// 		}
+	// 	]
+	// }
 }

@@ -6,6 +6,7 @@ import './uni.promisify.adaptor'
 import store from './store/index.js'
 App.mpType = 'app'
 
+
 Vue.mixin({
   filters: {
 	  imageUrlReset(url,s,q) {
@@ -28,7 +29,13 @@ Vue.mixin({
 	  },
 	  resetNum2(num) {
 		  if(num >= 10000) {
-			  return parseInt(num / 10000) + '.' + parseInt(num / 1000 % 10) + '万'
+			  const num1 =  parseInt(num / 1000 % 10) 
+			  const num2 = parseInt(num / 10000)
+			  if(num1 > 0){
+				  return num2 + '.' + num1+ '万'
+			  }else{
+				  return num2 + '万'
+			  }
 		  }else{
 			  return num
 		  }

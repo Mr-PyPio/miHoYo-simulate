@@ -1,5 +1,6 @@
 <template>
 	<view class="content">
+		<page-tab></page-tab>
 		<view class="top_nav" ref="topNav">
 			<image v-if="topTabBackground" :src="topTabBackground.image" mode="aspectFill" class="backgroungImage"></image>
 			<view class="indexTop">
@@ -78,13 +79,12 @@
 				</view>
 			</view>
 		</view>
-		<view class="imgFixWrapp" v-if="imgFixWrappShow" @tap.prevent="tapImgFixWrapper">
-			<img-pop-up :data = "imgList" :index='imgShowIndex'></img-pop-up>
-		</view>
+			<img-pop-up ></img-pop-up>
 	</view>
 </template>
 
 <script>
+	import PageTab from '../../components/common/pageTab.vue'
 	import IndexFind from '@/components/index/find.vue'
 	import IndexAuthority from '@/components/index/authority.vue'
 	import IndexCos from '@/components/index/cos.vue'
@@ -97,6 +97,7 @@
 	import ImgPopUp from '@/components/common/imgPopUp.vue'
 export default {
 	components: {
+		PageTab,
 		IndexFind,
 		IndexAuthority,
 		IndexCos,
@@ -109,7 +110,7 @@ export default {
 	},
 	computed: {
 		swiperHeight() {
-			return this.windowHeight * this.rpxNum - 330 + 'rpx'
+			return this.windowHeight * this.rpxNum - 430 + 'rpx'
 		}
 	},
 	data() {
@@ -141,9 +142,6 @@ export default {
 			fanArtShow: false,
 			cosShow: false,
 			hardCoreShow: false,
-			imgFixWrappShow: false,
-			imgList: [],
-			imgShowIndex: 0,
 			windowHeight: 0
 		}
 	},
@@ -156,11 +154,6 @@ export default {
 			this.wrapSort.sortSelect = data
 			this.wrapSort.wrapType = type
 			this.fixWrappShow = true
-		})
-		uni.$on('openImgPopUp',(list,index) => {
-			this.imgList = list
-			this.imgShowIndex = index
-			this.imgFixWrappShow = true
 		})
 		uni.$on('changeTab',(index) => {
 			this.tabItemClick(index)
@@ -276,11 +269,6 @@ export default {
 					this.hardCoreShow = true;
 					break;
 			}
-		},
-		tapImgFixWrapper() {
-			this.imgFixWrappShow = false
-			this.imgShowIndex = 0
-			this.imgList = []
 		},
 		goToSearch() {
 			uni.navigateTo({
@@ -510,15 +498,6 @@ export default {
 					top: -4px;
 				}
 			}
-		}
-		.imgFixWrapp{
-			position: fixed;
-			top: 0;
-			left: 0;
-			width: 100%;
-			height: 100%;
-			background: rgba(0, 0, 0, 1);
-			z-index: 999;
 		}
 	}
 </style>

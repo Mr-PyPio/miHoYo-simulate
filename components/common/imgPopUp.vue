@@ -1,69 +1,68 @@
 <template>
-	<view class="imgPopUp">
-		<view class="popUpTop">
-			<view class="popUpTopLeft">
-				{{num+1}}/{{data.length}}
+	<view class="imgFixWrapp" v-if="imgFixWrappShow" @tap.stop="tapImgFixWrapper" >
+		<view class="imgPopUp" >
+			<view class="popUpTop">
+				<view class="popUpTopLeft">
+					{{imgShowIndex+1}}/{{imgList.length}}
+				</view>
+				
+				<!-- #ifdef MP-WEIXIN -->
+				<view class="popUpTopRight" @tap.stop="saveImage">
+					<u-icon color="#fff" size="30" name="more-dot-fill"></u-icon>
+				</view>
+				<!-- #endif -->
 			</view>
+			<swiper :current="imgShowIndex" @change="swiperChange"
+				style="height: 80vh;margin-top: 10vh;overflow: hidden;">
+				<swiper-item v-for="(item,key) in imgList" :key="key">
+					<view class="swiper-item">
+						<image :src="item.url" mode="widthFix"></image>
+					</view>
+				</swiper-item>
+			</swiper>
 			
 			<!-- #ifdef MP-WEIXIN -->
-			<view class="popUpTopRight" @tap.stop="saveImage">
-				<u-icon color="#fff" size="30" name="more-dot-fill"></u-icon>
+			<view class="" @tap.stop="popUpClick">
+				<u-popup :show="show" mode="bottom" :overlay="true" :overlayOpacity="0.3" :round="24" ref="popupref"
+					:safeAreaInsetBottom="false">
+					<view class="saveLogo"  @tap="save">
+						<view class="saveLogoImg">
+							<image src="../../static/upDate2.png" mode="widthFix"></image>
+						</view>
+						<view class="saveText">保存</view>
+					</view>
+					<view class="cancel" @tap="cancel">
+						取消
+					</view>
+				</u-popup>
 			</view>
 			<!-- #endif -->
 		</view>
-		<swiper :current="num" @change="swiperChange"
-			style="height: 80vh;margin-top: 10vh;overflow: hidden;">
-			<swiper-item v-for="(item,key) in data" :key="key">
-				<view class="swiper-item">
-					<image :src="item.url" mode="widthFix"></image>
-				</view>
-			</swiper-item>
-		</swiper>
-		
-		<!-- #ifdef MP-WEIXIN -->
-		<view class="" @tap.stop="popUpClick">
-			<u-popup :show="show" mode="bottom" :overlay="true" :overlayOpacity="0.3" :round="24" ref="popupref"
-				:safeAreaInsetBottom="false">
-				<view class="saveLogo"  @tap="save">
-					<view class="saveLogoImg">
-						<image src="../../static/upDate2.png" mode="widthFix"></image>
-					</view>
-					<view class="saveText">保存</view>
-				</view>
-				<view class="cancel" @tap="cancel">
-					取消
-				</view>
-			</u-popup>
-		</view>
-		<!-- #endif -->
 	</view>
 </template>
 
 <script>
+	import {mapMutations,mapState} from 'vuex'
 	export default {
-		props: {
-			data: {
-				type: Array,
-				default() {
-					return []
-				}
-			},
-			index: {
-				type: Number,
-				default() {
-					return 0
-				}
-			}
-		},
 		data() {
 			return{
 				show: false,
-				num: this.index
 			}
 		},
+		computed: {
+			...mapState(['imgFixWrappShow','imgList','imgShowIndex'])
+		},
 		methods: {
+			...mapMutations(['updateImageData','updateImgShowIndex']),
 			swiperChange(e) {
-				this.num = e.detail.current
+				this.updateImgShowIndex(e.detail.current)
+			},
+			tapImgFixWrapper() {
+				this.updateImageData({
+					show: false,
+					list: [],
+					showIndex: 0
+				})
 			},
 			// #ifdef MP-WEIXIN
 			saveImage() {
@@ -77,7 +76,7 @@
 			},
 			save() {
 				uni.downloadFile({
-					url: this.data[this.num].url,
+					url: this.imgList[this.imgShowIndex].url,
 					success: function (res) {
 						const tempFilePath = res.tempFilePath;
 						if(res.statusCode == 200) {
@@ -105,6 +104,15 @@
 </script>
 
 <style lang="scss" scoped>
+	.imgFixWrapp{
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background: rgba(0, 0, 0, 1);
+		z-index: 999;
+	}
 	.swiper-item{
 		display: flex;
 		align-items: center;

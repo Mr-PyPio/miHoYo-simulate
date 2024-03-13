@@ -2,7 +2,7 @@
 	<view class="content" >
 		<view style="padding: 24rpx 24rpx 0;" @tap.stop="navigatePostReplay(item.post.post_id)">
 			<view class="itemDetailTop">
-				<view class="topLeft">
+				<view class="topLeft" @tap.stop="navigateToUser(item.user.uid)">
 					<view class="userImage">
 						<image :src="item.user.avatar_url|imageUrlReset(50,80)" mode="aspectFill" class="userAvatarImage" :lazy-load="true"></image>
 						<image :src="item.user.pendant|imageUrlReset(50,80)" :lazy-load="true" mode="aspectFill" class="userAvatarFrameImage" v-if="item.user.pendant"></image>
@@ -103,6 +103,11 @@
 				}
 				
 				return text.replace(reg, `<span style="color: #71e0fe">${this.keyWord}</span>`)
+			},
+			navigateToUser(uid) {
+				uni.navigateTo({
+					url: `/subPackages/user/user?uid=${uid}`,
+				})
 			}
 		},
 		filters: {

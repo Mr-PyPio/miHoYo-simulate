@@ -25,7 +25,7 @@
 					<u-loading-icon mode="circle" size="42"></u-loading-icon>
 				</view>
 				<view class="reviewEnd" v-if="is_last">
-					<image src="../../static/poseRequlay/reviewEnd.png" mode="widthFix"></image>
+					<image src="../../static/poseRequlay/reviewEnd.png" mode="widthFix"  class="image"></image>
 				</view>
 			</view>
 		</scroll-view>
@@ -160,7 +160,7 @@
 	.reviewEnd{
 		padding: 15px 0 30px;
 		
-		image{
+		.image{
 			width: 450rpx;
 			margin: 0 auto;
 			display: block;

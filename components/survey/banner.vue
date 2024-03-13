@@ -4,7 +4,7 @@
 		next-margin="24rpx" :circular="true" style="height:172rpx">
 			<swiper-item v-for="(item,index) in topBanner" :key="index">
 				<view class="swiper-item">
-					<lazy-image :src="item.image|imageUrlReset(500,80)" mode="widthFix" :index="index"></lazy-image>
+					<LazyImageTwo :src="item.image|imageUrlReset(500,80)" mode="widthFix" :index="item.id"></LazyImageTwo>
 				</view>
 			</swiper-item>
 		</swiper>
@@ -23,11 +23,11 @@
 </template>
 
 <script>
-	import LazyImage from '../common/lazyImage.vue'
+	import LazyImageTwo from '../common/lazyImageTwo.vue'
 	export default {
 		name:"banner",
 		components: {
-			LazyImage
+			LazyImageTwo
 		},
 		props: {
 			topBanner: {
@@ -50,7 +50,6 @@
 				this.current = index
 			}
 		},
-
 	}
 </script>
 

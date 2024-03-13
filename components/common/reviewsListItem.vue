@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<view class="userMessageWrap" v-if="item.user">
+		<view class="userMessageWrap" v-if="item.user" @tap.stop="navigateToUser(item.user.uid)">
 			<view class="userImage">
 				<image :src="item.user.avatar_url|imageUrlReset(50,80)" mode="aspectFill" class="userAvatarImage"></image>
 				<image :src="item.user.pendant|imageUrlReset(50,80)" mode="aspectFill" class="userAvatarFrameImage" v-if="item.user.pendant"></image>
@@ -135,6 +135,11 @@
 				`
 				return html
 			},
+			navigateToUser(uid) {
+				uni.navigateTo({
+					url: `/subPackages/user/user?uid=${uid}`,
+				})
+			}
 		},
 		filters: {
 			getUserLabel(data) {

@@ -132,9 +132,7 @@
 				</view>
 			</view>
 		</view>
-		<view class="imgFixWrapp" v-if="imgFixWrappShow" @tap.prevent="tapImgFixWrapper">
-			<img-pop-up :data = "imgList" :index='imgShowIndex'></img-pop-up>
-		</view>
+			<img-pop-up></img-pop-up>
 	</view>
 </template>
 
@@ -162,9 +160,6 @@
 				serachKey: '',
 				inClickToSearch: false,
 				texShadow: '',
-				imgFixWrappShow: false,
-				imgList: [],
-				imgShowIndex: 0
 			};
 		},
 		components: {
@@ -181,9 +176,7 @@
 				this.newList = newRes.data.carousels.data
 			},
 			goBack() {
-				uni.switchTab({
-					url: '/pages/index/index'
-				})
+				uni.navigateBack()
 			},
 			historyAllShowClick(){
 				this.historyAllShow = true
@@ -253,13 +246,12 @@
 				this.historyKeyWordList = []
 				uni.removeStorageSync('historyKeyWord')
 			},
-			tapImgFixWrapper() {
-				this.imgFixWrappShow = false
-				this.imgShowIndex = 0
-				this.imgList = []
-			},
 		},
-		onLoad() {
+		onLoad(option) {
+			const initKeyword = option.keyword
+			if(initKeyword) {
+				this.search(initKeyword)
+			}
 			uni.getSystemInfo({
 				success: res => {
 					this.windowHeight = res.windowHeight
@@ -270,11 +262,6 @@
 				this.historyKeyWordList = historyKeyWordsList
 			}
 			this.init()
-			uni.$on('openImgPopUp',(list,index) => {
-				this.imgList = list
-				this.imgShowIndex = index
-				this.imgFixWrappShow = true
-			})
 		}
 	}
 </script>
@@ -481,16 +468,6 @@
 				color: #999;
 			}
 		}
-	}
-	
-	.imgFixWrapp{
-		position: fixed;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		background: rgba(0, 0, 0, 1);
-		z-index: 999;
 	}
 }
 </style>

@@ -22,11 +22,14 @@
 		</view>
 		
 		<view class="reviewEnd" v-if="allShow && lzReviewReply">
-			<image src="../../static/poseRequlay/noreply.png" mode="widthFix"></image>
+			<image src="../../static/poseRequlay/noreply.png" mode="widthFix" class="image"></image>
+			<view class="text">
+				楼主还没有回复哦
+			</view>
 		</view>
 		
 		<view class="reviewEnd" v-if="allShow && !lzReviewReply">
-			<image src="../../static/poseRequlay/reviewEnd.png" mode="widthFix"></image>
+			<image src="../../static/poseRequlay/reviewEnd.png" mode="widthFix" class="image"></image>
 		</view>
 	</view>
 </template>
@@ -148,10 +151,16 @@
 		.reviewEnd{
 			padding: 15px 0 30px;
 			
-			image{
+			.image{
 				width: 450rpx;
 				margin: 0 auto;
 				display: block;
+			}
+			
+			.text{
+				font-size: 32rpx;
+				color: #b8bec1;
+				text-align: center;
 			}
 		}
 	}

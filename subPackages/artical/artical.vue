@@ -23,12 +23,20 @@
 				</view>
 			</view>
 			
+			<!-- #ifdef WEB -->
+			<view class="topTitleTab">
+				<view class="goBack" @tap.stop="goBack">
+					<u-icon name="arrow-left" color="#FFFFFF" size="36"></u-icon>
+				</view>
+			</view>
+			<!-- #endif -->
+			
 		<scroll-view :scroll-y="scrollY" :style="{'height': windowHeight + 'px'}" :scroll-top="scrollTop"
 			@scroll="pageScroll" @scrolltolower="scrolltolower" :refresher-enabled="true" :show-scrollbar="true"
 			:refresher-triggered="refresherTrg"  @refresherpulling="scrollPull" :scroll-with-animation='true'
 		>
 			<view class="postContent" v-if="postDetail.post">
-				<view class="userMessageWrap" v-if="userData">
+				<view class="userMessageWrap" v-if="userData" @tap.stop="navigateToUser(userData.uid)">
 					<view class="userImage">
 						<image :src="userData.avatar_url|imageUrlReset(50,80)" mode="aspectFill" class="userAvatarImage"></image>
 						<image :src="userData.pendant|imageUrlReset(50,80)" mode="aspectFill" class="userAvatarFrameImage" v-if="userData.pendant"></image>
@@ -213,7 +221,8 @@
 				newImageList: [],
 				swiperHeight: 0,
 				emotion: null,
-				emotionKey: null
+				emotionKey: null,
+				structured_content: ''
 			}
 		},
 		methods: {
@@ -228,8 +237,10 @@
 					this.resetSwiperHeight(this.postDetail.image_list)
 					const content = JSON.parse(this.postDetail.post.content)
 					const str = JSON.stringify(content.describe)
-					const newStr = str.slice(1, -1).replace(/\\n/g, '<br>')
-					this.structured_content = this.textParse(newStr,'36px')
+					if(str) {
+						const newStr = str.slice(1, -1).replace(/\\n/g, '<br>')
+						this.structured_content = this.textParse(newStr,'36px')
+					}
 				}
 				this.choose_upvote_type = this.postDetail.self_operation.upvote_type
 				if(this.is_collected) {
@@ -248,7 +259,7 @@
 				const video = this.postDetail.vod_list[0]
 				
 				// #ifdef WEB
-				this.fixTop = 44
+				this.fixTop = 30
 				// #endif
 				// #ifdef MP-WEIXIN
 				this.fixTop = 0
@@ -556,6 +567,14 @@
 				const {data: res2} = await emotionKeywordsApi()
 				this.emotionKey = res2.data
 				uni.setStorageSync('emotionKey',res2.data)
+			},
+			goBack() {
+				uni.navigateBack()
+			},
+			navigateToUser(uid) {
+				uni.navigateTo({
+					url: `/subPackages/user/user?uid=${uid}`,
+				})
 			}
 		},
 		onLoad: function (option) {
@@ -599,6 +618,23 @@
 	/* #ifdef MP-WEIXIN */
 	height: 100%;
 	/* #endif */
+	
+	.topTitleTab{
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 750rpx;
+		background: rgba(0, 0, 0, 0.1);
+		height: 60rpx;
+		z-index: 1000;
+		
+		.goBack{
+			position: absolute;
+			top: 50%;
+			transform: translateY(-50%);
+			left: 12rpx;
+		}
+	}
 	
 	
 	.loadingGif{
@@ -759,6 +795,7 @@
 			align-items: center;
 			position: relative;
 			margin-bottom: 8px;
+			padding-top: 60rpx;
 			
 			.userImage{
 				width: 72rpx;

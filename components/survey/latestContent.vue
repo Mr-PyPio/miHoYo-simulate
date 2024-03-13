@@ -82,7 +82,7 @@
 		mounted() {
 			this.$nextTick(function() {
 				this.intersectionObserver = uni.createIntersectionObserver(this);
-				this.intersectionObserver.relativeToViewport({bottom: 400}).observe(`.latestWrapperLine`, (res) => {
+				this.intersectionObserver.relativeToViewport({bottom: 0}).observe(`.latestWrapperLine`, (res) => {
 				  if (res.intersectionRatio > 0) {
 					this.loading = true
 					this.intersectionObserver.disconnect()

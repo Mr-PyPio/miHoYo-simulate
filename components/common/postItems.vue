@@ -2,7 +2,7 @@
 	<view class="content" >
 		<view style="padding: 24rpx 24rpx 0;" @tap.stop="navigatePostReplay(item.post.post_id)">
 			<view class="itemDetailTop">
-				<view class="topLeft">
+				<view class="topLeft"  @tap.stop="navigateToUser(item.user.uid)">
 					<view class="userImage">
 						<image :src="item.user.avatar_url|imageUrlReset(50,80)" mode="aspectFill" class="userAvatarImage" :lazy-load="true"></image>
 						<image :src="item.user.pendant|imageUrlReset(50,80)" :lazy-load="true" mode="aspectFill" class="userAvatarFrameImage" v-if="item.user.pendant"></image>
@@ -88,6 +88,11 @@
 						url: `/subPackages/artical/artical?post_id=${post_id}`,
 					})
 				}
+			},
+			navigateToUser(uid) {
+				uni.navigateTo({
+					url: `/subPackages/user/user?uid=${uid}`,
+				})
 			}
 		},
 		filters: {
@@ -174,7 +179,7 @@
 	.itemDetailTextContent{
 		font-size: 26rpx;
 		line-height: 1.5;
-		color: #ddd;
+		color: #7f858a;
 		display: block;
 		margin-bottom: 6px;
 		display: -webkit-box;

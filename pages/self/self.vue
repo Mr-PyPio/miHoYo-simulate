@@ -1,7 +1,19 @@
 <template>
-	<view class="userContent" :style="{'height' : windowHeight + 'px'}">
-		<view class="userInfo"  :style="{'height' : '566rpx'}">
+	<keep-alive>
+	<view class="userContent" style="background: url('../../static/user/bgimg.png') no-repeat top/100%;">
+		<page-tab></page-tab>
+		<view class="userInfo">
 			<view v-if="userInfo">
+				<view class="fixedTop" :style="{'background': fixedTopBgColor}">
+					<view class="fixedLeft" v-if="fixedTopLogoShow">
+						<image :src="userInfo.avatar_url|imageUrlReset(200,80)" mode="aspectFill" class="fixedTopLogo"></image>
+						{{userInfo.nickname}}
+					</view>
+					<view class="fixedRight">
+						<image src="../../static/user/set_icon.png" mode="widthFix" class="set"></image>
+						<image src="../../static/user/meun_icon.png" mode="widthFix" class="meun" @tap.stop="openMeun"></image>
+					</view>
+				</view>
 				<view class="icon">
 					<image :src="userInfo.avatar_url|imageUrlReset(200,80)" mode="aspectFill" class="iconImg"></image>
 				</view>
@@ -11,7 +23,9 @@
 					<view class="type">{{userInfo.introduce}}</view>
 				</view>
 				<view class="ip">
-					<u-icon name="map" color="#ddd" size="32" class="mapIcon"></u-icon>
+					<view class="mapIcon">
+						<u-icon name="map" color="#ddd" size="32"></u-icon>
+					</view>
 					IP:{{userInfo.ip_region}}
 				</view>
 				<view class="achieve">
@@ -59,45 +73,79 @@
 					<view class="gameManageSpan">
 						角色管理
 					</view>
-				</view>
+				</view>·
 			</view>
 		</scroll-view>
 		
-		<user-about :uid = "uid"></user-about>
+		<user-about :uid = "uid" ></user-about>
+		
+		<user-popup :uid = "uid" ref="userPopup"></user-popup>
+		
+		<img-pop-up ></img-pop-up>
 	</view>
+	</keep-alive>
 </template>
 
 <script>
+	import {mapMutations,mapState} from "vuex"
+	import PageTab from '../../components/common/pageTab.vue'
 	import {getGameRecordCard,getUserFullInfo} from '../../common/api.js'
 	import UserAbout from '../../components/user/userAbout.vue'
+	import ImgPopUp from '@/components/common/imgPopUp.vue'
+	import UserPopup from '../../components/user/userPopup.vue'
 	export default {
 		components: {
-			UserAbout
+			PageTab,
+			UserAbout,
+			UserPopup,
+			ImgPopUp
 		},
 		data() {
 			return {
 				gameCard: null,
 				uid: '19084220',
-				userInfo: null
+				userInfo: null,
+				fixedTopBgColor: 'rgba(0, 0, 0, 0.0)',
+				fixedTopLogoShow: false,
 			}
 		},
+		computed: {
+			...mapState(['myselfData'])
+		},
 		methods: {
+			...mapMutations(['updateMyselfData']),
 			async getUserInfo() {
 				const {data: res} = await getUserFullInfo(this.uid)
 				this.userInfo = res.data.user_info
+				this.updateMyselfData({
+					name: 'userInfo',
+					data: this.userInfo
+				})
 				console.log(res,'info')
 			},
 			// getGameRecordCard 请求回来的数据为固定数据
 			async getGameCard() {
 				const {data: res} =await getGameRecordCard(this.uid)
 				this.gameCard = res.data.list
+				this.updateMyselfData({
+					name: 'gameCard',
+					data: this.gameCard
+				})
 				console.log(res,'game')
 			},
 			fittlerImageSrc(id) {
 				if(id === 2) return '../../static/user/ys.png'
 				if(id === 1) return '../../static/user/bh3.png'
 				if(id === 6) return '../../static/user/sr.png'
-			}
+				if(id === 3) return '../../static/user/bh2.png'
+				if(id === 4) return '../../static/user/wd.png'
+				if(id === 8) return '../../static/user/zzz.png'
+			},
+			openMeun() {
+				this.$nextTick(function() {
+					this.$refs.userPopup.show = true
+				})
+			},
 		},
 		onLoad() {
 			uni.getSystemInfo({
@@ -107,24 +155,85 @@
 					this.windowHeight = res.windowHeight
 				}
 			})
-			this.getUserInfo()
-			this.getGameCard()
+			if(this.myselfData.userInfo) {
+				this.userInfo = this.myselfData.userInfo
+			}else{
+				this.getUserInfo()
+			}
+			if(this.myselfData.gameCard) {
+				this.gameCard = this.myselfData.gameCard
+			}else{
+				this.getGameCard()
+			}
+		},
+		onPageScroll: function(e) {
+			const top = e.scrollTop
+			if(top > 200) {
+				this.fixedTopBgColor = '#004887'
+				this.fixedTopLogoShow = true
+			}else{
+				this.fixedTopBgColor = 'rgba(0, 0, 0, 0.0)'
+				this.fixedTopLogoShow = false
+			}
 		}
-	}
+}
 </script>
 
 <style lang="scss" scoped>
 .userContent{
-	background: url(../../static/user/bgimg.png) no-repeat top/100%;
 	position: relative;
 	
 	.userInfo{
-		padding: 60rpx 32rpx 0;
+		padding: 100rpx 32rpx 0;
 		color: rgba(255, 255, 255, 0.6);
-		font-size: 26rpx;
+		font-size: 24rpx;
 		
-		.flex{
+		.fixedTop{
+			position: fixed;
+			left: 0;
+			top: 0;
+			width: 750rpx;
+			height: 80rpx;
+			z-index: 10;
+			display: flex;
+			align-items: center;
 			
+			.fixedLeft{
+				display: flex;
+				align-items: center;
+				font-size: 24rpx;
+				color: #fff;
+				padding: 0 32rpx;
+				
+				.fixedTopLogo{
+					width: 50rpx;
+					height: 50rpx;
+					border-radius: 50rpx;
+					border: 1px solid #fff;
+					margin-right: 6px;
+				}
+				
+				
+			}
+			
+			.fixedRight{
+				position: absolute;
+				right: 32rpx;
+				top: 50%;
+				transform: translateY(-50%);
+				display: flex;
+				align-items: center;
+				
+				.meun{
+					width: 40rpx;
+					height: 40rpx;
+					margin-left: 30rpx;
+				}
+				.set{
+					width: 40rpx;
+					height: 40rpx;
+				}
+			}
 		}
 		
 		.pr30{
@@ -146,15 +255,16 @@
 			
 			.name{
 				padding-bottom: 22rpx;
-				font-size: 48rpx;
+				font-size: 32rpx;
 				color: #ffffff;
 				display: flex;
 				align-items: center;
 			}
 			
 			.type{
+				width: 375rpx;
 				padding: 18rpx 0 26rpx;
-				font-size: 30rpx;
+				font-size: 24rpx;
 			}
 		}
 		
@@ -186,7 +296,7 @@
 			.number{
 				color: #ffffff;
 				padding-right: 5px;
-				font-size: 44rpx;
+				font-size: 32rpx;
 				display: inline-block;
 			}
 		}
@@ -262,6 +372,5 @@
 			margin-right: 32rpx;
 		}
 	}
-	
 }
 </style>

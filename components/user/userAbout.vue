@@ -1,6 +1,6 @@
 <template>
-	<view class="information" :style="{'height' : windowHeight*rpxNum + 124 + 'rpx'}">
-		<scroll-view :scroll-x="true" :style="{'height': '124rpx'}">
+	<view class="information">
+		<scroll-view :scroll-x="true" :style="{'height': '124rpx'}" v-if="showCategoryMode">
 			<view  class="categoryMode">
 				<view class="categoryModeItem">
 					<view class="top">
@@ -61,7 +61,7 @@
 			</view>
 		</scroll-view>
 	
-		<view class="selfArticle">
+		<view class="selfArticle"  :style="{'height' : windowHeight*rpxNum - 150 + 'rpx'}">
 			<view class="topTab">
 				<view class="tabitem" :class="{'active' : activeIndex === 0}" @tap.stop="tabClick(0)">
 					发布
@@ -78,19 +78,19 @@
 			</view>
 			
 			<view class="swiperContent">
-				<swiper :style="{'height': windowHeight*rpxNum - 80  + 'rpx'}" 
+				<swiper :style="{'height': swiperContentHeight}" 
 				:current="activeIndex" @change="swiperChange">
 					<swiper-item>
-						<user-instant :uid="uid"></user-instant>
+						<user-instant :uid="uid" ></user-instant>
 					</swiper-item>
 					<swiper-item>
-						<user-replay :uid="uid"></user-replay>
+						<user-replay :uid="uid" ></user-replay>
 					</swiper-item>
 					<swiper-item>
-						<user-collection :uid="uid"></user-collection>
+						<user-collection :uid="uid" ></user-collection>
 					</swiper-item>
 					<swiper-item>
-						<user-favourite :uid="uid"></user-favourite>
+						<user-favourite :uid="uid" ></user-favourite>
 					</swiper-item>
 				</swiper>
 			</view>
@@ -118,11 +118,33 @@
 				default() {
 					return ''
 				}
+			},
+			showCategoryMode: {
+				type: Boolean,
+				default() {
+					return true
+				}
 			}
 		},
 		data() {
 			return {
 				activeIndex: 0
+			}
+		},
+		computed: {
+			swiperContentHeight() {
+				let height = ''
+				// #ifdef MP-WEIXIN
+					height = this.windowHeight*this.rpxNum - 190  + 'rpx'
+				// #endif
+				// #ifdef WEB
+					if(this.showCategoryMode) {
+						height = this.windowHeight*this.rpxNum - 160  + 'rpx'
+					}else{
+						height = this.windowHeight*this.rpxNum - 150  + 'rpx'
+					}
+				// #endif
+				return height
 			}
 		},
 		methods: {
@@ -196,13 +218,14 @@
 	
 		.selfArticle{
 			padding: 32rpx 0;
+			box-sizing: border-box;
 			
 			.topTab{
 				display: flex;
 				padding: 0 32rpx;
 					
 				.tabitem{
-					font-size: 34rpx;
+					font-size: 30rpx;
 					color: #cccfd1;
 					margin-right: 46rpx;
 					padding-bottom: 20rpx;
@@ -221,16 +244,12 @@
 							background-color: #4ca0f8;
 							position: absolute;
 							left: 50%;
-							bottom: 0;
+							bottom: 6rpx;
 							transform: translateX(-50%);
 						}
 					}
 				}
 			}
-		}
-		
-		.swiperContent{
-			margin-top: 30rpx;
 		}
 	}
 </style>

@@ -54,15 +54,18 @@
 					:class="{'active': choose_upvote_type === index + 1}"
 					v-for="(item,index) in postDetail.stat.post_upvote_stat" :key="index">
 						<view class="imagLogo">
-							<image :src="'../../static/poseRequlay/post_upvote_stat_'+ (index + 1) +'.png'" mode="heightFix"></image>
+							<image :src="'../../static/poseRequlay/post_upvote_stat_'+ (index + 1) +'.png'" mode="heightFix" class="image"></image>
 						</view>
 						<view class="num">
 							{{item.upvote_cnt|resetNum}}
 						</view>
+						<view class="interactionBiggerImageWrap" v-if="interactionBiggerImageType === index + 1">
+							<image :src="'../../static/poseRequlay/post_upvote_stat_'+ (index + 1) +'_active.png'" mode="widthFix" class="interactionBiggerImage"></image>
+						</view>
 					</view>
 				</view>
 				
-				<view class="userMessageWrap" v-if="userData">
+				<view class="userMessageWrap" v-if="userData" @tap.stop="navigateToUser(userData.uid)">
 					<view class="userImage">
 						<image :src="userData.avatar_url|imageUrlReset(50,80)" mode="aspectFill" class="userAvatarImage"></image>
 						<image :src="userData.pendant|imageUrlReset(50,80)" mode="aspectFill" class="userAvatarFrameImage" v-if="userData.pendant"></image>
@@ -83,10 +86,10 @@
 					</view>
 					
 					
-					<view class="follow" @tap.stop="followUser(userData.uid)" v-if="!this.is_following">
+					<view class="follow" @tap.stop="followUser(userData.uid)" v-if="!is_following">
 						+ 关注
 					</view>
-					<view class="follow unfollow" @tap.stop="followUser(userData.uid)" v-if="this.is_following">
+					<view class="follow unfollow" @tap.stop="followUser(userData.uid)" v-if="is_following">
 						已关注
 					</view>
 				</view>
@@ -168,7 +171,7 @@
 					
 					
 					<view class="reviewEnd">
-						<image src="../../static/poseRequlay/reviewEnd.png" mode="widthFix"></image>
+						<image src="../../static/poseRequlay/reviewEnd.png" mode="widthFix"  class="image"></image>
 					</view>
 				</view>
 			</view>
@@ -211,6 +214,7 @@
 				is_following: false,
 				is_collected: false,
 				choose_upvote_type: 0,
+				interactionBiggerImageType: 0,
 				defaultVideoData: null,
 				userLabel: '',
 				postTip: '',
@@ -309,6 +313,12 @@
 						}else{
 							this.likeUrl = `../../static/poseRequlay/post_upvote_stat_${type}.png`
 						}
+					}
+					if(!is_cancel) {
+						this.interactionBiggerImageType = type
+						setTimeout(()=> {
+							this.interactionBiggerImageType = 10
+						},1500)
 					}
 				}
 			},
@@ -627,6 +637,11 @@
 			},
 			goBack() {
 				uni.navigateBack()
+			},
+			navigateToUser(uid) {
+				uni.navigateTo({
+					url: `/subPackages/user/user?uid=${uid}`,
+				})
 			}
 		},
 		onLoad: function (option) {
@@ -754,17 +769,17 @@
 				}
 				
 				&.active{
-					border-color: #ffcd69;
+					border-color: #ff7e3d;
 					
 					.num{
-						color: #ffcd69;
+						color: #ff7e3d;
 					}
 				}
 				
 				.imagLogo{
 					height: 36rpx;
 					
-					image{
+					.image{
 						height: 36rpx;
 						font-size: 0;
 					}
@@ -774,6 +789,19 @@
 					font-size: 20rpx;
 					color: #999;
 					padding-left: 4rpx;
+				}
+				
+				.interactionBiggerImageWrap{
+					position: fixed;
+					top: 50%;
+					left: 50%;
+					transform: translate(-50%,-50%);
+					width: 460rpx;
+					z-index: 100;
+					
+					.interactionBiggerImage{
+						width: 460rpx;
+					}
 				}
 			}
 		}
@@ -987,7 +1015,7 @@
 		.reviewEnd{
 			padding: 15px 0 30px;
 			
-			image{
+			.image{
 				width: 450rpx;
 				margin: 0 auto;
 				display: block;
@@ -1032,7 +1060,7 @@
 			}
 			
 			&.active{
-				color: #ffcd69;
+				color: #ff7e3d;
 			}
 		}
 		
@@ -1043,7 +1071,7 @@
 			}
 			
 			&.active{
-				color: #ffcd69;
+				color: #ff7e3d;
 			}
 		}
 	}

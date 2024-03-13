@@ -1,12 +1,25 @@
 <template>
 	<view class="itemDetailImage">
 			<view v-if="item.image_list.length > 0 && !item.vod_list.length" class="imageList" :class="'imageList'+ item.image_list[0].entity_id">
-				<view v-if="item.image_list.length >= 2" class="image2">
+				<!-- <view v-if="item.image_list.length >= 2" class="image2">
 					<image :src="item.image_list[0].url|imageUrlReset(300,80)" mode="aspectFill" class="showImage" :lazy-load="true" @tap.stop="showImage(0)"></image>
 					<image :src="item.image_list[1].url|imageUrlReset(300,80)" mode="aspectFill" class="showImage" :lazy-load="true" @tap.stop="showImage(1)"></image>
+				</view> -->
+				
+				<view v-if="item.image_list.length >= 2" class="image2">
+					<view class="showImage" @tap.stop="showImage(0)" >
+						<LazyImage :imageData="item.image_list[0]" ></LazyImage>
+					</view>
+					<view class="showImage" @tap.stop="showImage(1)" >
+						<LazyImage :imageData="item.image_list[1]" ></LazyImage>
+					</view>
 				</view>
+				
 				<view v-if="item.image_list.length < 2" class="image1">
-					<image :src="item.image_list[0].url|imageUrlReset(300,80)" mode="aspectFill" class="showImage" :lazy-load="true" @tap.stop="showImage(0)"></image>
+					<!-- <image :src="item.image_list[0].url|imageUrlReset(300,80)" mode="aspectFill" class="showImage" :lazy-load="true" @tap.stop="showImage(0)"></image> -->
+					<view class="showImage" @tap.stop="showImage(0)" >
+						<LazyImage :imageData="item.image_list[0]" ></LazyImage>
+					</view>
 				</view>
 				<view class="moreImage" v-if="item.image_list.length > 2">
 					{{item.image_list.length}}
@@ -35,7 +48,7 @@
 					{{videoStep}}
 				</view>
 				
-				 <view class="videoWrapp" v-if="is_stop" @tap="videoStart(item.vod_list[0].id)"></view>
+				 <view class="videoWrapp" v-if="is_stop" @tap.stop="videoStart(item.vod_list[0].id)"></view>
 				 
 				 <view class="videoEndedWrap" v-if="videoEnd && item.user">
 				 	<view class="videoEndedWraper">
@@ -62,7 +75,11 @@
 
 <script>
 		import {mapState,mapMutations} from 'vuex'
+		import LazyImage from '@/components/common/lazyImage.vue'
 	export default {
+		components: {
+			LazyImage
+		},
 		props: {
 			item: {
 				type: Object,
@@ -83,16 +100,22 @@
 				intervalTimer: null,
 				imageId: null,
 				intersectionObserverVideo: null,
-				videoUrl: ''
+				videoUrl: '',
 			}
 		},
 		computed: {
 			...mapState(['videoMute']),
 		},
 		methods: {
-			...mapMutations(['updateVideoMute']),
+			...mapMutations(['updateVideoMute','updateImageData']),
 			showImage(index) {
-				uni.$emit('openImgPopUp',this.item.image_list,index)
+				// uni.$emit('openImgPopUp',this.item.image_list,index)
+				const listData = this.item.image_list
+				this.updateImageData({
+					show: true,
+					list: listData,
+					showIndex: index
+				})
 			},
 			async followUser(userId) {
 				if(!this.is_following) {
@@ -122,15 +145,18 @@
 					// #ifndef MP-WEIXIN
 					videoContext = this.$refs[ref]
 					// #endif
-					if(type === 'replay') {
-						this.videoEnd = false
-						videoContext.pause()
-						videoContext.currentTime = 0	
-						videoContext.play()
-					}else{
-						this.videoEnd = false
-						videoContext.play()
+					if(videoContext) {
+						if(type === 'replay') {
+							this.videoEnd = false
+							videoContext.pause()
+							videoContext.currentTime = 0	
+							videoContext.play()
+						}else{
+							this.videoEnd = false
+							videoContext.play()
+						}
 					}
+
 				})
 			},
 			replayVideo() {
@@ -239,22 +265,22 @@
 			this.resetWH()
 			this.resetDurationTime()
 		},
-		mounted() {
-			this.$nextTick(function () {
-				if(this.videoId) {
-					this.intersectionObserverVideo = uni.createIntersectionObserver(this);
-					const top = this.windowHeight / 2 - 30
-					this.intersectionObserverVideo.relativeToViewport({bottom:-300,top:-top,left:0,right: 0}).observe(`.videoDetail${this.videoId}`, (res) => {
-					  if (res.intersectionRatio > 0) {
-						this.videoStart()
-					  } else{
-						this.videoStop()
-					  }
-					});
-				}
-			})
-		
-		}
+		// 视频自动播放,切换页面会报错,待修复
+		// mounted() {
+		// 	this.$nextTick(function () {
+		// 		if(this.videoId) {
+		// 			this.intersectionObserverVideo = uni.createIntersectionObserver(this);
+		// 			const top = this.windowHeight / 2 - 30
+		// 			this.intersectionObserverVideo.relativeToViewport({bottom:-300,top:-top,left:0,right: 0}).observe(`.videoDetail${this.videoId}`, (res) => {
+		// 			  if (res.intersectionRatio > 0) {
+		// 				this.videoStart()
+		// 			  } else{
+		// 				this.videoStop()
+		// 			  }
+		// 			});
+		// 		}
+		// 	})
+		// },
 	}
 </script>
 

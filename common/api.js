@@ -1,4 +1,8 @@
 
+
+
+
+
 const baseUrl = 'http://192.168.0.104:8086/api/'
 
 
@@ -372,28 +376,94 @@ exports.getGameRecordCard = (uid) => {
 		uid
 	})
 }
-exports.getUserInstantList = (uid,size=20) => {
-	return apiRequest('getUserInstantList',{
+exports.getUserInstantList = (uid,offset,size=20) => {
+	let data = {
 		uid,
 		size
-	})
+	}
+	if(offset) {
+		data = {
+			uid,
+			size,
+			offset
+		}
+	}
+	return apiRequest('getUserInstantList',data)
 }
-exports.getUserFavourite = (uid,size=20) => {
-	return apiRequest('getUserFavourite',{
+exports.getUserFavourite = (uid,offset,size=20) => {
+	let data = {
 		uid,
 		size
-	})
+	}
+	if(offset) {
+		data = {
+			uid,
+			size,
+			offset
+		}
+	}
+	return apiRequest('getUserFavourite',data)
 }
 
-exports.getUserReply = (uid,size=20) => {
-	return apiRequest('getUserReply',{
+exports.getUserReply = (uid,offset,size=20) => {
+	let data = {
 		uid,
 		size
-	})
+	}
+	if(offset) {
+		data = {
+			uid,
+			size,
+			offset
+		}
+	}
+	return apiRequest('getUserReply',data)
 }
 exports.getUserCollection = (uid,size=20) => {
 	return apiRequest('getUserCollection',{
 		uid,
 		size
 	})
+}
+
+
+exports.getTimelineCategory = () => {
+	return apiRequest('getTimelineCategory')
+}
+
+exports.getTimelineList = (category_id, offset, set_feed_top_uid = 0, size = 20) => {
+	let data = {
+		category_id,
+		set_feed_top_uid,
+		size
+	}
+	if(offset) {
+		data = {
+			category_id,
+			set_feed_top_uid,
+			size,
+			offset
+		}
+	}
+	return apiRequest('getTimelineList',data)
+}
+
+exports.recommendActive = (category_id, offset, size = 5) => {
+	let data = {
+		category_id,
+		size
+	}
+	if(offset) {
+		data = {
+			category_id,
+			size,
+			offset
+		}
+	}
+	return apiRequest('recommendActive',data)
+}
+
+
+exports.discover = () => {
+	return apiRequest('discover')
 }

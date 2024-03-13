@@ -71,7 +71,7 @@
 		mounted() {
 			this.$nextTick(function() {
 				this.intersectionObserver = uni.createIntersectionObserver(this);
-				this.intersectionObserver.relativeToViewport({bottom: 400}).observe(`.tabAndSwiperLine`, (res) => {
+				this.intersectionObserver.relativeToViewport({bottom: 0}).observe(`.tabAndSwiperLine`, (res) => {
 				  if (res.intersectionRatio > 0) {
 					  this.$refs[`recommend0`][0].loading = true
 					this.intersectionObserver.disconnect()

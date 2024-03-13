@@ -2,8 +2,9 @@
 	<view class="item" @tap.stop="navigatePostReplay(item.post.post_id)">
 		<view :class="'itemImage'+item.cover.entity_id" style="height: 1px;"></view>
 		<view class="itemImage" ref="itemImage" :style="{'width': imageWidth + 'rpx','height': imageHeight + 'rpx'}">
-			<image :src="item.cover.url|imageUrlReset(220,100)" :lazy-load="true" mode="widthFix" v-if="loading"></image>
-			<image src="../../static/loadingImg.png" mode="widthFix" class="loadingImg" v-if="!loading"></image>
+			<!-- <image :src="item.cover.url|imageUrlReset(220,80)" :lazy-load="true" mode="widthFix" v-if="loading"></image>
+			<image src="../../static/loadingImg.png" mode="widthFix" class="loadingImg" v-if="!loading"></image> -->
+			<LazyImage :imageData="item.cover" ></LazyImage>
 			
 			<view class="moreImage" v-if="item.image_list.length > 2">
 				+{{item.image_list.length}}
@@ -21,7 +22,7 @@
 			{{item.post.subject}}
 		</view>
 		<view class="itemUser">
-			<view class="wrapLeft">
+			<view class="wrapLeft" @tap.stop="navigateToUser(item.user.uid)">
 				<image :src="item.user.avatar_url" mode="aspectFill" ></image>
 				<text class="userName">{{item.user.nickname}}</text>
 			</view>
@@ -34,7 +35,7 @@
 </template>
 
 <script>
-	
+	import LazyImage from '@/components/common/lazyImage.vue'
 	export default {
 		props: {
 			item: {
@@ -43,6 +44,9 @@
 					return {}
 				}
 			}
+		},
+		components: {
+			LazyImage
 		},
 		data() {
 			return {
@@ -78,19 +82,21 @@
 						url: `/subPackages/artical/artical?post_id=${post_id}`,
 					})
 				}
+			},
+			navigateToUser(uid) {
+				uni.navigateTo({
+					url: `/subPackages/user/user?uid=${uid}`,
+				})
 			}
 		},
 		mounted() {
 			this.intersectionObserver = uni.createIntersectionObserver(this);
-			this.intersectionObserver.relativeToViewport({bottom:400}).observe(`.itemImage${this.entity_id}`, (res) => {
+			this.intersectionObserver.relativeToViewport({bottom: -500}).observe(`.itemImage${this.entity_id}`, (res) => {
 			  if (res.intersectionRatio > 0) {
 				this.loading = true
 				this.intersectionObserver.disconnect()
 			  } 
 			});
-		},
-		destroyed() {
-			this.intersectionObserver.disconnect()
 		},
 		filters: {
 			resetVideoStep(time) {

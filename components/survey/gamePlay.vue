@@ -8,10 +8,7 @@
 				<view class="gameSwiperItemsWrap" v-for="(item,index) in gameplayExplorationShowData" :key="index">
 					<view class="gameSwiperItems">
 						<view class="itemLeft">
-							<!-- <image :src="item.ch_ext.value|imageUrlReset(150,80)" mode="aspectFit"></image> -->
-							<lazy-image :src="item.ch_ext.value|imageUrlReset(150,80)" mode="widthFix"
-								:srcStyle="{'width': '216rpx','height': '216rpx'}"
-							></lazy-image>
+							<LazyImageTwo :src="item.ch_ext.value|imageUrlReset(150,80)" mode="widthFix" :index="item.id"></LazyImageTwo>
 						</view>
 						<view class="itemRight">
 							<view class="itemTitle">{{item.name}}</view>
@@ -30,12 +27,12 @@
 
 <script>
 	import ModuleTitle from './moduleTitle.vue'
-	import LazyImage from '../common/lazyImage.vue'
+	import LazyImageTwo from '../common/lazyImageTwo.vue'
 	export default {
 		name:"gamePlay",
 		components: {
 			ModuleTitle,
-			LazyImage
+			LazyImageTwo
 		},
 		props: {
 			gameplayExplorationShowData: {
@@ -53,7 +50,7 @@
 					name: '玩法探索'
 				}
 			};
-		}
+		},
 	}
 </script>
 
@@ -66,7 +63,7 @@
 	}
 	
 	.moduleTitle{
-		padding: 0 32rpx;
+		padding-bottom: 16rpx;
 	}
 	
 	.gameSwiperItemsWrap{
