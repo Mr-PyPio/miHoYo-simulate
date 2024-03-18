@@ -1,6 +1,6 @@
 <template>
 	<view class="title" v-if="moduleTitle">
-		<image :src="moduleTitle.src" mode="aspectFit"></image>
+		<image :src="moduleTitle.src" mode="aspectFit" class="image"></image>
 		{{moduleTitle.name}}
 		<view class="more">
 			更多
@@ -32,7 +32,7 @@
 		margin-bottom: 10px;
 		position: relative;
 		
-		image{
+		.image{
 			width: 56rpx;
 			height: 56rpx;
 			margin-right: 4px;

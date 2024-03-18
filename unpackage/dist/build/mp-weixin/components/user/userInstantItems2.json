@@ -1,0 +1,6 @@
+{
+  "component": true,
+  "usingComponents": {
+    "item-content": "/components/common/itemContent"
+  }
+}

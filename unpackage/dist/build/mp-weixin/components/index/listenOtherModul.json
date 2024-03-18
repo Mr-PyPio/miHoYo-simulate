@@ -1,0 +1,9 @@
+{
+  "component": true,
+  "usingComponents": {
+    "post-replay": "/components/postReplay/postReplay",
+    "artical": "/components/postReplay/artical",
+    "user": "/components/user/user",
+    "search": "/components/search/search"
+  }
+}

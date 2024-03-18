@@ -54,7 +54,6 @@
 									for(let i = 0; i < text.length; i ++) {
 										const splitArr = text[i].split('/')
 										obj[splitArr[0]] = splitArr[1]
-										// console.log(splitArr[0], splitArr[1],'tab22')
 										if(tabListObj[splitArr[0]]) {
 											if( !tabListObj[splitArr[0]].includes(splitArr[1])) {
 												tabListObj[splitArr[0]].push(splitArr[1])

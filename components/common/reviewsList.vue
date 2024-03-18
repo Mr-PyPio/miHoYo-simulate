@@ -118,6 +118,7 @@
 		width: 750rpx;
 		box-sizing: border-box;
 		overflow: hidden;
+		padding-bottom: 50px;
 		
 		.reviewFoldReplyState{
 			background: #f2f4f5;

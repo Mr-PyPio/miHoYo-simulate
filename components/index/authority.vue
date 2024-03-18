@@ -154,13 +154,15 @@
 			},
 			navigatePostReplay(post_id,type) {
 				if(type === 5) {
-					uni.navigateTo({
-						url: `/subPackages/postReplay/postReplay?post_id=${post_id}`,
-					})
+					// uni.navigateTo({
+					// 	url: `/subPackages/postReplay/postReplay?post_id=${post_id}`,
+					// })
+					uni.$emit('navPage','postReplay',post_id)
 				}else if(type === 1){
-					uni.navigateTo({
-						url: `/subPackages/artical/artical?post_id=${post_id}`,
-					})
+					// uni.navigateTo({
+					// 	url: `/subPackages/artical/artical?post_id=${post_id}`,
+					// })
+					uni.$emit('navPage','artical',post_id)
 				}
 			}
 		},

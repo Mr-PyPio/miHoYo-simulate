@@ -42,7 +42,7 @@
 				</view>
 				<view class="reviewMessageRight">
 					<view class="reply">
-						<image src="../../static/reply.png" mode="heightFix"></image>
+						<image src="../../static/reply.png" mode="heightFix" class="image"></image>
 						回复
 					</view>
 					<view class="praise">
@@ -59,7 +59,7 @@
 </template>
 
 <script>
-	
+	import {mapState} from 'vuex'
 	export default {
 		props: {
 			item: {
@@ -69,13 +69,14 @@
 				}
 			},
 		},
-		created() {
+		computed: {
+			...mapState(['emotion','emotionKey'])
 		},
 		methods: {
 			textParse(text) {
 				const regex = /_\((.*?)\)/g;
 				const matches = text.match(regex);
-				let emotion = uni.getStorageSync('emotion')
+				let emotion = this.emotion
 				
 				const regex2 = /<img\b[^>]*src=['"]([^'"]*)['"][^>]*>/g;
 				
@@ -136,9 +137,10 @@
 				return html
 			},
 			navigateToUser(uid) {
-				uni.navigateTo({
-					url: `/subPackages/user/user?uid=${uid}`,
-				})
+				// uni.navigateTo({
+				// 	url: `/subPackages/user/user?uid=${uid}`,
+				// })
+				uni.$emit('navPage','user',uid)
 			}
 		},
 		filters: {
@@ -308,7 +310,7 @@
 					display: flex;
 					align-items: center;
 					
-					image{
+					.image{
 						height: 13px;
 						padding-right: 5px;
 					}

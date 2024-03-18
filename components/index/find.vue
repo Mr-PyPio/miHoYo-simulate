@@ -7,7 +7,7 @@
 			<view class="card">
 				<view class="consultTitle">
 					<view class="titleLeft">
-						<image src="@/static/list.png" mode="widthFix"></image>
+						<image src="@/static/list.png" mode="widthFix" class="image"></image>
 						<text>官方咨询</text>
 					</view>
 					<view class="titleRight" @tap.stop="gotoAuthority">
@@ -37,7 +37,7 @@
 						</view>
 						<view class="hotTipsContent" v-if="hotTopics.length > 0">
 							<view class="hotTopicsItem" v-for="hot in hotTopics" :key="hot.topic_id">
-								<image :src="hot.image|imageUrlReset(100,80)" mode="aspectFill"></image>
+								<image :src="hot.image|imageUrlReset(100,80)" mode="aspectFill" class="image"></image>
 								<view class="topicsDesc">
 									<view class="topicsName">
 										#{{hot.topic_name}}
@@ -116,7 +116,6 @@
 					if(this.pageLoading) {
 						this.pageLoading = false
 					}
-					console.log(this.consultDiscoverData,'list')
 					if(callBack) callBack()
 				}
 			},
@@ -128,7 +127,6 @@
 				this.filter = Object.keys(databox)
 				const newList = list
 				this.consultDiscoverData.push(...newList)
-				console.log(this.consultDiscoverData)
 			},
 			scroll(e) {
 				// if(this.swiperHeight) {
@@ -172,13 +170,15 @@
 			},
 			navigatePostReplay(post_id,type) {
 				if(type === 5) {
-					uni.navigateTo({
-						url: `/subPackages/postReplay/postReplay?post_id=${post_id}`,
-					})
+					// uni.navigateTo({
+					// 	url: `/subPackages/postReplay/postReplay?post_id=${post_id}`,
+					// })
+					uni.$emit('navPage','postReplay',post_id)
 				}else if(type === 1){
-					uni.navigateTo({
-						url: `/subPackages/artical/artical?post_id=${post_id}`,
-					})
+					// uni.navigateTo({
+					// 	url: `/subPackages/artical/artical?post_id=${post_id}`,
+					// })
+					uni.$emit('navPage','artical',post_id)
 				}
 			},
 			gotoAuthority() {
@@ -240,7 +240,7 @@
 					display: flex;
 					align-items: center;
 					
-					image{
+					.image{
 						width: 36rpx;
 						margin-right: 6rpx;
 					}
@@ -324,7 +324,7 @@
 							align-items: center;
 							padding: 12rpx 0;
 							
-							image{
+							.image{
 								width: 64rpx;
 								height: 64rpx;
 								border-radius: 6px;

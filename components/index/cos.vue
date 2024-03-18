@@ -18,7 +18,7 @@
 							<view class="itemLogo" :style="{'backgroundImage': resetSrc(index)}">
 							</view>
 							<view class="itemImage">
-								<image :src="item.cover.url|imageUrlReset(300,80)" mode="aspectFill"></image>
+								<image :src="item.cover.url|imageUrlReset(300,80)" mode="aspectFill" class="image"></image>
 							</view>
 							<view class="itemBotUser">
 								<image :src="item.user.avatar_url" mode="aspectFill" class="userIcon"></image>
@@ -202,12 +202,6 @@
 			position: relative;
 			box-sizing: border-box;
 			
-			image{
-				width: 56rpx;
-				height: 56rpx;
-				margin-right: 4px;
-			}
-			
 			.more{
 				position: absolute;
 				right: 24rpx;
@@ -252,7 +246,7 @@
 					width: 222rpx;
 					height: 292rpx;
 					
-					image{
+					.image{
 						width: 100%;
 						height: 100%;
 					}
@@ -268,7 +262,7 @@
 					background-repeat: no-repeat;
 					background-size: 100% 90rpx;
 					
-					image{
+					.userIcon{
 						width: 40rpx;
 						height: 40rpx;
 						margin: 0 auto;

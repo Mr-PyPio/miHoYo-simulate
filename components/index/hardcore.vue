@@ -27,7 +27,7 @@
 						</view>
 						<view class="hotTipsContent" v-if="hotTopics.length > 0">
 							<view class="hotTopicsItem" v-for="(hot,key) in hotTopics" :key="key" v-if="key < 4">
-								<image :src="hot.cover|imageUrlReset(100,80)" mode="aspectFill"></image>
+								<image :src="hot.cover|imageUrlReset(100,80)" mode="aspectFill" class="image"></image>
 								<view class="topicsDesc">
 									<view class="topicsName">
 										#{{hot.name}}
@@ -196,7 +196,7 @@
 						align-items: center;
 						padding: 12rpx 0;
 						
-						image{
+						.image{
 							width: 64rpx;
 							height: 64rpx;
 							border-radius: 6px;

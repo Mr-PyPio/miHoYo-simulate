@@ -1,0 +1,9 @@
+{
+  "component": true,
+  "usingComponents": {
+    "user-instant": "/components/user/userInstant",
+    "user-replay": "/components/user/userReply",
+    "user-collection": "/components/user/userCollection",
+    "user-favourite": "/components/user/userFavourite"
+  }
+}

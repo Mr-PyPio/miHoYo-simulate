@@ -1,0 +1,12 @@
+{
+  "navigationBarTitleText": "动态",
+  "enablePullDownRefresh": false,
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "u-icon": "/node-modules/uview-ui/components/u-icon/u-icon",
+    "find-content": "/components/action/findContent",
+    "follow-content": "/components/action/followContent",
+    "img-pop-up": "/components/common/imgPopUp",
+    "listen-other-modul": "/components/index/listenOtherModul"
+  }
+}

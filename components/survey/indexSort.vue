@@ -14,7 +14,7 @@
 				<swiper-item v-for="(item, index) in swiperData" :key="index">
 					<view class="listItemsWrap">
 						<view v-for="(pop,key) in item.list" :key="key" class="listItems" v-if="key < 6">
-							<image :src="pop.icon|imageUrlReset(30,80)" mode="aspectFill"></image>
+							<image :src="pop.icon|imageUrlReset(30,80)" mode="aspectFill" class="image"></image>
 							<view class="name">
 								{{pop.title}}
 							</view>
@@ -66,7 +66,6 @@
 		},
 		created() {
 			this.swiperData = this.sortData.children
-			console.log(this.sortData,'sort')
 		}
 	}
 </script>
@@ -113,7 +112,7 @@
 					margin-bottom: 8px;
 					background: #f5f5f5;
 					
-					image{
+					.image{
 						width: 20px;
 						height: 20px;
 						border-radius: 4px;

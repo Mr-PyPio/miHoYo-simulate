@@ -1,0 +1,7 @@
+{
+  "component": true,
+  "usingComponents": {
+    "tab-swiper-one": "/components/common/tabSwiperOne",
+    "module-title": "/components/survey/moduleTitle"
+  }
+}

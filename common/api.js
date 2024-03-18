@@ -3,7 +3,7 @@
 
 
 
-const baseUrl = 'http://192.168.0.104:8086/api/'
+const baseUrl = 'http://8.138.116.67:8086/api/'
 
 
 const apiRequest =(url,data = {},type = 'get') => {

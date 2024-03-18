@@ -1,6 +1,11 @@
 <template>
 		<view class="imageWrap" v-if="src" >
+			<!-- #ifdef WEB -->
 			<image :src="imageSrc" :mode="mode" :lazy-load="true" class="image"  :class="'lazyImageDetail' + index"></image>
+			<!-- #endif -->
+			<!-- #ifdef MP-WEIXIN -->
+			<image :src="src" :mode="mode" :lazy-load="true" class="image"  :class="'lazyImageDetail' + index"></image>
+			<!-- #endif -->
 		</view>
 </template>
 
@@ -26,9 +31,9 @@
 				}
 			}
 		},
+		// #ifdef WEB
 		data() {
 			return {
-				loading: false,
 				intersectionObserver: null,
 				imageSrc: '../../static/loadingImg.png'
 			}
@@ -47,7 +52,6 @@
 						this.intersectionObserver.disconnect()
 					}
 				}
-
 			},
 		},
 		mounted() {
@@ -63,6 +67,7 @@
 
 			})
 		},
+		// #endif
 	}
 </script>
 

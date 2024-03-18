@@ -16,7 +16,7 @@
 					
 					<view v-if="item.name === '原神琴谱'" class="musicScore">
 						<view v-for="(pop,key) in item.list" :key="key" class="musicScoreItem" v-if="key < 6">
-							<image :src="pop.icon|imageUrlReset(30,80)" mode="aspectFill" v-if="loading"></image>
+							<image :src="pop.icon|imageUrlReset(30,80)" mode="aspectFill" v-if="loading" class="image"></image>
 							<view class="name">
 								{{pop.title}}
 							</view>
@@ -142,7 +142,7 @@
 				margin-bottom: 8px;
 				background: #f5f5f5;
 				
-				image{
+				.image{
 					width: 20px;
 					height: 20px;
 					border-radius: 4px;

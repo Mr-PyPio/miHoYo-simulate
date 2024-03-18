@@ -8,9 +8,9 @@
 				
 				<view v-if="item.image_list.length >= 2" class="image2">
 					<view class="showImage" @tap.stop="showImage(0)" >
-						<LazyImage :imageData="item.image_list[0]" ></LazyImage>
+						<LazyImage :imageData="item.image_list[0]" :width="346 / rpxNum"></LazyImage>
 					</view>
-					<view class="showImage" @tap.stop="showImage(1)" >
+					<view class="showImage" @tap.stop="showImage(1)"  :width="346 / rpxNum">
 						<LazyImage :imageData="item.image_list[1]" ></LazyImage>
 					</view>
 				</view>
@@ -18,7 +18,7 @@
 				<view v-if="item.image_list.length < 2" class="image1">
 					<!-- <image :src="item.image_list[0].url|imageUrlReset(300,80)" mode="aspectFill" class="showImage" :lazy-load="true" @tap.stop="showImage(0)"></image> -->
 					<view class="showImage" @tap.stop="showImage(0)" >
-						<LazyImage :imageData="item.image_list[0]" ></LazyImage>
+						<LazyImage :imageData="item.image_list[0]"  :width="460 / rpxNum"></LazyImage>
 					</view>
 				</view>
 				<view class="moreImage" v-if="item.image_list.length > 2">
@@ -63,7 +63,7 @@
 				 			+ 关注
 				 		</view>
 				 		<view class="replayVideo" @tap.stop="replayVideo">
-				 			<image src="../../static/replay.png" mode="aspectFill"></image>
+				 			<image src="../../static/replay.png" mode="aspectFill" class="image"></image>
 				 			重播
 				 		</view>
 				 	</view>
@@ -104,7 +104,7 @@
 			}
 		},
 		computed: {
-			...mapState(['videoMute']),
+			...mapState(['videoMute','windowHeight','rpxNum']),
 		},
 		methods: {
 			...mapMutations(['updateVideoMute','updateImageData']),
@@ -248,39 +248,31 @@
 				const s = parseInt(num % 60) >=10 ? parseInt(num % 60) : '0' + parseInt(num % 60)
 				this.videoStep = `${m}:${s}`
 			},
-			entryVideoDetail() {
-				
-			},
 			entryUserHome(userId) {
-				console.log(userId)
+				uni.$emit('navPage','user',uid)
 			},
 			
 		},
 		created() {
-			uni.getSystemInfo({
-				success: res => {
-					this.windowHeight = res.windowHeight
-				}
-			})
 			this.resetWH()
 			this.resetDurationTime()
 		},
 		// 视频自动播放,切换页面会报错,待修复
-		// mounted() {
-		// 	this.$nextTick(function () {
-		// 		if(this.videoId) {
-		// 			this.intersectionObserverVideo = uni.createIntersectionObserver(this);
-		// 			const top = this.windowHeight / 2 - 30
-		// 			this.intersectionObserverVideo.relativeToViewport({bottom:-300,top:-top,left:0,right: 0}).observe(`.videoDetail${this.videoId}`, (res) => {
-		// 			  if (res.intersectionRatio > 0) {
-		// 				this.videoStart()
-		// 			  } else{
-		// 				this.videoStop()
-		// 			  }
-		// 			});
-		// 		}
-		// 	})
-		// },
+		mounted() {
+			this.$nextTick(function () {
+				if(this.videoId) {
+					this.intersectionObserverVideo = uni.createIntersectionObserver(this);
+					const top = this.windowHeight / 2 - 30
+					this.intersectionObserverVideo.relativeToViewport({bottom:-300,top:-top,left:0,right: 0}).observe(`.videoDetail${this.videoId}`, (res) => {
+					  if (res.intersectionRatio > 0) {
+						this.videoStart()
+					  } else{
+						this.videoStop()
+					  }
+					});
+				}
+			})
+		},
 	}
 </script>
 
@@ -398,10 +390,6 @@
 				border-radius: 4px;
 			}
 			
-			video{
-				width: 100%;
-			}
-			
 			.videoEndedWrap{
 				position: absolute;
 				left: 0;
@@ -469,7 +457,7 @@
 					width: 70px;
 					margin: 0 auto;
 					
-					image{
+					.image{
 						width: 12px;
 						height: 12px;
 						margin-right: 3px;

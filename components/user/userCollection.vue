@@ -66,13 +66,6 @@
 			scrolltolower() {}
 		},
 		created() {
-			uni.getSystemInfo({
-				success: res => {
-					const rpxNum = 750 / res.windowWidth
-					this.rpxNum = rpxNum
-					this.windowHeight = res.windowHeight
-				}
-			})
 			this.getDate()
 		},
 		filters: {

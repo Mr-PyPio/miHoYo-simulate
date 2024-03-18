@@ -72,7 +72,6 @@ import {mapState,mapGetters,mapMutations} from "vuex"
 				this.topPosts = res.data.top_posts
 				this.topics = res.data.topics
 				this.sortConfig = res.data.forum_sort_config
-				console.log(res,'tanvern1')
 			},
 			async getTavernPostList(page=1,sort_type=1,page_size=20, callBack) {
 				const {data:res} = await tavernPostListApi(page,page_size,sort_type)
@@ -81,7 +80,6 @@ import {mapState,mapGetters,mapMutations} from "vuex"
 				}
 				const list = res.data.list
 				this.tavernPostList = list
-				console.log(list,'tanvern2')
 				if(callBack) callBack()
 			},
 			async updateTavernPostList(page,sort_type,page_size=20) {
@@ -89,7 +87,6 @@ import {mapState,mapGetters,mapMutations} from "vuex"
 				const list = res.data.list
 				const newList = list
 				this.tavernPostList.push(...newList)
-				console.log(list,'tanvern2')
 			},
 			scroll(e) {
 				// if(this.swiperHeight) {

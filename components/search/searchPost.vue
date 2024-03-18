@@ -12,7 +12,7 @@
 			</scroll-view>
 		</view>
 		<swiper :current="current" :style="{
-					'height' : windowHeight + 'px',
+					'height' : windowHeight + 'px' ,
 					'width' : '750rpx',
 					'padding-top' : '178rpx',
 					'box-sizing' : 'border-box'
@@ -55,6 +55,7 @@
 	import ImagePost from './imagePost.vue'
 	import EncyclePost from './encyclePost.vue'
 	import AuthorityPost from './authorityPost.vue'
+	import {mapState} from 'vuex'
 	export default {
 		name:"searchPost",
 		components: {
@@ -70,7 +71,6 @@
 		data() {
 			return {
 				scrollY: true,
-				windowHeight:0,
 				keyWord: '',
 				tabList: ['综合','攻略','视频','百科','图片','用户','话题','官方'],
 				current: 0,
@@ -163,12 +163,8 @@
 				return ref
 			},
 		},
-		created() {
-			uni.getSystemInfo({
-				success: res => {
-					this.windowHeight = res.windowHeight
-				}
-			})
+		computed: {
+			...mapState(['windowHeight','rpxNum'])
 		},
 	}
 </script>
@@ -186,7 +182,7 @@
 	.tab{
 		background: #f8f8f8;
 		padding: 20rpx 24rpx 0;
-		position: fixed;
+		position: absolute;
 		top: 98rpx;
 		left: 0;
 		width: 702rpx;

@@ -1,6 +1,15 @@
 <template>
 		<view class="imageWrap" v-if="imageData" >
-			<image :src="imageSrc" :mode="mode" :lazy-load="true" class="image"  :class="'lazyImageDetail' + imageData.image_id"></image>
+			<!-- #ifdef WEB -->
+			<image :src="imageSrc" :mode="mode" :lazy-load="true" class="image"  :class="'lazyImageDetail' + imageData.image_id"
+				:style="{'height': imageHeight + 'px'}"
+			></image>
+			<!-- #endif -->
+			<!-- #ifdef MP-WEIXIN -->
+			<image :src="imageData.url|imageUrlReset(300,80)" :mode="mode" :lazy-load="true" class="image"  :class="'lazyImageDetail' + imageData.image_id"
+				:style="{'height': imageHeight + 'px'}"
+			></image>
+			<!-- #endif -->
 		</view>
 </template>
 
@@ -18,13 +27,30 @@
 				default() {
 					return 'aspectFill'
 				}
+			},
+			width: {
+				type: Number,
+				default() {
+					return 230
+				}
 			}
 		},
+		computed: {
+			imageHeight() {
+				const initWidth = this.imageData.width
+				const initHeight = this.imageData.height
+				let height = this.width / initWidth * initHeight
+				if(height < this.width) {
+					height = this.width
+				}
+				return height
+			}
+		},
+		// #ifdef WEB
 		data() {
 			return {
-				loading: false,
 				intersectionObserver: null,
-				imageSrc: '../../static/loadingImg.png'
+				imageSrc: '../../static/loadingImg.png',
 			}
 		},
 		methods: {
@@ -42,17 +68,18 @@
 						this.intersectionObserver.disconnect()
 					}
 				}
+
 			},
 			imageUrlReset(url,s,q) {
-					const reg = /.gif/g
-					const matches = url.match(reg);
-					
-					if(matches) {
-						return url
-					}else {
-						const urlArr = url.split('?')
-						return urlArr[0] + `?x-oss-process=image/resize,s_${s}/quality,q_${q}/auto-orient,0/interlace,1/format,png`
-					}
+				const reg = /.gif/g
+				const matches = url.match(reg);
+				
+				if(matches) {
+					return url
+				}else {
+					const urlArr = url.split('?')
+					return urlArr[0] + `?x-oss-process=image/resize,s_${s}/quality,q_${q}/auto-orient,0/interlace,1/format,png`
+				}
 			},
 		},
 		mounted() {
@@ -65,9 +92,10 @@
 					  }
 					});
 				}
-
+			
 			})
 		},
+		// #endif
 	}
 </script>
 
@@ -75,5 +103,7 @@
 	.image,.imageWrap{
 		width: 100%;
 		height: 100%;
+		display: flex;
+		align-items: center;
 	}
 </style>

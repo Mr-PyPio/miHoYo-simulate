@@ -59,7 +59,6 @@
 		methods: {
 			async getDate() {
 				const {data: res} = await getUserReply(this.uid)
-				console.log(res)
 				if(res.message === "权限不足") {
 					this.limit = false
 				}
@@ -67,7 +66,6 @@
 					this.postData = res.data.list
 					this.is_last = res.data.is_last
 					this.next_offset = res.data.next_offset
-					console.log(this.postData,'replay')
 				}
 			},
 			async loadMoreDate() {
@@ -92,13 +90,6 @@
 			}
 		},
 		created() {
-			uni.getSystemInfo({
-				success: res => {
-					const rpxNum = 750 / res.windowWidth
-					this.rpxNum = rpxNum
-					this.windowHeight = res.windowHeight
-				}
-			})
 			this.getDate()
 		},
 		filters: {

@@ -111,7 +111,6 @@
 				})
 				if(res.message === 'OK'){
 					this.postData.splice(index,1)
-					console.log(this.postData)
 					if(this.postData.length < 4) {
 						this.loadMoreDate()
 					}

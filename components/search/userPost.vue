@@ -1,6 +1,6 @@
 <template>
-	<view class="" :style="{'height': scrollHeight}">
-		<scroll-view :scroll-y="true" :style="{'height': scrollHeight}" @scrolltolower="scrollBottom">
+	<view class="" :style="{'height': '100%'}" >
+		<scroll-view :scroll-y="true" :style="{'height': '100%'}"  @scrolltolower="scrollBottom">
 			<view v-if="postData" class="userList">
 				<view v-for="(item,index) in postData" :key="index">
 					<user-items :item="item" :keyWord="keyWord"></user-items>
@@ -28,24 +28,12 @@
 		data() {
 			return {
 				loading: false,
-				scrollHeight: 0,
 				last_id: null,
 				is_last: false,
 				keyWord: '',
 				postData: null,
 				upDateLoading: false
 			}
-		},
-		created() {
-			uni.getSystemInfo({
-				success: res => {
-					const rpxNum = 750 / res.windowWidth
-					this.rpxNum = rpxNum
-					this.windowHeight = res.windowHeight * rpxNum
-					this.windowWidth = res.windowWidth * rpxNum
-					this.scrollHeight = this.windowHeight - 178 + 'rpx'
-				}
-			})
 		},
 		methods: {
 			async initData(keyWord) {
@@ -56,8 +44,9 @@
 				this.last_id = dataNew.last_id
 				this.is_last = dataNew.is_last
 				this.postData = dataNew.users
-				setTimeout(() => {
+				let timer = setTimeout(() => {
 					this.loading = false
+					clearTimeout(timer)
 				},300)
 			},
 			async scrollBottom() {

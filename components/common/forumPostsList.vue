@@ -23,7 +23,7 @@
 		</view>
 		<view class="itemUser">
 			<view class="wrapLeft" @tap.stop="navigateToUser(item.user.uid)">
-				<image :src="item.user.avatar_url" mode="aspectFill" ></image>
+				<image :src="item.user.avatar_url" mode="aspectFill" class="image"></image>
 				<text class="userName">{{item.user.nickname}}</text>
 			</view>
 			<view class="wrapRight">
@@ -74,19 +74,22 @@
 			},
 			navigatePostReplay(post_id) {
 				if(this.is_video) {
-					uni.navigateTo({
-						url: `/subPackages/postReplay/postReplay?post_id=${post_id}`,
-					})
+					// uni.navigateTo({
+					// 	url: `/subPackages/postReplay/postReplay?post_id=${post_id}`,
+					// })
+					uni.$emit('navPage','postReplay',post_id)
 				}else{
-					uni.navigateTo({
-						url: `/subPackages/artical/artical?post_id=${post_id}`,
-					})
+					// uni.navigateTo({
+					// 	url: `/subPackages/artical/artical?post_id=${post_id}`,
+					// })
+					uni.$emit('navPage','artical',post_id)
 				}
 			},
 			navigateToUser(uid) {
-				uni.navigateTo({
-					url: `/subPackages/user/user?uid=${uid}`,
-				})
+				// uni.navigateTo({
+				// 	url: `/subPackages/user/user?uid=${uid}`,
+				// })
+				uni.$emit('navPage','user',uid)
 			}
 		},
 		mounted() {
@@ -121,10 +124,6 @@
 		position: relative;
 		background: #f6f6f6;
 		
-		image{
-			width: 100%;
-			height: auto;
-		}
 		
 		.loadingImg{
 			width: 300rpx;
@@ -198,7 +197,7 @@
 			display: flex;
 			align-items: center;
 			
-			image{
+			.image{
 				width: 48rpx;
 				height: 48rpx;
 				margin-right: 4px;

@@ -67,12 +67,12 @@
 					</view>
 				</template>
 			</view>
-			<view class="reviewEnd" v-if="allShow">
-				<image src="../../static/poseRequlay/reviewEnd.png" mode="widthFix"  class="image"></image>
-			</view>
-			<view class="noLimit" v-if="!limit">
-				<image src="../../static/user/noLimit.png" mode="widthFix" class="logo"></image>
-			</view>
+		</view>
+		<view class="reviewEnd" v-if="allShow">
+			<image src="../../static/poseRequlay/reviewEnd.png" mode="widthFix"  class="image"></image>
+		</view>
+		<view class="noLimit" v-if="!limit">
+			<image src="../../static/user/noLimit.png" mode="widthFix" class="logo"></image>
 		</view>
 	</scroll-view>
 </template>
@@ -129,15 +129,16 @@
 				}
 			},
 			navigatePostReplay(post_id,videoUrl) {
-				console.log(videoUrl)
 				if(videoUrl) {
-					uni.navigateTo({
-						url: `/subPackages/postReplay/postReplay?post_id=${post_id}`,
-					})
+					// uni.navigateTo({
+					// 	url: `/subPackages/postReplay/postReplay?post_id=${post_id}`,
+					// })
+					uni.$emit('navPage','postReplay',post_id)
 				}else{
-					uni.navigateTo({
-						url: `/subPackages/artical/artical?post_id=${post_id}`,
-					})
+					// uni.navigateTo({
+					// 	url: `/subPackages/artical/artical?post_id=${post_id}`,
+					// })
+					uni.$emit('navPage','artical',post_id)
 				}
 			},
 			scrolltolower() {
@@ -147,13 +148,6 @@
 			}
 		},
 		created() {
-			uni.getSystemInfo({
-				success: res => {
-					const rpxNum = 750 / res.windowWidth
-					this.rpxNum = rpxNum
-					this.windowHeight = res.windowHeight
-				}
-			})
 			this.getDate()
 		},
 		filters: {
@@ -257,6 +251,7 @@
 				padding-left: 24rpx;
 			}
 		}
+	}
 		
 		.reviewEnd{
 			padding: 15px 0 30px;
@@ -277,5 +272,4 @@
 				display: block;
 			}
 		}
-	}
 </style>

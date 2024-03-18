@@ -59,9 +59,6 @@
 				event.stopPropagation();
 			},
 		},
-		created() {
-			console.log(this.videoData)
-		},
 		mounted() {
 			this.$nextTick(function() {
 				this.intersectionObserver = uni.createIntersectionObserver(this);

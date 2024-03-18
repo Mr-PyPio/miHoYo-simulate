@@ -1,0 +1,9 @@
+{
+  "component": true,
+  "usingComponents": {
+    "u-icon": "/node-modules/uview-ui/components/u-icon/u-icon",
+    "u-loading-page": "/node-modules/uview-ui/components/u-loading-page/u-loading-page",
+    "top-posts-list": "/components/common/topPostsList",
+    "post-items": "/components/common/postItems"
+  }
+}

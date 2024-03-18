@@ -16,7 +16,7 @@
 				style="height: 80vh;margin-top: 10vh;overflow: hidden;">
 				<swiper-item v-for="(item,key) in imgList" :key="key">
 					<view class="swiper-item">
-						<image :src="item.url" mode="widthFix"></image>
+						<image :src="item.url" mode="widthFix" class="image"></image>
 					</view>
 				</swiper-item>
 			</swiper>
@@ -27,7 +27,7 @@
 					:safeAreaInsetBottom="false">
 					<view class="saveLogo"  @tap="save">
 						<view class="saveLogoImg">
-							<image src="../../static/upDate2.png" mode="widthFix"></image>
+							<image src="../../static/upDate2.png" mode="widthFix" class="image"></image>
 						</view>
 						<view class="saveText">保存</view>
 					</view>
@@ -120,7 +120,7 @@
 		width: 100%;
 		height: 100%;
 		
-		image{
+		.image{
 			width: 98%;
 		}
 	}
@@ -162,7 +162,7 @@
 			justify-content: center;
 			align-items: center;
 			
-			image{
+			.image{
 				width: 16px;
 				height: 16px;
 			}

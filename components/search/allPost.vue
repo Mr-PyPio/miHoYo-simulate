@@ -1,12 +1,12 @@
 <template>
-	<view class="content" :style="{'height': scrollHeight}">
-		<scroll-view :scroll-y="true" :style="{'height': scrollHeight}" 
+	<view class="content"  :style="{'height': '100%'}" >
+		<scroll-view :scroll-y="true" :style="{'height': '100%'}" 
 			@scrolltolower="scrollBottom"
 		>
 			<view class="edition" v-if="editionData">
 				<view class="editionTop">
 					<view class="editionTopLeft">
-						<image src="../../static/poseRequlay/screen.png" mode="widthFix"></image>
+						<image src="../../static/poseRequlay/screen.png" mode="widthFix" class="image"></image>
 						{{editionType}}
 					</view>
 					<view class="editionTopRight">
@@ -26,7 +26,7 @@
 								<image :src="gameRoleData.role_card_data_list[1].value|imageUrlReset(60,80)" mode="widthFix" class="roleElement"></image>
 								<view class="roleRarity">
 									<template v-for="(item,index) in rarityArr" >
-										<image src="../../static/star.png" mode="widthFix" :key="index" v-if="index < rarityNum"></image>
+										<image src="../../static/star.png" mode="widthFix" :key="index" v-if="index < rarityNum" class="image"></image>
 									</template>
 								</view>
 							</view>
@@ -40,7 +40,7 @@
 							</view>
 						</view>
 						<view class="roleMessageCardRight">
-							<image src="../../static/search/profile.png" mode="widthFix"></image>
+							<image src="../../static/search/profile.png" mode="widthFix" class="image"></image>
 							查看角色资料
 						</view>
 					</view>
@@ -50,7 +50,7 @@
 								<template v-for="(item,index) in gameRoleData.strategy_list" >
 									<view class="listItems" v-if="index < 3" :key="index">
 										<view class="itemsImage">
-											<image :src="item.image|imageUrlReset(100,80)" mode="scaleToFill"></image>
+											<image :src="item.image|imageUrlReset(100,80)" mode="scaleToFill" class="image"></image>
 										</view>
 										<view class="itemsTitle" v-html="matchText(item.title)">
 										</view>
@@ -143,7 +143,6 @@
 		data() {
 			return {
 				loading: true,
-				scrollHeight: 0,
 				postData: null,
 				editionData: null,
 				editionType: '原神板块',
@@ -183,8 +182,9 @@
 				this.last_id = dataNew.last_id
 				this.is_last = dataNew.is_last
 				this.postData = dataNew.posts
-				setTimeout(() => {
+				let timer = setTimeout(() => {
 					this.loading = false
+					clearTimeout(timer)
 				},300)
 			},
 			initData(keyWord) {
@@ -213,17 +213,6 @@
 					this.upDateLoading = false
 				}
 			}
-		},
-		created() {
-			uni.getSystemInfo({
-				success: res => {
-					const rpxNum = 750 / res.windowWidth
-					this.rpxNum = rpxNum
-					this.windowHeight = res.windowHeight * rpxNum
-					this.windowWidth = res.windowWidth * rpxNum
-					this.scrollHeight = this.windowHeight - 178 + 'rpx'
-				}
-			})
 		},
 	}
 </script>
@@ -256,7 +245,7 @@
 					border: 1px solid #f8f8f8;
 					box-sizing: border-box;
 					
-					image{
+					.image{
 						width: 24rpx;
 						margin-right: 10rpx;
 					}
@@ -324,7 +313,7 @@
 								bottom: -4px;
 								left: 0;
 								
-								image{
+								.image{
 									width: 18rpx;
 									
 									&:last-of-type{
@@ -359,7 +348,7 @@
 						border: 1px solid #ddd;
 						border-radius: 4px;
 						
-						image{
+						.image{
 							width: 30rpx;
 							margin-right: 4rpx;
 						}
@@ -390,7 +379,7 @@
 								height: 120rpx;
 								overflow: hidden;
 								
-								image{
+								.image{
 									width: 240rpx;
 									height: 120rpx;
 								}

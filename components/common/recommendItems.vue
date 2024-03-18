@@ -7,12 +7,12 @@
 			<view class="cardLine"></view>
 			<view class="itemImage">
 				<view class="itemIcon">
-					<image :src="pop.icon|imageUrlReset(50,80)" mode="aspectFill" v-if="loading"></image>
+					<image :src="pop.icon|imageUrlReset(50,80)" mode="aspectFill" v-if="loading" class="image"></image>
 				</view>
 				<view class="line"></view>
 				<view class="itemRecImage">
 					<view class="itemRecImageWrapp"  v-if="loading">
-						<image v-for="(item,index) in pop.ext.list" :key="index" 
+						<image v-for="(item,index) in pop.ext.list" :key="index"  class="image"
 							:src="item|imageUrlReset(36,80)" mode="aspectFill"></image>
 					</view>
 				</view>
@@ -90,7 +90,7 @@
 					position: relative;
 					border-radius: 6rpx;
 					
-					image{
+					.image{
 						width: 68rpx;
 						height: 68rpx;
 					}
@@ -130,7 +130,7 @@
 						height: 100%;
 					}
 					
-					image{
+					.image{
 						width: 44rpx;
 						height: 44rpx;
 						border-radius: 44rpx;

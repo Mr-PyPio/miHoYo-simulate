@@ -23,6 +23,10 @@
 		<view v-if="cardGroupWalkthroughData.children && cardGroupWalkthroughData.children.length > 0">
 			<card-group :cardGroupData="cardGroupWalkthroughData"></card-group>
 		</view>
+		
+		<view v-if="NPC_challenge_data.children && NPC_challenge_data.children.length > 0">
+			<npc-challenge :challengeData="NPC_challenge_data"></npc-challenge>
+		</view>
 
 		<view v-if="latestContentData.children && latestContentData.children.length > 0">
 			<latest-content :latestData="latestContentData"></latest-content>
@@ -51,11 +55,11 @@
 				</view>
 			</view>
 			
-			<image src="../../static/survey/surveyBottomImg.png" mode="aspectFill"></image>
+			<image src="../../static/survey/surveyBottomImg.png" mode="aspectFill" class="image"></image>
 		</view>
 		
 		<view class="to_top" v-if="to_top_show" @tap.stop="toTop">
-			<image src="../../static/survey/run_top.png" mode="aspectFill"></image>
+			<image src="../../static/survey/run_top.png" mode="aspectFill" class="image"></image>
 		</view>
 	</view>
 		<u-loading-page :loading="pageLoading" loadingText=" " iconSize="60"></u-loading-page>
@@ -123,7 +127,6 @@
 			async getSurveyBanner() {
 				const {data: res} = await surveyBannerApi()
 				this.topBanner = res.data.list
-				console.log(res,'sur1')
 			},
 			async getSurveyMap() {
 				const {data: res} = await surveyMapApi()
@@ -266,7 +269,7 @@
 				}
 			}
 			
-			image{
+			.image{
 				width: 686rpx;
 				height: 182rpx;
 			}
@@ -277,7 +280,7 @@
 			right: 32rpx;
 			bottom: 150rpx;
 			
-			image{
+			.image{
 				width: 136rpx;
 				height: 136rpx;
 			}

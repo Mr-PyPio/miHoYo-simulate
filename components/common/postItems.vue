@@ -69,30 +69,26 @@
 			return {
 			};
 		},
-		created() {
-			uni.getSystemInfo({
-				success: res => {
-					this.windowHeight = res.windowHeight
-				}
-			})
-		},
 		methods: {
 			navigatePostReplay(post_id) {
 				const videoUrl = this.$refs.itemContent.videoUrl
 				if(videoUrl) {
-					uni.navigateTo({
-						url: `/subPackages/postReplay/postReplay?post_id=${post_id}`,
-					})
+					// uni.navigateTo({
+					// 	url: `/subPackages/postReplay/postReplay?post_id=${post_id}`,
+					// })
+					uni.$emit('navPage','postReplay',post_id)
 				}else{
-					uni.navigateTo({
-						url: `/subPackages/artical/artical?post_id=${post_id}`,
-					})
+					// uni.navigateTo({
+					// 	url: `/subPackages/artical/artical?post_id=${post_id}`,
+					// })
+					uni.$emit('navPage','artical',post_id)
 				}
 			},
 			navigateToUser(uid) {
-				uni.navigateTo({
-					url: `/subPackages/user/user?uid=${uid}`,
-				})
+				// uni.navigateTo({
+				// 	url: `/subPackages/user/user?uid=${uid}`,
+				// })
+				uni.$emit('navPage','user',uid)
 			}
 		},
 		filters: {

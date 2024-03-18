@@ -14,7 +14,7 @@
 							<view class="itemTitle">{{item.name}}</view>
 							<view class="playList">
 								<view class="playListItems" v-for="(play,playIndex) in item.children" :key="playIndex" v-if="playIndex < 3 ">
-									<text>{{play.name}}</text>
+									<text class="text">{{play.name}}</text>
 								</view>
 							</view>
 						</view>
@@ -58,12 +58,8 @@
 .gameplay{
 	padding: 10px 0;
 	
-	.title{
-		margin: 0 32rpx;
-	}
-	
 	.moduleTitle{
-		padding-bottom: 16rpx;
+		padding: 0 24rpx 16rpx;
 	}
 	
 	.gameSwiperItemsWrap{
@@ -95,11 +91,6 @@
 			border-radius: 8px;
 			position: relative;
 			overflow: hidden;
-			
-			image{
-				width: 100%;
-				height: 100%;
-			}
 			
 			&::after{
 				content: '更多';
@@ -165,7 +156,7 @@
 					box-sizing: border-box;
 					position: relative;
 					
-					text{
+					.text{
 						width: 100%;
 						overflow: hidden;
 						text-overflow: ellipsis;

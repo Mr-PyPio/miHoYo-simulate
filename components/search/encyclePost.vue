@@ -4,7 +4,7 @@
 			<view class="edition">
 				<view class="editionTop">
 					<view class="editionTopLeft">
-						<image src="../../static/poseRequlay/screen.png" mode="widthFix"></image>
+						<image src="../../static/poseRequlay/screen.png" mode="widthFix" class="image"></image>
 						{{editionType}}
 					</view>
 					<view class="editionTopRight">
@@ -18,7 +18,7 @@
 				</view>
 			</view>
 			<view class="grid">
-				<image :src="gridSrc" mode="widthFix" @tap.stop="gridChange"></image>
+				<image :src="gridSrc" mode="widthFix" @tap.stop="gridChange" class="image"></image>
 			</view>
 			<view class="postList" v-if="wikisData">
 				<view class="wikisList">
@@ -49,6 +49,7 @@
 
 <script>
 	import {searchAllWiki} from '../../common/api.js'
+	import {mapState} from 'vuex'
 	export default {
 		name: 'encyclePost',
 		data() {
@@ -75,8 +76,9 @@
 				this.last_id = dataNew.last_id
 				this.is_last = dataNew.is_last
 				this.wikisData = dataNew.wikis
-				setTimeout(() => {
+				let timer = setTimeout(() => {
 					this.loading = false
+					clearTimeout(timer)
 				},300)
 			},
 			async scrollBottom() {
@@ -104,16 +106,11 @@
 				}
 			}
 		},
+		computed: {
+			...mapState(['windowHeight','rpxNum'])
+		},
 		created() {
-			uni.getSystemInfo({
-				success: res => {
-					const rpxNum = 750 / res.windowWidth
-					this.rpxNum = rpxNum
-					this.windowHeight = res.windowHeight * rpxNum
-					this.windowWidth = res.windowWidth * rpxNum
-					this.scrollHeight = this.windowHeight - 178 + 'rpx'
-				}
-			})
+			this.scrollHeight = this.windowHeight*this.rpxNum - 178 + 'rpx'
 		},
 	}
 </script>
@@ -145,7 +142,7 @@
 					border: 1px solid #f8f8f8;
 					box-sizing: border-box;
 					
-					image{
+					.image{
 						width: 24rpx;
 						margin-right: 10rpx;
 					}
@@ -179,7 +176,7 @@
 			padding: 0 24rpx 24rpx;
 			height: 40rpx;
 			
-			image{
+			.image{
 				float: right;
 				width: 40rpx;
 				height: 40rpx;

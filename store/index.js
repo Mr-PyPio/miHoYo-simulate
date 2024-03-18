@@ -3,12 +3,16 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
-import {emotionApi,emotionKeywordsApi} from "../common/api.js"
+import {emotionApi,emotionKeywordsApi} from "@/common/api.js"
 
 export default new Vuex.Store({
 	state: {
 		videoMute: false,
 		pageType: 1,
+		
+		windowHeight: 0,
+		rpxNum: 0,
+		windowWidth: 0,
 		
 		imgFixWrappShow: false,
 		imgList: [],
@@ -18,9 +22,23 @@ export default new Vuex.Store({
 		myselfUid: '19084220',
 		limitTime: Date.now(),
 		
-		actionPage: {}
+		actionPage: {},
+		
+		emotion: null,
+		emotionKey: null
 	},
 	mutations: {
+		updateEmotion(state,data) {
+			state.emotion = data
+		},
+		updateEmotionKey(state,data) {
+			state.emotionKey = data
+		},
+		updateWindowHeight(state,data) {
+			if(data.height) state.windowHeight = data.height
+			if(data.rpxNum) state.rpxNum = data.rpxNum
+			if(data.windowWidth) state.windowWidth = data.windowWidth
+		},
 		updateVideoMute(state,type) {
 			state.videoMute = type
 		},
@@ -48,4 +66,24 @@ export default new Vuex.Store({
 			state.actionPage = {}
 		},
 	},
+	actions: {
+		async initEmotionData({ commit }) {
+			const emotion = uni.getStorageSync('emotion')
+			const emotionKey = uni.getStorageSync('emotionKey')
+			if(emotion) {
+				commit('updateEmotion', emotion);
+			}else{
+				const {data: res} = await emotionApi()
+				uni.setStorageSync('emotion',res.data)
+				commit('updateEmotion', res.data);
+			}
+			if(emotionKey) {
+				commit('updateEmotionKey', emotionKey);
+			}else{
+				const {data: res} = await emotionKeywordsApi()
+				uni.setStorageSync('emotionKey',res.data)
+				commit('updateEmotionKey', res.data);
+			}
+		},
+	}
 })

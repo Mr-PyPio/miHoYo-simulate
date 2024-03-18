@@ -3,7 +3,7 @@
 		<view  class="videoContent" :class="'videoContent'+itemData.id">
 			<view class="videoItems" v-for="(pop,index) in itemData.list"  :key="pop.content_id" v-if="index < 4">
 				<view class="itemsImage">
-					<image :src="pop.icon|imageUrlReset(120,80)" mode="aspectFill" v-if="loading"></image>
+					<image :src="pop.icon|imageUrlReset(120,80)" mode="aspectFill" v-if="loading" class="image"></image>
 				</view>
 				<view class="itemsTitle">
 					{{pop.title}}
@@ -11,7 +11,7 @@
 				<view class="videoUser">
 					<view class="userRight">
 						<view class="userImg">
-							<image :src="pop.avatar_url|imageUrlReset(30,80)" mode="aspectFill" v-if="pop.avatar_url && loading"></image>
+							<image :src="pop.avatar_url|imageUrlReset(30,80)" mode="aspectFill" v-if="pop.avatar_url && loading" class="image"></image>
 						</view>
 						<view class="name" v-if="pop.article_user_name">
 							{{pop.article_user_name}}
@@ -83,7 +83,7 @@
 			border-radius: 6px;
 			overflow: hidden;
 			
-			image{
+			.image{
 				width: 100%;
 				height: 184rpx;
 			}
@@ -121,7 +121,7 @@
 					margin-right: 4px;
 					overflow: hidden;
 					
-					image{
+					.image{
 						width: 40rpx;
 						height: 40rpx;
 					}

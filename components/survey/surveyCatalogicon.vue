@@ -1,12 +1,12 @@
 <template>
 	<view class="mapIcon">
 		<view class="mapIconItems" v-for="(item,index) in mapShowData" :key="index" v-if="index < 7">
-			<image :src="item.ch_ext.value|imageUrlReset(60,80)" mode="aspectFit"></image>
-			<text>{{item.name}}</text>
+			<image :src="item.ch_ext.value|imageUrlReset(60,80)" mode="aspectFit" class="image"></image>
+			<text class="text">{{item.name}}</text>
 		</view>
 		<view class="mapIconItems">
-			<image src="../../static/survey/moreMap.png" mode="aspectFit"></image>
-			<text>更多</text>
+			<image src="../../static/survey/moreMap.png" mode="aspectFit" class="image"></image>
+			<text class="text">更多</text>
 		</view>
 	</view>
 </template>
@@ -42,13 +42,13 @@
 		flex-wrap: wrap;
 		padding-bottom: 15px;
 		
-		image{
+		.image{
 			width: 90rpx;
 			height: 90rpx;
 			margin-bottom: 5px;
 		}
 		
-		text{
+		.text{
 			display: block;
 			text-align: center;
 			width: 100%;

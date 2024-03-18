@@ -59,19 +59,16 @@
 		},
 		methods: {
 			navigateToUser(uid) {
-				uni.navigateTo({
-					url: `/subPackages/user/user?uid=${uid}`,
-				})
+				// uni.navigateTo({
+				// 	url: `/subPackages/user/user?uid=${uid}`,
+				// })
+				uni.$emit('navPage','user',uid)
 			},
 			navigatePostReplay(post_id,videoUrl) {
 				if(videoUrl) {
-					uni.navigateTo({
-						url: `/subPackages/postReplay/postReplay?post_id=${post_id}`,
-					})
+					uni.$emit('navPage','postReplay',post_id)
 				}else{
-					uni.navigateTo({
-						url: `/subPackages/artical/artical?post_id=${post_id}`,
-					})
+					uni.$emit('navPage','artical',post_id)
 				}
 			},
 			async followUser(userId) {

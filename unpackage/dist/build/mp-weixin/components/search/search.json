@@ -1,0 +1,9 @@
+{
+  "component": true,
+  "usingComponents": {
+    "u--input": "/node-modules/uview-ui/components/u--input/u--input",
+    "u-icon": "/node-modules/uview-ui/components/u-icon/u-icon",
+    "search-post": "/components/search/searchPost",
+    "img-pop-up": "/components/common/imgPopUp"
+  }
+}

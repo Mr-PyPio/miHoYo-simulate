@@ -1,7 +1,23 @@
 <script>
+	import {mapMutations,mapActions} from 'vuex'
 	export default {
+		methods: {
+			...mapMutations(['updateWindowHeight','updateEmotion','updateEmotionKey']),
+			...mapActions(['initEmotionData'])
+		},
 		onLaunch: function() {
-			console.log('App Launch')
+			uni.getSystemInfo({
+				success: res => {
+					const rpxNum = 750 / res.windowWidth
+					this.updateWindowHeight({
+						height:res.windowHeight,
+						rpxNum: rpxNum,
+						windowWidth: res.windowWidth
+					})
+					uni.hideTabBar()
+					this.initEmotionData()
+				}
+			})
 		},
 		onShow: function() {
 			console.log('App Show')

@@ -135,13 +135,13 @@
 			swiperContentHeight() {
 				let height = ''
 				// #ifdef MP-WEIXIN
-					height = this.windowHeight*this.rpxNum - 190  + 'rpx'
+					height = this.windowHeight*this.rpxNum - 170  + 'rpx'
 				// #endif
 				// #ifdef WEB
 					if(this.showCategoryMode) {
-						height = this.windowHeight*this.rpxNum - 160  + 'rpx'
+						height = this.windowHeight*this.rpxNum - 60  + 'rpx'
 					}else{
-						height = this.windowHeight*this.rpxNum - 150  + 'rpx'
+						height = this.windowHeight*this.rpxNum - 50 + 'rpx'
 					}
 				// #endif
 				return height

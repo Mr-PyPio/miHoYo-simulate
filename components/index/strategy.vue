@@ -6,7 +6,7 @@
 		<view class="content"  :style="{'padding-top': indexChangePadding}" v-if="!pageLoading">
 			<view class="top_tab" v-if="topTabList.length">
 				<view v-for="(item,index) in topTabList" :key="index"  class="tab_items">
-					<image :src="item.icon" mode="aspectFill"></image>
+					<image :src="item.icon" mode="aspectFill" class="image"></image>
 					<view class="tab_name">
 						{{item.name}}
 					</view>
@@ -27,9 +27,9 @@
 				<view class="consultDiscoverItem" v-for="(item,index) in tavernPostList" :key="item.post.post_id">
 					<PostItems :item="item"></PostItems>
 					<view v-if="index === 2 && swiperBanner.length > 0" class="swiper_banner">
-						<swiper :display-multiple-items="2">
+						<swiper :display-multiple-items="2" :style="{'height': '158rpx'}">
 							<swiper-item v-for="(banner,bannerIndex) in swiperBanner" :key="bannerIndex">
-								<image :src="banner.image_url" mode="aspectFill"></image>
+								<image :src="banner.image_url" mode="aspectFill" class="image"></image>
 							</swiper-item>
 						</swiper>
 					</view>
@@ -86,7 +86,6 @@ import {mapState,mapGetters,mapMutations} from "vuex"
 			...mapMutations(['updateScrollProp','swiperChange']),
 			async getStrategyTopTabApi() {
 				const {data:res} = await strategyTopTabApi()
-				console.log(res,'TabApi')
 				this.topTabList = res.data.navigators
 				if(this.pageLoading) {
 					this.pageLoading = false
@@ -98,7 +97,6 @@ import {mapState,mapGetters,mapMutations} from "vuex"
 				this.topics = res.data.topics
 				this.sortConfig = res.data.forum_sort_config
 				this.swiperBanner = res.data.banners
-				console.log(res,'strategy1')
 			},
 			async getStrategyPostList(page,sort_type,page_size, callBack) {
 				const {data:res} = await strategyPostList(page,page_size,sort_type)
@@ -109,7 +107,6 @@ import {mapState,mapGetters,mapMutations} from "vuex"
 					list = res.data.list
 				}
 				this.tavernPostList = list
-				console.log(list,'strategy2',sort_type)
 				if(callBack) callBack()
 			},
 			async updateStrategyPostList(page,sort_type,page_size=20) {
@@ -122,7 +119,6 @@ import {mapState,mapGetters,mapMutations} from "vuex"
 				}
 				const newList = list
 				this.tavernPostList.push(...newList)
-				console.log(list,'strategy2',sort_type)
 			},
 			scroll(e) {
 				// if(this.swiperHeight) {
@@ -196,7 +192,7 @@ import {mapState,mapGetters,mapMutations} from "vuex"
 				justify-content: center;
 				flex-wrap: wrap;
 				
-				image{
+				.image{
 					width: 80rpx;
 					height: 80rpx;
 					margin: 0 auto;
@@ -247,11 +243,7 @@ import {mapState,mapGetters,mapMutations} from "vuex"
 					border-top:  6px solid #f8f8f8;
 					border-radius: 8px;
 					
-					swiper{
-						height: 158rpx;
-					}
-					
-					image{
+					.image{
 						width: 340rpx;
 						height: 158rpx;
 						border-radius: 8px;

@@ -129,9 +129,10 @@
 				}
 			},
 			search(keyword) {
-				uni.navigateTo({
-					url: `/subPackages/search/search?keyword=${keyword}`,
-				})
+				// uni.navigateTo({
+				// 	url: `/subPackages/search/search?keyword=${keyword}`,
+				// })
+				uni.$emit('navPage','search',keyword)
 			}
 		},
 		created() {

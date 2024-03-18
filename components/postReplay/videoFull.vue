@@ -1,5 +1,5 @@
 <template>
-	<view class="vodieList" :class="{'fixed': video.initEnd}" v-if="video.videoUrl" :style="{'height': video.videoHeight +'rpx','top': 0}">
+	<view class="vodieList" :class="{'fixed': video.initEnd}" v-if="video.videoUrl" :style="{'height': video.videoHeight +'rpx','top': video.top}">
 		<view :style="{'width': '100%', 'height': video.videoHeight +'rpx'}" class="videoBackgroung">
 			<video :src="video.videoUrl"  :id="'video'+ video.videoId" :class="'videoDetail'+video.videoId"  :ref="'video'+ video.videoId"
 				:autoplay="true" :muted="video.videoMute" :initial-time="video.currentTime" :loop="false"
@@ -39,13 +39,13 @@
 		 			+ 关注
 		 		</view>
 		 		<view class="replayVideo" @tap.stop="replayVideo">
-		 			<image src="../../static/replay.png" mode="aspectFill"></image>
+		 			<image src="../../static/replay.png" mode="aspectFill" class="image"></image>
 		 			重播
 		 		</view>
 		 	</view>
 			
 			<view class="is_following" v-if="is_following" @tap.stop="replayVideo">
-				<image class="mhy-video-player-svg-icon" src="../../static/videoReply.png" mode="widthFix"></image>
+				<image class="mhy-video-player-svg-icon" src="../../static/videoReply.png" mode="widthFix" ></image>
 				<view class="">
 					重新播放
 				</view>
@@ -55,6 +55,7 @@
 </template>
 
 <script>
+	import {mapState} from 'vuex'
 	export default{
 		props: {
 			videoData:{
@@ -88,13 +89,14 @@
 					initHeight: 0,
 					initEnd: false,
 					heightIsChange: false,
-					miniHeight: 600
+					miniHeight: 600,
+					top: 0
 				}, 
 				is_following: this.userData.is_following,
-				windowHeight: 0,
-				windowWidth: 0,
-				rpxNum: 2
 			}
+		},
+		computed: {
+			...mapState(['windowHeight','rpxNum','windowWidth'])
 		},
 		created() {
 			const currentTime =  this.videoData.currentTime
@@ -102,14 +104,9 @@
 			if(durationTime != currentTime) {
 				this.video.currentTime = currentTime
 			}
-			uni.getSystemInfo({
-				success: res => {
-					const rpxNum = 750 / res.windowWidth
-					this.rpxNum = rpxNum
-					this.windowHeight = res.windowHeight * rpxNum
-					this.windowWidth = res.windowWidth * rpxNum
-				}
-			})
+			// #ifdef MP-WEIXIN
+			this.video.top = '170rpx'
+			// #endif
 			this.resetWH()
 		},
 		methods: {
@@ -171,8 +168,8 @@
 						resolutions = video.resolutions[0]
 					}
 					this.video.aspectRatio = resolutions.width / resolutions.height
-					const InitHeight = this.windowWidth / this.video.aspectRatio
-					const MaxHeight = parseInt(this.windowHeight * 0.6)
+					const InitHeight = this.windowWidth*this.rpxNum / this.video.aspectRatio
+					const MaxHeight = parseInt(this.windowHeight*this.rpxNum * 0.6)
 					if(InitHeight > MaxHeight) {
 						this.video.videoHeight = MaxHeight
 						this.video.videoWidth = this.video.videoHeight * this.video.aspectRatio
@@ -215,7 +212,7 @@
 				this.$emit('followUser',userId)
 			},
 			entryUserHome(userId) {
-				console.log(userId)
+				uni.$emit('navPage','user',userId)
 			},
 			scrollHeightChange(top) {
 				let change = false
@@ -241,7 +238,7 @@
 		width: 750rpx;
 		
 		&.fixed{
-			position: fixed;
+			position: absolute;
 			left: 0;
 			z-index: 100;
 		}
@@ -312,10 +309,6 @@
 			border-radius: 4px;
 		}
 		
-		video{
-			width: 100%;
-		}
-		
 		.videoEndedWrap{
 			position: absolute;
 			left: 0;
@@ -382,7 +375,7 @@
 				width: 70px;
 				margin: 0 auto;
 				
-				image{
+				.image{
 					width: 12px;
 					height: 12px;
 					margin-right: 3px;

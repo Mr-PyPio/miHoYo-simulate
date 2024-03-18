@@ -5,14 +5,14 @@
 		<view class="latestWrapper">
 			<view class="latestItems" v-for="(item,index) in newData.list" :key="index" v-if="index < 6">
 				<view class="itemsImage">
-					<image :src="item.icon|imageUrlReset(100,80)" mode="aspectFill" v-if="loading"></image>
+					<image :src="item.icon|imageUrlReset(100,80)" mode="aspectFill" v-if="loading" class="image"></image>
 				</view>
 				<view class="itemRight">
 					<view class="title">{{item.title}}</view>
 					<view class="articleUser">
 						<view class="userRight">
 							<view class="userImage">
-								<image :src="item.avatar_url|imageUrlReset(36,80)" mode="aspectFill" v-if="loading"></image>
+								<image :src="item.avatar_url|imageUrlReset(36,80)" mode="aspectFill" v-if="loading" class="image"></image>
 							</view>
 							<view class="name">
 								{{item.article_user_name}}
@@ -76,9 +76,6 @@
 				}
 			}
 		},
-		created() {
-			console.log(this.latestData)
-		},
 		mounted() {
 			this.$nextTick(function() {
 				this.intersectionObserver = uni.createIntersectionObserver(this);
@@ -118,7 +115,7 @@
 			margin-right: 24rpx;
 			overflow: hidden;
 			
-			image{
+			.image{
 				width: 240rpx;
 				height: 136rpx;
 			}
@@ -159,7 +156,7 @@
 						margin-right: 4px;
 						overflow: hidden;
 						
-						image{
+						.image{
 							width: 40rpx;
 							height: 40rpx;
 						}
