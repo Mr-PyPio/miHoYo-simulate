@@ -1,1 +1,0 @@
-<view class="cardGroup data-v-b07abac4"><module-title vue-id="1ffef1da-1" moduleTitle="{{moduleTitle}}" class="data-v-b07abac4" bind:__l="__l"></module-title><tab-swiper-one vue-id="1ffef1da-2" swiperData="{{newData}}" tabList="{{tabList}}" class="data-v-b07abac4" bind:__l="__l"></tab-swiper-one></view>

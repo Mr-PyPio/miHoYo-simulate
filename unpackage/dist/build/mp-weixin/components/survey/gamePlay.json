@@ -1,7 +1,0 @@
-{
-  "component": true,
-  "usingComponents": {
-    "module-title": "/components/survey/moduleTitle",
-    "lazy-image-two": "/components/common/lazyImageTwo"
-  }
-}

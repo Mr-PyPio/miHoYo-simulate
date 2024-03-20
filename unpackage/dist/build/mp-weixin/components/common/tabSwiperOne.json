@@ -1,6 +1,0 @@
-{
-  "component": true,
-  "usingComponents": {
-    "recommend-items": "/components/common/recommendItems"
-  }
-}

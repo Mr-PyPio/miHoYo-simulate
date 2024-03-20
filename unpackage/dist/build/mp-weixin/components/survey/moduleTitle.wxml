@@ -1,1 +1,0 @@
-<block wx:if="{{moduleTitle}}"><view class="title data-v-ef98baf2"><image class="image data-v-ef98baf2" src="{{moduleTitle.src}}" mode="aspectFit"></image>{{''+moduleTitle.name+''}}<view class="more data-v-ef98baf2">更多</view></view></block>

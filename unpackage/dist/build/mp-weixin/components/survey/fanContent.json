@@ -1,7 +1,0 @@
-{
-  "component": true,
-  "usingComponents": {
-    "module-title": "/components/survey/moduleTitle",
-    "recommend-video-items": "/components/common/recommendVideoItems"
-  }
-}

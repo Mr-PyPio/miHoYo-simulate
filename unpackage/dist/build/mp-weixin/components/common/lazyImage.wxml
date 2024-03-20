@@ -1,1 +1,0 @@
-<block wx:if="{{imageData}}"><view class="imageWrap data-v-64b7bd1c"><image class="{{['image','data-v-64b7bd1c','lazyImageDetail'+imageData.image_id]}}" style="{{'height:'+(imageHeight+'px')+';'}}" src="{{$root.f0}}" mode="{{mode}}" lazy-load="{{true}}"></image></view></block>

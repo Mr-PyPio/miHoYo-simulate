@@ -1,7 +1,0 @@
-{
-  "component": true,
-  "usingComponents": {
-    "u-loading-icon": "/node-modules/uview-ui/components/u-loading-icon/u-loading-icon",
-    "user-items": "/components/search/userItems"
-  }
-}
