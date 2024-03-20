@@ -1,34 +1,32 @@
 <template>
-	<view>
-		<!-- #ifdef WEB -->
+	<view class="messageContent">
 		<view class="topTab">
 			消息
 		</view>
-		<!-- #endif -->
 		
-		<scroll-view scroll-y="true" :style="{'height': windowHeight*rpxNum - 80 + 'rpx'}">
+		<scroll-view scroll-y="true" style="height: 100%">
 			<view class="content">
 				<view class="tipcs">
 					<view class="tipcsItems">
-						<image src="../../static/message/replay.png" mode="widthFix" class="icon"></image>
+						<image :src="imageBaseUrl + 'message/replay.png'" mode="widthFix" class="icon"></image>
 						<view class="">
 							回复我的
 						</view>
 					</view>
 					<view class="tipcsItems">
-						<image src="../../static/message/callMe.png" mode="widthFix" class="icon"></image>
+						<image :src="imageBaseUrl + 'message/callMe.png'" mode="widthFix" class="icon"></image>
 						<view class="">
 							@我的
 						</view>
 					</view>
 					<view class="tipcsItems">
-						<image src="../../static/message/zan.png" mode="widthFix" class="icon"></image>
+						<image :src="imageBaseUrl + 'message/zan.png'" mode="widthFix" class="icon"></image>
 						<view class="">
 							收到的赞
 						</view>
 					</view>
 					<view class="tipcsItems">
-						<image src="../../static/message/subscribe.png" mode="widthFix" class="icon"></image>
+						<image :src="imageBaseUrl + 'message/subscribe.png'" mode="widthFix" class="icon"></image>
 						<view class="">
 							订阅通知
 						</view>
@@ -36,7 +34,7 @@
 				</view>
 				
 				<view class="reviewEnd" v-if="lzReviewReply">
-					<image src="../../static/poseRequlay/noreply.png" mode="widthFix" class="image"></image>
+					<image :src="imageBaseUrl + 'poseRequlay/noreply.png'" mode="widthFix" class="image"></image>
 					<view class="text">
 						暂时还没有收到私信消息哦
 					</view>
@@ -55,14 +53,24 @@
 			};
 		},
 		computed: {
-			...mapState(['windowHeight','rpxNum'])
+			...mapState(['windowHeight','rpxNum','imageBaseUrl'])
 		},
 		onLoad() {
+			let timer = setTimeout(() => {
+				this.coverImageShow = false
+				uni.showTabBar()
+				clearTimeout(timer)
+			},500)
 		}
 	}
 </script>
 
 <style lang="scss" scoped>
+	.messageContent{
+		/* #ifdef MP-WEIXIN */
+		padding-top: 90rpx;
+		/* #endif */
+	}
 	.topTab{
 		height: 80rpx;
 		width: 100%;
@@ -74,6 +82,7 @@
 	
 	.content{
 		overflow: hidden;
+		
 		
 		.tipcs{
 			display: flex;

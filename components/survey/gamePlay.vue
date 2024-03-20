@@ -45,7 +45,7 @@
 		data() {
 			return {
 				moduleTitle: {
-					src: '../../static/survey/game.png',
+					src: 'http://8.138.116.67:5230/miyoushe/survey/game.png',
 					url: '',
 					name: '玩法探索'
 				}
@@ -127,7 +127,7 @@
 					display: block;
 					width: 12px;
 					height: 12px;
-					background-image: url("../../static/survey/miniIcon.png");
+					background-image: url("http://8.138.116.67:5230/miyoushe/survey/miniIcon.png");
 					background-repeat: no-repeat;
 					background-size: 12px 12px;
 				}
@@ -137,7 +137,7 @@
 					display: block;
 					width: 12px;
 					height: 12px;
-					background-image: url("../../static/survey/miniIcon.png");
+					background-image: url("http://8.138.116.67:5230/miyoushe/survey/miniIcon.png");
 					background-repeat: no-repeat;
 					background-size: 12px 12px;
 				}
@@ -168,7 +168,7 @@
 						display: block;
 						width: 12px;
 						height: 12px;
-						background-image: url("../../static/survey/miniIcon2.png");
+						background-image: url("http://8.138.116.67:5230/miyoushe/survey/miniIcon2.png");
 						background-repeat: no-repeat;
 						background-size: 12px 12px;
 						position: absolute;

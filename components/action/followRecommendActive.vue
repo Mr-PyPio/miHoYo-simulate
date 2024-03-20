@@ -16,7 +16,7 @@
 						<view class="userImage">
 							<image :src="item.user.avatar_url|imageUrlReset(50,80)" mode="aspectFill" class="userAvatarImage" :lazy-load="true"></image>
 							<image v-if="item.user.certification && item.user.certification.type"
-								:src="`../../static/poseRequlay/certificate${item.user.certification.type}.png`" mode="widthFix" class="certificate">
+								:src="`${imageBaseUrl}poseRequlay/certificate${item.user.certification.type}.png`" mode="widthFix" class="certificate">
 							</image>
 						</view>
 						<view class="name overfllowOne">
@@ -62,7 +62,7 @@
 			}
 		},
 		computed: {
-			...mapState(['actionPage'])
+			...mapState(['actionPage','imageBaseUrl'])
 		},
 		methods: {
 			...mapMutations(['updateActionPage']),

@@ -25,7 +25,9 @@ export default new Vuex.Store({
 		actionPage: {},
 		
 		emotion: null,
-		emotionKey: null
+		emotionKey: null,
+		
+		imageBaseUrl : 'http://8.138.116.67:5230/miyoushe/'
 	},
 	mutations: {
 		updateEmotion(state,data) {

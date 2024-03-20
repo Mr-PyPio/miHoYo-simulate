@@ -1,88 +1,90 @@
 <template>
-	<view class="userContent" style="background: url('../../static/user/bgimg.png') no-repeat top/100%;">
-		<view class="userInfo">
-			<view v-if="userInfo">
-				<view class="fixedTop" :style="{'background': fixedTopBgColor}">
-					<view class="fixedLeft" v-if="fixedTopLogoShow">
-						<image :src="userInfo.avatar_url|imageUrlReset(200,80)" mode="aspectFill" class="fixedTopLogo"></image>
-						{{userInfo.nickname}}
+	<scroll-view scroll-y="true" :style="{'height' : scrollHeight}" @scroll="pageScroll">
+		<view class="userContent" :style="bigImage">
+			<view class="userInfo">
+				<view v-if="userInfo">
+					<view class="fixedTop" :style="{'background': fixedTopBgColor}">
+						<view class="fixedLeft" v-if="fixedTopLogoShow">
+							<image :src="userInfo.avatar_url|imageUrlReset(200,80)" mode="aspectFill" class="fixedTopLogo"></image>
+							{{userInfo.nickname}}
+						</view>
+						<view class="fixedRight">
+							<image src="../../static/set_icon.png" mode="widthFix" class="set"></image>
+							<image src="../../static/meun_icon.png" mode="widthFix" class="meun" @tap.stop="openMeun"></image>
+						</view>
 					</view>
-					<view class="fixedRight">
-						<image src="../../static/user/set_icon.png" mode="widthFix" class="set"></image>
-						<image src="../../static/user/meun_icon.png" mode="widthFix" class="meun" @tap.stop="openMeun"></image>
+					<view class="icon">
+						<image :src="userInfo.avatar_url|imageUrlReset(200,80)" mode="aspectFill" class="iconImg"></image>
 					</view>
-				</view>
-				<view class="icon">
-					<image :src="userInfo.avatar_url|imageUrlReset(200,80)" mode="aspectFill" class="iconImg"></image>
-				</view>
-				<view class="message">
-					<view class="name">{{userInfo.nickname}}</view>
-					<view class="uid">UID: {{userInfo.uid}}</view>
-					<view class="type">{{userInfo.introduce}}</view>
-				</view>
-				<view class="ip">
-					<view class="mapIcon">
-						<u-icon name="map" color="#ddd" size="32"></u-icon>
+					<view class="message">
+						<view class="name">{{userInfo.nickname}}</view>
+						<view class="uid">UID: {{userInfo.uid}}</view>
+						<view class="type">{{userInfo.introduce}}</view>
 					</view>
-					IP:{{userInfo.ip_region}}
-				</view>
-				<view class="achieve">
-					<view class="followed flex pr30">
-						<view class="number">
-							{{userInfo.achieve.followed_cnt}}
-						</view>粉丝</view>
-					<view class="followimg flex pr30">
-						<view class="number">
-							{{userInfo.achieve.follow_cnt}}
-						</view>关注</view>
-					<view class="like flex">
-						<view class="number">
-							{{userInfo.achieve.like_num}}
-						</view>获赞</view>
+					<view class="ip">
+						<view class="mapIcon">
+							<u-icon name="map" color="#ddd" size="32"></u-icon>
+						</view>
+						IP:{{userInfo.ip_region}}
+					</view>
+					<view class="achieve">
+						<view class="followed flex pr30">
+							<view class="number">
+								{{userInfo.achieve.followed_cnt}}
+							</view>粉丝</view>
+						<view class="followimg flex pr30">
+							<view class="number">
+								{{userInfo.achieve.follow_cnt}}
+							</view>关注</view>
+						<view class="like flex">
+							<view class="number">
+								{{userInfo.achieve.like_num}}
+							</view>获赞</view>
+					</view>
 				</view>
 			</view>
+			<scroll-view :scroll-x="true" :style="{'height' : '169rpx'}">
+				<view class="gameList" v-if="gameCard">
+					<view class="gameCard" v-for="(item,index) in gameCard" :key="index">
+						<view class="gameDetail" :style="{'background': `url(${item.background_image_v2}) no-repeat top/100%`}">
+							<view class="gameInfo">
+								<image :src="fittlerImageSrc(item.game_id)" mode="widthFix" class="gameLogo"></image>
+								<view class="level">
+									<view class="name">{{item.nickname}}</view>
+									<view class="gameLevel">
+										{{item.region_name}} Lv.{{item.level}}
+									</view>
+								</view>
+							</view>
+							<view class="gamePlay">
+								<view class="gamePlayData" v-for="(item2,index2) in item.data" :key="index2">
+									<view class="number">
+										{{item2.value}}
+									</view>
+									<view class="desc">
+										{{item2.name}}
+									</view>
+								</view>
+							</view>
+						</view>
+					</view>
+					<view class="gameManage">
+						<view class="gameManageSpan">
+							角色管理
+						</view>
+					</view>·
+				</view>
+			</scroll-view>
+			
+			<user-about :uid = "uid" ></user-about>
+			
+			<user-popup :uid = "uid" ref="userPopup"></user-popup>
+			
+			<img-pop-up ></img-pop-up>
+			
+			<ListenOtherModul></ListenOtherModul>
 		</view>
-		<scroll-view :scroll-x="true" :style="{'height' : '169rpx'}">
-			<view class="gameList" v-if="gameCard">
-				<view class="gameCard" v-for="(item,index) in gameCard" :key="index">
-					<view class="gameDetail" :style="{'background': `url(${item.background_image_v2}) no-repeat top/100%`}">
-						<view class="gameInfo">
-							<image :src="fittlerImageSrc(item.game_id)" mode="widthFix" class="gameLogo"></image>
-							<view class="level">
-								<view class="name">{{item.nickname}}</view>
-								<view class="gameLevel">
-									{{item.region_name}} Lv.{{item.level}}
-								</view>
-							</view>
-						</view>
-						<view class="gamePlay">
-							<view class="gamePlayData" v-for="(item2,index2) in item.data" :key="index2">
-								<view class="number">
-									{{item2.value}}
-								</view>
-								<view class="desc">
-									{{item2.name}}
-								</view>
-							</view>
-						</view>
-					</view>
-				</view>
-				<view class="gameManage">
-					<view class="gameManageSpan">
-						角色管理
-					</view>
-				</view>·
-			</view>
-		</scroll-view>
-		
-		<user-about :uid = "uid" ></user-about>
-		
-		<user-popup :uid = "uid" ref="userPopup"></user-popup>
-		
-		<img-pop-up ></img-pop-up>
-		
-		<ListenOtherModul></ListenOtherModul>
-	</view>
+	</scroll-view>
 </template>
 
 <script>
@@ -109,7 +111,16 @@
 			}
 		},
 		computed: {
-			...mapState(['myselfData'])
+			...mapState(['myselfData','imageBaseUrl','windowHeight','rpxNum']),
+			bigImage() {
+				return  `background: url('${this.imageBaseUrl}user/bgimg.png') no-repeat top/100%;`
+			},
+			scrollHeight() {
+				// #ifdef MP-WEIXIN
+				return this.windowHeight + 'px'
+				// #endif
+				return this.windowHeight - 50 + 'px'
+			}
 		},
 		methods: {
 			...mapMutations(['updateMyselfData']),
@@ -131,18 +142,28 @@
 				})
 			},
 			fittlerImageSrc(id) {
-				if(id === 2) return '../../static/user/ys.png'
-				if(id === 1) return '../../static/user/bh3.png'
-				if(id === 6) return '../../static/user/sr.png'
-				if(id === 3) return '../../static/user/bh2.png'
-				if(id === 4) return '../../static/user/wd.png'
-				if(id === 8) return '../../static/user/zzz.png'
+				if(id === 2) return this.imageBaseUrl + 'user/ys.png'
+				if(id === 1) return this.imageBaseUrl + 'user/bh3.png'
+				if(id === 6) return this.imageBaseUrl + 'user/sr.png'
+				if(id === 3) return this.imageBaseUrl + 'user/bh2.png'
+				if(id === 4) return this.imageBaseUrl + 'user/wd.png'
+				if(id === 8) return this.imageBaseUrl + 'user/zzz.png'
 			},
 			openMeun() {
 				this.$nextTick(function() {
 					this.$refs.userPopup.show = true
 				})
 			},
+			pageScroll(e){
+				const top = e.detail.scrollTop
+				if(top > 200) {
+					this.fixedTopBgColor = '#004887'
+					this.fixedTopLogoShow = true
+				}else{
+					this.fixedTopBgColor = 'rgba(0, 0, 0, 0.0)'
+					this.fixedTopLogoShow = false
+				}
+			}
 		},
 		onLoad() {
 			if(this.myselfData.userInfo) {
@@ -156,16 +177,6 @@
 				this.getGameCard()
 			}
 		},
-		onPageScroll: function(e) {
-			const top = e.scrollTop
-			if(top > 200) {
-				this.fixedTopBgColor = '#004887'
-				this.fixedTopLogoShow = true
-			}else{
-				this.fixedTopBgColor = 'rgba(0, 0, 0, 0.0)'
-				this.fixedTopLogoShow = false
-			}
-		}
 }
 </script>
 
@@ -178,6 +189,10 @@
 		color: rgba(255, 255, 255, 0.6);
 		font-size: 24rpx;
 		
+		/* #ifdef MP-WEIXIN */
+		padding-top: 270rpx;
+		/* #endif */
+		
 		.fixedTop{
 			position: fixed;
 			left: 0;
@@ -187,6 +202,10 @@
 			z-index: 10;
 			display: flex;
 			align-items: center;
+			/* #ifdef MP-WEIXIN */
+			padding-top: 90rpx;
+			/* #endif */
+			
 			
 			.fixedLeft{
 				display: flex;
@@ -213,6 +232,10 @@
 				transform: translateY(-50%);
 				display: flex;
 				align-items: center;
+				/* #ifdef MP-WEIXIN */
+				padding-top: 90rpx;
+				margin-right: 200rpx;
+				/* #endif */
 				
 				.meun{
 					width: 40rpx;

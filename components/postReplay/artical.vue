@@ -39,7 +39,7 @@
 							<image :src="userData.avatar_url|imageUrlReset(50,80)" mode="aspectFill" class="userAvatarImage"></image>
 							<image :src="userData.pendant|imageUrlReset(50,80)" mode="aspectFill" class="userAvatarFrameImage" v-if="userData.pendant"></image>
 								<image v-if="userData.certification && userData.certification.type"
-								:src="`../../static/poseRequlay/certificate${userData.certification.type}.png`" mode="widthFix" class="certificate">
+								:src="`${imageBaseUrl}poseRequlay/certificate${userData.certification.type}.png`" mode="widthFix" class="certificate">
 							</image>
 						</view>
 						<view class="userMessage">
@@ -105,7 +105,7 @@
 						:class="{'active': choose_upvote_type === index + 1}"
 						v-for="(item,index) in postDetail.stat.post_upvote_stat" :key="index">
 							<view class="imagLogo">
-								<image :src="'../../static/poseRequlay/post_upvote_stat_'+ (index + 1) +'.png'" mode="heightFix" class="image"></image>
+								<image :src="imageBaseUrl + 'poseRequlay/post_upvote_stat_'+ (index + 1) +'.png'" mode="heightFix" class="image"></image>
 							</view>
 							<view class="num">
 								{{item.upvote_cnt|resetNum}}
@@ -170,7 +170,7 @@
 				</view>
 			</view>
 		</template>
-		<image src="../../static/search/loading1.gif" mode="aspectFit" class="loading" v-if="pageLoading"></image>
+		<image src="http://8.138.116.67:5230/miyoushe/search/loading1.gif" mode="aspectFit" class="loading" v-if="pageLoading"></image>
 	</view>
 </template>
 
@@ -218,8 +218,12 @@
 				scrollTop: 0,
 				reviewsTopFixed: 'none',
 				fixTop: 0,
-				bookUrl:'../../static/poseRequlay/book.png',
-				likeUrl:'../../static/poseRequlay/like1.png',
+				bookUrl:'http://8.138.116.67:5230/miyoushe/poseRequlay/book.png',
+				bookUrl1:'http://8.138.116.67:5230/miyoushe/poseRequlay/book.png',
+				bookUrl2:'http://8.138.116.67:5230/miyoushe/poseRequlay/book2.png',
+				likeUrl:'http://8.138.116.67:5230/miyoushe/poseRequlay/like1.png',
+				likeUrl1:'http://8.138.116.67:5230/miyoushe/poseRequlay/like1.png',
+				likeUrl2:'http://8.138.116.67:5230/miyoushe//poseRequlay/like2.png',
 				forumType: null,
 				swiperCurrent: 0,
 				swiperOldCurrent: 0,
@@ -239,7 +243,7 @@
 			this.getPostFullData()
 		},
 		computed: {
-			...mapState(['windowHeight','rpxNum','emotion','emotionKey'])
+			...mapState(['windowHeight','rpxNum','emotion','emotionKey','imageBaseUrl'])
 		},
 		methods: {
 			async getPostFullData() {
@@ -260,16 +264,16 @@
 				}
 				this.choose_upvote_type = this.postDetail.self_operation.upvote_type
 				if(this.is_collected) {
-					this.bookUrl = '../../static/poseRequlay/book2.png'
+					this.bookUrl = this.bookUrl2
 				}else{
-					this.bookUrl = '../../static/poseRequlay/book.png'
+					this.bookUrl = this.bookUrl1
 				}
 				if(this.choose_upvote_type === 0) {
-					this.likeUrl = '../../static/poseRequlay/like1.png'
+					this.likeUrl = this.likeUrl1
 				}else if(this.choose_upvote_type === 1) {
-					this.likeUrl = '../../static/poseRequlay/like2.png'
+					this.likeUrl = this.likeUrl2
 				}else{
-					this.likeUrl = `../../static/poseRequlay/post_upvote_stat_${this.choose_upvote_type}.png`
+					this.likeUrl = `${this.imageBaseUrl}poseRequlay/post_upvote_stat_${this.choose_upvote_type}.png`
 				}
 				this.reviewsTop.reviewNum = this.postDetail.stat.reply_num
 				const video = this.postDetail.vod_list[0]
@@ -311,13 +315,13 @@
 				if(res.message === 'OK') {
 					if(is_cancel) {
 						this.choose_upvote_type = 0
-						this.likeUrl = '../../static/poseRequlay/like1.png'
+						this.likeUrl = this.likeUrl1
 					}else{
 						this.choose_upvote_type = type
 						if(type === 1) {
-							this.likeUrl = '../../static/poseRequlay/like2.png'
+							this.likeUrl = this.likeUrl2
 						}else{
-							this.likeUrl = `../../static/poseRequlay/post_upvote_stat_${type}.png`
+							this.likeUrl = `${this.imageBaseUrl}poseRequlay/post_upvote_stat_${type}.png`
 						}
 					}
 				}
@@ -338,9 +342,9 @@
 				if(res.message === 'OK') {
 					this.is_collected = !is_collected
 					if(this.is_collected) {
-						this.bookUrl = '../../static/poseRequlay/book2.png'
+						this.bookUrl = this.bookUrl2
 					}else{
-						this.bookUrl = '../../static/poseRequlay/book.png'
+						this.bookUrl = this.bookUrl1
 					}
 				}
 			},

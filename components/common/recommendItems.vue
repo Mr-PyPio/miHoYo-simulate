@@ -10,7 +10,7 @@
 					<image :src="pop.icon|imageUrlReset(50,80)" mode="aspectFill" v-if="loading" class="image"></image>
 				</view>
 				<view class="line"></view>
-				<view class="itemRecImage">
+				<view class="itemRecImage" :style="imageBaseUrl + 'survey/itemRecImage.png'">
 					<view class="itemRecImageWrapp"  v-if="loading">
 						<image v-for="(item,index) in pop.ext.list" :key="index"  class="image"
 							:src="item|imageUrlReset(36,80)" mode="aspectFill"></image>
@@ -22,6 +22,7 @@
 </template>
 
 <script>
+	import {mapState} from 'vuex'
 	export default {
 		name:"recommendItems",
 		props: {
@@ -37,6 +38,9 @@
 					return 0
 				}
 			}
+		},
+		computed: {
+			...mapState(['imageBaseUrl'])
 		},
 		data() {
 			return {
@@ -57,7 +61,7 @@
 			height: 184rpx;
 			padding: 20rpx 16rpx 24rpx;
 			box-sizing: border-box;
-			background-image: url("../../static/survey/itemsBg.png");
+			background-image: url("http://8.138.116.67:5230/miyoushe/survey/itemsBg.png");
 			background-repeat: no-repeat;
 			background-size: 336rpx 184rpx;
 			margin-bottom: 20rpx;
@@ -72,7 +76,7 @@
 			}
 			
 			.cardLine{
-				background-image: url("../../static/survey/line.png");
+				background-image: url("http://8.138.116.67:5230/miyoushe/survey/line.png");
 				background-size: 100% 12rpx;
 				background-repeat: no-repeat;
 				margin: 4rpx 0 8rpx;
@@ -100,7 +104,7 @@
 						display: block;
 						width: 68rpx;
 						height: 68rpx;
-						background-image: url("../../static/survey/imgBox.png");
+						background-image: url("http://8.138.116.67:5230/miyoushe/survey/imgBox.png");
 						background-size: 68rpx 68rpx;
 						position: absolute;
 						top: 0;
@@ -120,7 +124,6 @@
 					box-sizing: border-box;
 					width: 206rpx;
 					height: 68rpx;
-					background-image: url("../../static/survey/itemRecImage.png");
 					background-size: 206rpx 68rpx;
 					background-repeat: no-repeat;
 					

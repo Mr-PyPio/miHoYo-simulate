@@ -6,6 +6,9 @@ import './uni.promisify.adaptor'
 import store from './store/index.js'
 App.mpType = 'app'
 
+import CoverLoadingImage from './components/common/coverLoadingImage.vue'
+
+Vue.component('CoverLoadingImage', CoverLoadingImage);
 
 Vue.mixin({
   filters: {
@@ -42,6 +45,7 @@ Vue.mixin({
 	  }
   }
 })
+
 
 import uView from 'uview-ui'
 Vue.use(uView)

@@ -12,12 +12,12 @@
 				<view class="texShadow" v-if="texShadow">
 					{{texShadow}}
 				</view>
+				<view class="close" v-if="inputKey" @tap.stop="cancleSearchClick">
+					<u-icon name="close-circle" color="#909399" size="24"></u-icon>
+				</view>
 			</view>
 			<view class="cancelSearch" @tap.stop='goBack'>
 				取消
-			</view>
-			<view class="close" v-if="serachKey" @tap.stop="cancleSearchClick">
-				<u-icon name="close-circle" color="#909399" size="24"></u-icon>
 			</view>
 		</view>
 		<template v-show="!hasPost">
@@ -294,6 +294,7 @@
 		// #endif
 		
 		.searchInput{
+			position: relative;
 			background: #fff;
 			border-radius: 4px;
 			padding: 4rpx 8rpx;
@@ -314,24 +315,26 @@
 				height: 48rpx;
 				line-height: 48rpx;
 			}
+			
+			
+			.close{
+				position: absolute;
+				width: 56rpx;
+				height: 56rpx;
+				right: 16rpx;
+				top: 0;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				z-index: 100;
+			}
 		}
 		
 		.cancelSearch{
 			font-size: 24rpx;
 			color: #222;
 		}
-		
-		.close{
-			position: absolute;
-			width: 56rpx;
-			height: 56rpx;
-			left: 586rpx;
-			top: 30rpx;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			z-index: 100;
-		}
+
 	}
 	
 	.otherContent{

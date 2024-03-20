@@ -69,10 +69,10 @@
 			</view>
 		</view>
 		<view class="reviewEnd" v-if="allShow">
-			<image src="../../static/poseRequlay/reviewEnd.png" mode="widthFix"  class="image"></image>
+			<image :src="imageBaseUrl + 'poseRequlay/reviewEnd.png'" mode="widthFix"  class="image"></image>
 		</view>
 		<view class="noLimit" v-if="!limit">
-			<image src="../../static/user/noLimit.png" mode="widthFix" class="logo"></image>
+			<image :src="imageBaseUrl + 'user/noLimit.png'" mode="widthFix" class="logo"></image>
 		</view>
 	</scroll-view>
 </template>
@@ -81,6 +81,7 @@
 	import {getUserInstantList} from "../../common/api.js"
 	import ItemContent from '../../components/common/itemContent.vue'
 	import UserInstantItems2 from './userInstantItems2.vue'
+	import {mapState} from 'vuex'
 	export default {
 		components: {
 			ItemContent,
@@ -104,6 +105,7 @@
 			}
 		},
 		computed: {
+			...mapState(['imageBaseUrl']),
 			allShow() {
 				return this.is_last
 			},

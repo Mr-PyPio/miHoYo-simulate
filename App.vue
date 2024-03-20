@@ -14,7 +14,12 @@
 						rpxNum: rpxNum,
 						windowWidth: res.windowWidth
 					})
-					uni.hideTabBar()
+					// #ifdef WEB
+						uni.hideTabBar()
+					// #endif
+					// #ifdef MP-WEIXIN
+						wx.hideTabBar()
+					// #endif
 					this.initEmotionData()
 				}
 			})

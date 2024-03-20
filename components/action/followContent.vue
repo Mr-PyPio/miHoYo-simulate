@@ -10,7 +10,7 @@
 									<image :src="item.post.user.avatar_url|imageUrlReset(50,80)" mode="aspectFill" class="userAvatarImage" :lazy-load="true"></image>
 									<image :src="item.post.user.pendant|imageUrlReset(50,80)" :lazy-load="true" mode="aspectFill" class="userAvatarFrameImage" v-if="item.post.user.pendant"></image>
 									<image v-if="item.post.user.certification && item.post.user.certification.type"
-										:src="`../../static/poseRequlay/certificate${item.post.user.certification.type}.png`" mode="widthFix" class="certificate">
+										:src="`${imageBaseUrl}poseRequlay/certificate${item.post.user.certification.type}.png`" mode="widthFix" class="certificate">
 									</image>
 								</view>
 								<view class="userMessage">
@@ -56,7 +56,7 @@
 									<image :src="item.instant.user.avatar_url|imageUrlReset(50,80)" mode="aspectFill" class="userAvatarImage" :lazy-load="true"></image>
 									<image :src="item.instant.user.pendant|imageUrlReset(50,80)" :lazy-load="true" mode="aspectFill" class="userAvatarFrameImage" v-if="item.instant.user.pendant"></image>
 									<image v-if="item.instant.user.certification && item.instant.user.certification.type"
-										:src="`../../static/poseRequlay/certificate${item.instant.user.certification.type}.png`" mode="widthFix" class="certificate">
+										:src="`${imageBaseUrl}poseRequlay/certificate${item.instant.user.certification.type}.png`" mode="widthFix" class="certificate">
 									</image>
 								</view>
 								<view class="userMessage">
@@ -97,7 +97,7 @@
 				</template>
 			</view>
 			<view class="reviewEnd" v-if="allShow">
-				<image src="../../static/poseRequlay/reviewEnd.png" mode="widthFix"  class="image"></image>
+				<image :src="imageBaseUrl + 'poseRequlay/reviewEnd.png'" mode="widthFix"  class="image"></image>
 			</view>
 		</view>
 	</scroll-view>
@@ -125,7 +125,7 @@
 			}
 		},
 		computed: {
-			...mapState(['actionPage']),
+			...mapState(['actionPage','imageBaseUrl']),
 			allShow() {
 				return this.is_last
 			},

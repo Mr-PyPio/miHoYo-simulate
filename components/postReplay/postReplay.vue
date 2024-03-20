@@ -12,7 +12,7 @@
 					</view>
 					<view class="topRight" @tap.stop="showSort($event,'right')" v-show="reviewsTop.rightTop">
 						{{reviewsTop.rightText}}
-						<image src="../../static/poseRequlay/screen.png" mode="heightFix" class="image"></image>
+						<image src="../../static/screen.png" mode="heightFix" class="image"></image>
 					</view>
 				</view>
 				
@@ -27,7 +27,7 @@
 				:refresher-triggered="refresherTrg"  @refresherpulling="scrollPull" :scroll-with-animation='true'
 			>
 				<view :style="{'height': hiddenContainerHeight + 'rpx','width': '750rpx','position':'relative'}" v-if="hiddenContainerHeight">
-					<image src="../../static/poseRequlay/loading.gif" mode="heightFix" class="loadingGif">
+					<image :src="imageBaseUrl + 'poseRequlay/loading.gif'" mode="heightFix" class="loadingGif">
 					</image>
 				</view>
 				<view class="postContent" v-if="postDetail.post">
@@ -53,13 +53,13 @@
 						:class="{'active': choose_upvote_type === index + 1}"
 						v-for="(item,index) in postDetail.stat.post_upvote_stat" :key="index">
 							<view class="imagLogo">
-								<image :src="'../../static/poseRequlay/post_upvote_stat_'+ (index + 1) +'.png'" mode="heightFix" class="image"></image>
+								<image :src="imageBaseUrl + 'poseRequlay/post_upvote_stat_'+ (index + 1) +'.png'" mode="heightFix" class="image"></image>
 							</view>
 							<view class="num">
 								{{item.upvote_cnt|resetNum}}
 							</view>
 							<view class="interactionBiggerImageWrap" v-if="interactionBiggerImageType === index + 1">
-								<image :src="'../../static/poseRequlay/post_upvote_stat_'+ (index + 1) +'_active.png'" mode="widthFix" class="interactionBiggerImage"></image>
+								<image :src="imageBaseUrl + 'poseRequlay/post_upvote_stat_'+ (index + 1) +'_active.png'" mode="widthFix" class="interactionBiggerImage"></image>
 							</view>
 						</view>
 					</view>
@@ -69,7 +69,7 @@
 							<image :src="userData.avatar_url|imageUrlReset(50,80)" mode="aspectFill" class="userAvatarImage"></image>
 							<image :src="userData.pendant|imageUrlReset(50,80)" mode="aspectFill" class="userAvatarFrameImage" v-if="userData.pendant"></image>
 								<image v-if="userData.certification && userData.certification.type"
-								:src="`../../static/poseRequlay/certificate${userData.certification.type}.png`" mode="widthFix" class="certificate">
+								:src="`${imageBaseUrl}poseRequlay/certificate${userData.certification.type}.png`" mode="widthFix" class="certificate">
 							</image>
 						</view>
 						<view class="userMessage">
@@ -102,7 +102,7 @@
 								</view>
 								<view class="topRight" @tap.stop="showSort($event,'right')" v-show="reviewsTop.rightTop">
 									{{reviewsTop.rightText}}
-									<image src="../../static/poseRequlay/screen.png" mode="heightFix" class="image"></image>
+									<image src="../../static/screen.png" mode="heightFix" class="image"></image>
 								</view>
 							</view>
 						</view>
@@ -170,7 +170,7 @@
 						
 						
 						<view class="reviewEnd">
-							<image src="../../static/poseRequlay/reviewEnd.png" mode="widthFix"  class="image"></image>
+							<image :src="imageBaseUrl + 'poseRequlay/reviewEnd.png'" mode="widthFix"  class="image"></image>
 						</view>
 					</view>
 				</view>
@@ -194,7 +194,7 @@
 				</view>
 			</view>
 		</template>
-		<image src="../../static/search/loading1.gif" mode="aspectFit" class="loading" v-if="pageLoading"></image>
+		<image src="http://8.138.116.67:5230/miyoushe/search/loading1.gif" mode="aspectFit" class="loading" v-if="pageLoading"></image>
 	</view>
 </template>
 
@@ -251,15 +251,19 @@
 				scrollTop: 0,
 				reviewsTopFixed: 'none',
 				fixTop: 0,
-				bookUrl:'../../static/poseRequlay/book.png',
-				likeUrl:'../../static/poseRequlay/like1.png',
+				bookUrl:'http://8.138.116.67:5230/miyoushe/poseRequlay/book.png',
+				bookUrl1:'http://8.138.116.67:5230/miyoushe/poseRequlay/book.png',
+				bookUrl2:'http://8.138.116.67:5230/miyoushe/poseRequlay/book2.png',
+				likeUrl:'http://8.138.116.67:5230/miyoushe/poseRequlay/like1.png',
+				likeUrl1:'http://8.138.116.67:5230/miyoushe/poseRequlay/like1.png',
+				likeUrl2:'http://8.138.116.67:5230/miyoushe//poseRequlay/like2.png',
 				pageLoading: true,
 				weixinTop: 0,
 				scrollWrapHeight: '100%'
 			}
 		},
 		computed: {
-			...mapState(['windowHeight','rpxNum','emotion','emotionKey'])
+			...mapState(['windowHeight','rpxNum','emotion','emotionKey','imageBaseUrl'])
 		},
 		created() {
 			// #ifdef MP-WEIXIN
@@ -278,16 +282,16 @@
 				this.postDetail = res.data.post
 				this.choose_upvote_type = res.data.post.self_operation.upvote_type
 				if(this.is_collected) {
-					this.bookUrl = '../../static/poseRequlay/book2.png'
+					this.bookUrl = this.bookUrl2
 				}else{
-					this.bookUrl = '../../static/poseRequlay/book.png'
+					this.bookUrl = this.bookUrl2
 				}
 				if(this.choose_upvote_type === 0) {
-					this.likeUrl = '../../static/poseRequlay/like1.png'
+					this.likeUrl = this.likeUrl1
 				}else if(this.choose_upvote_type === 1) {
-					this.likeUrl = '../../static/poseRequlay/like2.png'
+					this.likeUrl = this.likeUrl2
 				}else{
-					this.likeUrl = `../../static/poseRequlay/post_upvote_stat_${this.choose_upvote_type}.png`
+					this.likeUrl = `${this.imageBaseUrl}poseRequlay/post_upvote_stat_${this.choose_upvote_type}.png`
 				}
 				this.reviewsTop.reviewNum = this.postDetail.stat.reply_num
 				this.reviewsTop.leftText = `评论(${this.reviewsTop.reviewNum})`
@@ -328,13 +332,13 @@
 				if(res.message === 'OK') {
 					if(is_cancel) {
 						this.choose_upvote_type = 0
-						this.likeUrl = '../../static/poseRequlay/like1.png'
+						this.likeUrl = this.likeUrl1
 					}else{
 						this.choose_upvote_type = type
 						if(type === 1) {
-							this.likeUrl = '../../static/poseRequlay/like2.png'
+							this.likeUrl = this.likeUrl2
 						}else{
-							this.likeUrl = `../../static/poseRequlay/post_upvote_stat_${type}.png`
+							this.likeUrl = `${this.imageBaseUrl}poseRequlay/post_upvote_stat_${type}.png`
 						}
 					}
 					if(!is_cancel) {
@@ -362,9 +366,9 @@
 				if(res.message === 'OK') {
 					this.is_collected = !is_collected
 					if(this.is_collected) {
-						this.bookUrl = '../../static/poseRequlay/book2.png'
+						this.bookUrl = this.bookUrl2
 					}else{
-						this.bookUrl = '../../static/poseRequlay/book.png'
+						this.bookUrl = this.bookUrl2
 					}
 				}
 			},

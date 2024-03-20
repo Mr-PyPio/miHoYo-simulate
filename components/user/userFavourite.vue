@@ -7,10 +7,10 @@
 				</view>
 			</view>
 			<view class="reviewEnd" v-if="allShow">
-				<image src="../../static/poseRequlay/reviewEnd.png" mode="widthFix" class="logo"></image>
+				<image :src="imageBaseUrl + 'poseRequlay/reviewEnd.png'" mode="widthFix" class="logo"></image>
 			</view>
 			<view class="noLimit" v-if="!limit">
-				<image src="../../static/user/noLimit.png" mode="widthFix" class="logo"></image>
+				<image :src="imageBaseUrl + 'user/noLimit.png'" mode="widthFix" class="logo"></image>
 			</view>
 		</view>
 	</scroll-view>
@@ -19,6 +19,7 @@
 <script>
 	import PostItems from '../common/postItems.vue'
 	import {getUserFavourite} from "../../common/api.js"
+	import {mapState} from 'vuex'
 	export default {
 		components: {
 			PostItems
@@ -41,6 +42,7 @@
 			}
 		},
 		computed: {
+			...mapState(['imageBaseUrl']),
 			allShow() {
 				return this.is_last
 			},

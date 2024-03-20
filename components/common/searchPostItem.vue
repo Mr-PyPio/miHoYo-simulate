@@ -7,7 +7,7 @@
 						<image :src="item.user.avatar_url|imageUrlReset(50,80)" mode="aspectFill" class="userAvatarImage" :lazy-load="true"></image>
 						<image :src="item.user.pendant|imageUrlReset(50,80)" :lazy-load="true" mode="aspectFill" class="userAvatarFrameImage" v-if="item.user.pendant"></image>
 						<image v-if="item.user.certification && item.user.certification.type"
-							:src="`../../static/poseRequlay/certificate${item.user.certification.type}.png`" mode="widthFix" class="certificate">
+							:src="`${imageBaseUrl}poseRequlay/certificate${item.user.certification.type}.png`" mode="widthFix" class="certificate">
 						</image>
 					</view>
 					<view class="userMessage">
@@ -49,6 +49,7 @@
 </template>
 
 <script>
+	import {mapState} from 'vuex'
 	import ItemContent from './itemContent.vue'
 	export default {
 		name:"postItems",
@@ -73,6 +74,9 @@
 			return {
 			};
 		},
+		computed: {
+			...mapState(['imageBaseUrl'])
+		},
 		methods: {
 			navigatePostReplay(post_id) {
 				const videoUrl = this.$refs.itemContent.videoUrl
@@ -91,7 +95,7 @@
 			matchText(text,type) {
 				const reg = new RegExp(`${this.keyWord}`,'g')
 				if(this.item.user.certification && this.item.user.certification.type === 1 && type === 1) {
-					text = `<img class="logoImage" src="../../static/search/certificate01.png" style="width: 20px;height: 20px;font-size: 0;vertical-align: bottom;"/>${text}`
+					text = `<img class="logoImage" src="${imageBaseUrl}search/certificate01.png" style="width: 20px;height: 20px;font-size: 0;vertical-align: bottom;"/>${text}`
 				}
 				if(type === 2) {
 					text = `${text}...`

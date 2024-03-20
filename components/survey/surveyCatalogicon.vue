@@ -5,7 +5,7 @@
 			<text class="text">{{item.name}}</text>
 		</view>
 		<view class="mapIconItems">
-			<image src="../../static/survey/moreMap.png" mode="aspectFit" class="image"></image>
+			<image src="http://8.138.116.67:5230/miyoushe/survey/moreMap.png" mode="aspectFit" class="image"></image>
 			<text class="text">更多</text>
 		</view>
 	</view>

@@ -39,7 +39,7 @@
 		data() {
 			return {
 				moduleTitle: {
-					src: '../../static/survey/video.png',
+					src: 'http://8.138.116.67:5230/miyoushe/survey/video.png',
 					url: '',
 					name: '视频攻略'
 				},
@@ -90,7 +90,7 @@
 				margin-right: 24rpx;
 				
 				&.active{
-					background-image: url("../../static/survey/tab_b.png");
+					background-image: url("http://8.138.116.67:5230/miyoushe/survey/tab_b.png");
 					background-size: 26px 5px;
 					background-repeat: no-repeat;
 					background-position: center 18px;

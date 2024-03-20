@@ -6,7 +6,7 @@
 			<view class="edition" v-if="editionData">
 				<view class="editionTop">
 					<view class="editionTopLeft">
-						<image src="../../static/poseRequlay/screen.png" mode="widthFix" class="image"></image>
+						<image src="../../static/screen.png" mode="widthFix" class="image"></image>
 						{{editionType}}
 					</view>
 					<view class="editionTopRight">
@@ -40,7 +40,7 @@
 							</view>
 						</view>
 						<view class="roleMessageCardRight">
-							<image src="../../static/search/profile.png" mode="widthFix" class="image"></image>
+							<image :src="imageBaseUrl + 'search/profile.png'" mode="widthFix" class="image"></image>
 							查看角色资料
 						</view>
 					</view>
@@ -128,13 +128,14 @@
 				</view>
 			</view>
 		</scroll-view>
-		<image src="../../static/search/loading1.gif" mode="widthFix" class="loading" v-if="loading"></image>
+		<image src="http://8.138.116.67:5230/miyoushe/search/loading1.gif" mode="widthFix" class="loading" v-if="loading"></image>
 	</view>
 </template>
 
 <script>
 	import SearchPostItem from '../common/searchPostItem.vue'
 	import {search,searchPost} from '../../common/api.js'
+	import {mapState} from 'vuex'
 	export default {
 		name: 'allPost',
 		components: {
@@ -164,6 +165,9 @@
 				keyWord: '',
 				upDateLoading: false,
 			}
+		},
+		computed: {
+			...mapState(['imageBaseUrl'])
 		},
 		methods: {
 			async initEditionData() {

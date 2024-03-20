@@ -11,38 +11,34 @@
 				</view>
 			</scroll-view>
 		</view>
-		<swiper :current="current" :style="{
-					'height' : windowHeight + 'px' ,
-					'width' : '750rpx',
-					'padding-top' : '178rpx',
-					'box-sizing' : 'border-box'
-				}" @change="swiperChange" 
-			:scroll-with-animation='true'>
-			<swiper-item  class="swiper-item">
-				<all-post  ref="allRefs" ></all-post>
-			</swiper-item>
-			<swiper-item class="swiper-item" >
-				<strategy-post  ref="strategyRefs" ></strategy-post>
-			</swiper-item>
-			<swiper-item class="swiper-item" >
-				<video-post  ref="videoRefs" ></video-post>
-			</swiper-item>
-			<swiper-item class="swiper-item" >
-				<encycle-post  ref="encycleRefs" ></encycle-post>
-			</swiper-item>
-			<swiper-item class="swiper-item" >
-				<image-post  ref="imageRefs" ></image-post>
-			</swiper-item>
-			<swiper-item class="swiper-item" >
-				<user-post  ref="userRefs" ></user-post>
-			</swiper-item>
-			<swiper-item class="swiper-item" >
-				<topic-post  ref="topicRefs" ></topic-post>
-			</swiper-item>
-			<swiper-item class="swiper-item" >
-				<authority-post ref="autorityRefs"></authority-post>
-			</swiper-item>
-		</swiper>
+		<view class="swiperContent" :style="{'height' : windowHeight + 'px'}">
+			<swiper :current="current" style="height: 100%;width: 100%;" @change="swiperChange" :scroll-with-animation='true'>
+				<swiper-item  class="swiper-item">
+					<all-post  ref="allRefs" ></all-post>
+				</swiper-item>
+				<swiper-item class="swiper-item" >
+					<strategy-post  ref="strategyRefs" ></strategy-post>
+				</swiper-item>
+				<swiper-item class="swiper-item" >
+					<video-post  ref="videoRefs" ></video-post>
+				</swiper-item>
+				<swiper-item class="swiper-item" >
+					<encycle-post  ref="encycleRefs" ></encycle-post>
+				</swiper-item>
+				<swiper-item class="swiper-item" >
+					<image-post  ref="imageRefs" ></image-post>
+				</swiper-item>
+				<swiper-item class="swiper-item" >
+					<user-post  ref="userRefs" ></user-post>
+				</swiper-item>
+				<swiper-item class="swiper-item" >
+					<topic-post  ref="topicRefs" ></topic-post>
+				</swiper-item>
+				<swiper-item class="swiper-item" >
+					<authority-post ref="autorityRefs"></authority-post>
+				</swiper-item>
+			</swiper>
+		</view>
 	</view>
 </template>
 
@@ -186,6 +182,9 @@
 		top: 98rpx;
 		left: 0;
 		width: 702rpx;
+		/* #ifdef MP-WEIXIN */
+		top: 168rpx;
+		/* #endif */
 		
 		.tabWrap{
 			display: flex;
@@ -218,6 +217,15 @@
 				}
 			}
 		}
+	}
+	
+	.swiperContent{
+		padding-top: 178rpx;
+		/* #ifdef MP-WEIXIN */
+		padding-top: 258rpx;
+		/* #endif */
+		box-sizing : border-box;
+		width: 750rpx;
 	}
 }
 </style>

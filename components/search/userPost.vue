@@ -9,17 +9,18 @@
 					<u-loading-icon mode="circle" size="42"></u-loading-icon>
 				</view>
 				<view class="reviewEnd" v-if="is_last">
-					<image src="../../static/poseRequlay/reviewEnd.png" mode="widthFix"  class="image"></image>
+					<image :src="imageBaseUrl + 'poseRequlay/reviewEnd.png'" mode="widthFix"  class="image"></image>
 				</view>
 			</view>
 		</scroll-view>
-		<image src="../../static/search/loading1.gif" mode="aspectFit" class="loading" v-if="loading"></image>
+		<image src="http://8.138.116.67:5230/miyoushe/search/loading1.gif" mode="aspectFit" class="loading" v-if="loading"></image>
 	</view>
 </template>
 
 <script>
 	import {searchUser} from "../../common/api.js"
 	import UserItems from "./userItems.vue"
+	import {mapState} from 'vuex'
 	export default {
 		name: 'userPost',
 		components: {
@@ -34,6 +35,9 @@
 				postData: null,
 				upDateLoading: false
 			}
+		},
+		computed: {
+			...mapState(['imageBaseUrl'])
 		},
 		methods: {
 			async initData(keyWord) {

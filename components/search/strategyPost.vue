@@ -4,7 +4,7 @@
 			<view class="edition">
 				<view class="editionTop">
 					<view class="editionTopLeft">
-						<image src="../../static/poseRequlay/screen.png" mode="widthFix" class="image"></image>
+						<image src="../../static/screen.png" mode="widthFix" class="image"></image>
 						{{editionType}}
 					</view>
 					<view class="editionTopRight">
@@ -25,11 +25,11 @@
 					<u-loading-icon mode="circle" size="42"></u-loading-icon>
 				</view>
 				<view class="reviewEnd" v-if="is_last">
-					<image src="../../static/poseRequlay/reviewEnd.png" mode="widthFix"  class="image"></image>
+					<image :src="imageBaseUrl + 'poseRequlay/reviewEnd.png'" mode="widthFix"  class="image"></image>
 				</view>
 			</view>
 		</scroll-view>
-		<image src="../../static/search/loading1.gif" mode="widthFix" class="loading" v-if="loading"></image>
+		<image src="http://8.138.116.67:5230/miyoushe/search/loading1.gif" mode="widthFix" class="loading" v-if="loading"></image>
 	</view>
 </template>
 
@@ -83,7 +83,7 @@
 			}
 		},
 		computed: {
-			...mapState(['windowHeight','rpxNum'])
+			...mapState(['windowHeight','rpxNum','imageBaseUrl'])
 		},
 		created() {
 			this.scrollHeight = this.windowHeight*this.rpxNum - 178 + 'rpx'

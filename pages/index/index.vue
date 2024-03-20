@@ -41,7 +41,7 @@
 						</view>
 				   </view>
 				</view>
-				<view class="swiper_auto_height" :style="{'height' : windowHeight * rpxNum - 410 + 'rpx'}">
+				<view class="swiper_auto_height" :style="{'height' : windowHeight * rpxNum - 430 + 'rpx'}">
 					  <swiper :current="tabSetting.current"  @change="swiperAnimationfinish"  :style="{'height' : windowHeight * rpxNum - 410 + 'rpx'}"
 							v-if="consultData.length" ref="tabSwiperRef" >
 							<swiper-item class="swiper-item">
@@ -84,7 +84,7 @@
 			
 			<ListenOtherModul></ListenOtherModul>
 		</template>
-		<image src="@/static/coverImage.png" mode="widthFix" class="coverImage" v-if="coverImageShow"></image>
+		<image src="http://8.138.116.67:5230/miyoushe/coverImage.png" mode="widthFix" class="coverImage" v-if="coverImageShow"></image>
 	</view>
 </template>
 
@@ -182,7 +182,12 @@ export default {
 			this.hotTopics = data.hot_topics.data
 			let timer = setTimeout(() => {
 				this.coverImageShow = false
-				uni.showTabBar()
+				// #ifdef WEB
+					uni.showTabBar()
+				// #endif
+				// #ifdef MP-WEIXIN
+					wx.showTabBar()
+				// #endif
 				clearTimeout(timer)
 			},500)
 		},

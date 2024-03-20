@@ -20,16 +20,17 @@
 			</view>
 		</view>
 		<view class="reviewEnd" v-if="allShow">
-			<image src="../../static/poseRequlay/reviewEnd.png" mode="widthFix" class="logo"></image>
+			<image :src="imageBaseUrl + 'poseRequlay/reviewEnd.png'" mode="widthFix" class="logo"></image>
 		</view>
 		<view class="noLimit" v-if="!limit">
-			<image src="../../static/user/noLimit.png" mode="widthFix" class="logo"></image>
+			<image :src="imageBaseUrl + 'user/noLimit.png'" mode="widthFix" class="logo"></image>
 		</view>
 	</scroll-view>
 </template>
 
 <script>
 	import {getUserCollection} from "../../common/api.js"
+	import {mapState} from 'vuex'
 	export default {
 		props: {
 			uid: {
@@ -48,6 +49,7 @@
 			}
 		},
 		computed: {
+			...mapState(['imageBaseUrl']),
 			allShow() {
 				return this.is_last
 			},

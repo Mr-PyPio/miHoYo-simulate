@@ -1,6 +1,6 @@
 <template>
 	<view class="title" v-if="moduleTitle">
-		<image :src="moduleTitle.src" mode="aspectFit" class="image"></image>
+		<image :src="moduleTitle.src" mode="aspectFit" class="image" lazy-load="true"></image>
 		{{moduleTitle.name}}
 		<view class="more">
 			更多
@@ -46,7 +46,7 @@
 			font-size: 22rpx;
 			color: #b1968b;
 			padding-right: 12px;
-			background-image: url("../../static/survey/right_icon.png");
+			background-image: url("http://8.138.116.67:5230/miyoushe/survey/right_icon.png");
 			background-size: auto 8px;
 			background-position: right 66%;
 			background-repeat: no-repeat;

@@ -22,7 +22,7 @@
 			</view>
 			<view class="hotPostContent">
 				<view v-for="(item,index) in hotPost" :key="index" class="hotPostItem">
-					<image :src="'../../static/NO'+ (index+1) + '.png'" mode="widthFix" class="itemSort"></image>
+					<image :src="imageBaseUrl + 'NO'+ (index+1) + '.png'" mode="widthFix" class="itemSort"></image>
 					<view class="itemHot">
 						<image src="../../static/hot2.png" mode="widthFix" class="hotIcon"></image>
 						{{item.post.score|resetNum2}}
@@ -106,7 +106,7 @@
 			}
 		},
 		computed: {
-			...mapState(['actionPage'])
+			...mapState(['actionPage','imageBaseUrl'])
 		},
 		methods: {
 			...mapMutations(['updateActionPage']),

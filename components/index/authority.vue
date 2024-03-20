@@ -52,7 +52,7 @@
 										{{item.post.subject}}
 									</view>
 									<view class="time">
-										<image :src="`../../static/activity${item.news_meta.activity_status}.png`" mode="heightFix" class="activityImage"></image>
+										<image :src="`${imageBaseUrl}activity${item.news_meta.activity_status}.png`" mode="heightFix" class="activityImage"></image>
 										<view class="limit">
 											<u-icon name="clock" color="#7f858a" size="24" style="margin-right: 6rpx;"></u-icon>
 											{{item.news_meta.start_at_sec|resetDateTime}} ~ {{item.news_meta.end_at_sec|resetDateTime}}
@@ -71,6 +71,7 @@
 </template>
 
 <script>
+	import {mapState} from 'vuex'
 	import {getNewsList,getHomeNew} from '../../common/api.js'
 	export default {
 		data() {
@@ -103,6 +104,9 @@
 				tabType1: 3,
 				loading: true
 			}
+		},
+		computed: {
+			...mapState(['imageBaseUrl'])
 		},
 		methods: {
 			async getTopNew () {

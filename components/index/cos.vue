@@ -66,6 +66,7 @@
 	import TopPostsList from '../common/topPostsList.vue'
 	import ForumPostsList from '../common/forumPostsList.vue'
 	import {cosTopNApi,cosMainApi,cosPostList} from '../../common/api.js'
+	import {mapState} from 'vuex'
 	export default {
 		name:"cos",
 		components: {
@@ -95,6 +96,9 @@
 				last_id: null,
 				pageLoading: true
 			};
+		},
+		computed: {
+			...mapState(['imageBaseUrl']),
 		},
 		methods: {
 			async getTopNoList() {
@@ -168,7 +172,7 @@
 				})
 			},
 			resetSrc(index) {
-				return `url('../../static/cosNo${index+1}.png')`
+				return `url('${imageBaseUrl}cosNo${index+1}.png')`
 			}
 		},
 		created() {
@@ -210,7 +214,7 @@
 				font-size: 22rpx;
 				color: #b1968b;
 				padding-right: 12px;
-				background-image: url("../../static/survey/right_icon.png");
+				background-image: url("http://8.138.116.67:5230/miyoushe/survey/right_icon.png");
 				background-size: auto 8px;
 				background-position: right 66%;
 				background-repeat: no-repeat;
@@ -258,7 +262,7 @@
 					left: 0;
 					width: 100%;
 					height: 90rpx;
-					background-image: url("../../static/survey/fanNoBg.png");
+					background-image: url("http://8.138.116.67:5230/miyoushe/survey/fanNoBg.png");
 					background-repeat: no-repeat;
 					background-size: 100% 90rpx;
 					

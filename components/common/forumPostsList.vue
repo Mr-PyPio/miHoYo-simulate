@@ -2,8 +2,6 @@
 	<view class="item" @tap.stop="navigatePostReplay(item.post.post_id)">
 		<view :class="'itemImage'+item.cover.entity_id" style="height: 1px;"></view>
 		<view class="itemImage" ref="itemImage" :style="{'width': imageWidth + 'rpx','height': imageHeight + 'rpx'}">
-			<!-- <image :src="item.cover.url|imageUrlReset(220,80)" :lazy-load="true" mode="widthFix" v-if="loading"></image>
-			<image src="../../static/loadingImg.png" mode="widthFix" class="loadingImg" v-if="!loading"></image> -->
 			<LazyImage :imageData="item.cover" ></LazyImage>
 			
 			<view class="moreImage" v-if="item.image_list.length > 2">
@@ -123,15 +121,6 @@
 		overflow: hidden;
 		position: relative;
 		background: #f6f6f6;
-		
-		
-		.loadingImg{
-			width: 300rpx;
-			position: absolute;
-			left: 50%;
-			top: 50%;
-			transform: translate(-50%,-50%);
-		}
 		
 		.moreImage{
 			position: absolute;

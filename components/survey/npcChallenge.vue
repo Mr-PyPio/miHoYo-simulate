@@ -27,7 +27,7 @@
 				tabList: [],
 				newData: [],
 				moduleTitle: {
-					src: '../../static/survey/card.png',
+					src: 'http://8.138.116.67:5230/miyoushe/survey/card.png',
 					url: '',
 					name: 'NPC挑战'
 				}

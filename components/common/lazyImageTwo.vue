@@ -35,7 +35,7 @@
 		data() {
 			return {
 				intersectionObserver: null,
-				imageSrc: '../../static/loadingImg.png'
+				imageSrc: 'http://8.138.116.67:5230/miyoushe/loadingImg.png'
 			}
 		},
 		methods: {

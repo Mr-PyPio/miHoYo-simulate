@@ -16,6 +16,11 @@
 /* uni.scss */
 @import "uview-ui/theme.scss";
 
+.uni-page-loading,
+.uni-page-refresh {
+    display: none !important;
+}
+
 /* 主题色 */ 
 $uni-color-theme-color: #71e0fe;
 

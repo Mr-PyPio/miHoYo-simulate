@@ -116,6 +116,9 @@
 					list: listData,
 					showIndex: index
 				})
+				// #ifdef MP-WEIXIN
+					wx.hideTabBar()
+				// #endif
 			},
 			async followUser(userId) {
 				if(!this.is_following) {

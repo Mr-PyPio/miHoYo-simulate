@@ -55,11 +55,11 @@
 				</view>
 			</view>
 			
-			<image src="../../static/survey/surveyBottomImg.png" mode="aspectFill" class="image"></image>
+			<image :src="imageBaseUrl + 'survey/surveyBottomImg.png'" mode="aspectFill" class="image"></image>
 		</view>
 		
 		<view class="to_top" v-if="to_top_show" @tap.stop="toTop">
-			<image src="../../static/survey/run_top.png" mode="aspectFill" class="image"></image>
+			<image :src="imageBaseUrl + 'survey/run_top.png'" mode="aspectFill" class="image"></image>
 		</view>
 	</view>
 		<u-loading-page :loading="pageLoading" loadingText=" " iconSize="60"></u-loading-page>
@@ -68,6 +68,7 @@
 
 <script>
 	import {surveyBannerApi,surveyMapApi} from '../../common/api.js'
+	import {mapState} from 'vuex'
 	import Banner from '../../components/survey/banner.vue'
 	import SurveyCatalogicon from '../../components/survey/surveyCatalogicon.vue'
 	import HotRecommend from '../../components/survey/hotRecommend.vue'
@@ -122,6 +123,9 @@
 				oldScrollTop: 0,
 				pageLoading: true
 			};
+		},
+		computed: {
+			...mapState(['imageBaseUrl'])
 		},
 		methods: {
 			async getSurveyBanner() {
@@ -214,7 +218,7 @@
 				line-height: 36px;
 				padding-left: 36px;
 				box-sizing: border-box;
-				background-image: url('../../static/survey/search.png');
+				background-image: url('http://8.138.116.67:5230/miyoushe/survey/search.png');
 				background-position: 10px 10px;
 				background-size: 16px 16px;
 				color: #d9d9d9;
@@ -227,7 +231,7 @@
 			.notice{
 				width: 140rpx;
 				height: 36px;
-				background-image: url('../../static/survey/notice.png');
+				background-image: url('http://8.138.116.67:5230/miyoushe/survey/notice.png');
 				background-repeat: no-repeat;
 				background-size: 140rpx 36px;
 				background-position: 0 0;
@@ -236,7 +240,7 @@
 			.catalog{
 				width: 148rpx;
 				height: 36px;
-				background-image: url('../../static/survey/catalog.png');
+				background-image: url('http://8.138.116.67:5230/miyoushe/survey/catalog.png');
 				background-repeat: no-repeat;
 				background-size: 148rpx 36px;
 				background-position: 0 0;

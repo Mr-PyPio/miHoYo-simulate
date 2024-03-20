@@ -22,14 +22,14 @@
 		</view>
 		
 		<view class="reviewEnd" v-if="allShow && lzReviewReply">
-			<image src="../../static/poseRequlay/noreply.png" mode="widthFix" class="image"></image>
+			<image :src="imageBaseUrl + 'poseRequlay/noreply.png'" mode="widthFix" class="image"></image>
 			<view class="text">
 				楼主还没有回复哦
 			</view>
 		</view>
 		
 		<view class="reviewEnd" v-if="allShow && !lzReviewReply">
-			<image src="../../static/poseRequlay/reviewEnd.png" mode="widthFix" class="image"></image>
+			<image :src="imageBaseUrl + 'poseRequlay/reviewEnd.png'" mode="widthFix" class="image"></image>
 		</view>
 	</view>
 </template>
@@ -37,6 +37,7 @@
 <script>
 	import ReviewsListItem from "./reviewsListItem.vue"
 	import {postReplaiesApi,foldedPostRepliesApi} from "../../common/api.js"
+	import {mapState} from 'vuex'
 	export default {
 		props: {
 			post_id: {
@@ -65,6 +66,7 @@
 			}
 		},
 		computed: {
+			...mapState(['imageBaseUrl']),
 			allShow() {
 				if(this.foldReplyNum) {
 					return this.showFoldReply && this.is_last

@@ -95,7 +95,7 @@
 			margin-right: 24rpx;
 			
 			&.active{
-				background-image: url("../../static/survey/tab_b.png");
+				background-image: url("http://8.138.116.67:5230/miyoushe/survey/tab_b.png");
 				background-size: 26px 5px;
 				background-repeat: no-repeat;
 				background-position: center 18px;
@@ -114,7 +114,7 @@
 			height: 24px;
 			line-height: 24px;
 			padding-right: 16px;
-			background-image: url("../../static/survey/down.png");
+			background-image: url("http://8.138.116.67:5230/miyoushe/survey/down.png");
 			background-size: 16px 16px;
 			background-position: right 66%;
 			background-repeat: no-repeat;

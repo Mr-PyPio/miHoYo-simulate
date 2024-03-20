@@ -46,7 +46,7 @@
 		data() {
 			return {
 				moduleTitle: {
-					src: '../../static/survey/new.png',
+					src: 'http://8.138.116.67:5230/miyoushe/survey/new.png',
 					url: '',
 					name: '最新内容'
 				},

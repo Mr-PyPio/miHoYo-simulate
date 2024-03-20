@@ -4,7 +4,7 @@
 			<view  class="categoryMode">
 				<view class="categoryModeItem">
 					<view class="top">
-						<image src="../../static/user/convert.png" mode="widthFix" class="logo"></image>
+						<image :src="imageBaseUrl + 'user/convert.png'" mode="widthFix" class="logo"></image>
 						兑换中心
 					</view>
 					<view class="bottom">
@@ -13,7 +13,7 @@
 				</view>
 				<view class="categoryModeItem">
 					<view class="top">
-						<image src="../../static/user/write.png" mode="widthFix" class="logo"></image>
+						<image :src="imageBaseUrl + 'user/write.png'" mode="widthFix" class="logo"></image>
 						创作中心
 					</view>
 					<view class="bottom">
@@ -22,7 +22,7 @@
 				</view>
 				<view class="categoryModeItem">
 					<view class="top">
-						<image src="../../static/user/stall.png" mode="widthFix" class="logo"></image>
+						<image :src="imageBaseUrl + 'user/stall.png'" mode="widthFix" class="logo"></image>
 						创小摊
 					</view>
 					<view class="bottom">
@@ -31,7 +31,7 @@
 				</view>
 				<view class="categoryModeItem">
 					<view class="top">
-						<image src="../../static/user/mi.png" mode="widthFix" class="logo"></image>
+						<image :src="imageBaseUrl + 'user/mi.png'" mode="widthFix" class="logo"></image>
 						米游铺
 					</view>
 					<view class="bottom">
@@ -40,7 +40,7 @@
 				</view>
 				<view class="categoryModeItem">
 					<view class="top">
-						<image src="../../static/user/mib.png" mode="widthFix" class="logo"></image>
+						<image :src="imageBaseUrl + 'user/mib.png'" mode="widthFix" class="logo"></image>
 						米游币
 					</view>
 					<view class="bottom">
@@ -50,7 +50,7 @@
 				<view class="">
 					<view class="categoryModeItem">
 						<view class="top">
-							<image src="../../static/user/game.png" mode="widthFix" class="logo"></image>
+							<image :src="imageBaseUrl + 'user/game.png'" mode="widthFix" class="logo"></image>
 							游戏中心
 						</view>
 						<view class="bottom">
@@ -104,6 +104,7 @@
 	import UserReplay from './userReply.vue'
 	import UserCollection from './userCollection.vue'
 	import UserFavourite from './userFavourite.vue'
+	import {mapState} from 'vuex'
 	export default {
 		name:"userAbout",
 		components: {
@@ -132,14 +133,19 @@
 			}
 		},
 		computed: {
+			...mapState(['imageBaseUrl']),
 			swiperContentHeight() {
 				let height = ''
 				// #ifdef MP-WEIXIN
-					height = this.windowHeight*this.rpxNum - 170  + 'rpx'
+					if(this.showCategoryMode) {
+						height = this.windowHeight*this.rpxNum - 270  + 'rpx'
+					}else{
+						height = this.windowHeight*this.rpxNum - 170 + 'rpx'
+					}
 				// #endif
 				// #ifdef WEB
 					if(this.showCategoryMode) {
-						height = this.windowHeight*this.rpxNum - 60  + 'rpx'
+						height = this.windowHeight*this.rpxNum - 160  + 'rpx'
 					}else{
 						height = this.windowHeight*this.rpxNum - 50 + 'rpx'
 					}

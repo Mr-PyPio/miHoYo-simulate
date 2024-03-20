@@ -17,7 +17,7 @@
 			</view>
 		</view>
 		
-		<view class="popupWrap"  :style="{'height' : windowHeight*rpxNum - 72 + 'rpx', 'top' : popupWrapTop}" @tap.stop="hidden">
+		<view class="popupWrap"  :style="{'height' : windowHeight*rpxNum + 'rpx', 'top' : popupWrapTop}" @tap.stop="hidden">
 			
 		</view>
 		<view class="popupContent" v-if="timelineCategoryData" :style="{'top' : popupTop}">
@@ -27,14 +27,16 @@
 			</view>
 		</view>
 		
-		<swiper :style="{'height' : swiperHeight}" :current="swiperIndex" @change="swiperChange">
-			<swiper-item>
-				<follow-content ref="folloeRefs"></follow-content>
-			</swiper-item>
-			<swiper-item>
-				<find-content ref="findRefs"></find-content>
-			</swiper-item>
-		</swiper>
+		<view class="swiperContent">
+			<swiper :style="{'height' : swiperHeight}" :current="swiperIndex" @change="swiperChange">
+				<swiper-item>
+					<follow-content ref="folloeRefs"></follow-content>
+				</swiper-item>
+				<swiper-item>
+					<find-content ref="findRefs"></find-content>
+				</swiper-item>
+			</swiper>
+		</view>
 		<img-pop-up ></img-pop-up>
 		
 		<ListenOtherModul></ListenOtherModul>
@@ -69,7 +71,10 @@
 		computed: {
 			...mapState(['actionPage','windowHeight','rpxNum']),
 			swiperHeight() {
-				return this.windowHeight*this.rpxNum - 72 + 'rpx'
+				// #ifdef MP-WEIXIN
+				return this.windowHeight*this.rpxNum - 162 + 'rpx'
+				// #endif
+				return this.windowHeight*this.rpxNum - 172 + 'rpx'
 			},
 			isDynamic() {
 				if(this.clickTab == 0) {
@@ -89,6 +94,11 @@
 						name: 'category',
 						data: res.data.list
 					})
+					let timer = setTimeout(() => {
+						this.coverImageShow = false
+						uni.showTabBar()
+						clearTimeout(timer)
+					},500)
 				}
 			},
 			fixedTop(type) {
@@ -99,6 +109,9 @@
 						}else{
 							this.popupWrapTop = '72rpx'
 							this.popupTop = '72rpx'
+							// #ifdef MP-WEIXIN
+							this.popupTop = '162rpx'
+							// #endif
 						}
 					}
 				}else{
@@ -143,18 +156,22 @@
 
 <style lang="scss" scoped>
 .content{
-	padding-bottom: 100rpx;
+	height: 100%;
 	
 	.fixedTop{
-		position: relative;
-		top: 0;
-		left: 0;
 		width: 750rpx;
+		position: absolute;
 		background: #f8f8f8;
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		z-index: 10;
+		z-index: 10000;
+		top: 0;
+		left: 0;
+		/* #ifdef MP-WEIXIN */
+		padding-top: 90rpx;
+		justify-content: flex-start;
+		/* #endif */
 		
 		.fixedTopTab{
 			font-size: 30rpx;
@@ -162,6 +179,8 @@
 			position: relative;
 			padding: 16rpx 0;
 			margin: 0 16rpx;
+			min-width: 90rpx;
+			text-align: center;
 			
 			.followText{
 				padding-right: 10rpx;
@@ -197,6 +216,10 @@
 			right: 24rpx;
 			font-size: 22rpx;
 			color: #333;
+			/* #ifdef MP-WEIXIN */
+			right: 234rpx;
+			padding-top: 90rpx;
+			/* #endif */
 		}
 	}
 	
@@ -231,6 +254,13 @@
 			text-align: center;
 			margin-bottom: 18rpx;
 		}
+	}
+	
+	.swiperContent{
+		padding-top: 72rpx;
+		/* #ifdef MP-WEIXIN */
+		padding-top: 162rpx;
+		/* #endif */
 	}
 }
 </style>

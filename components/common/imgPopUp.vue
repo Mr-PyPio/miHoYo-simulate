@@ -63,6 +63,9 @@
 					list: [],
 					showIndex: 0
 				})
+				// #ifdef MP-WEIXIN
+					wx.showTabBar()
+				// #endif
 			},
 			// #ifdef MP-WEIXIN
 			saveImage() {

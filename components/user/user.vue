@@ -1,7 +1,7 @@
 <template>
 	<scroll-view :scroll-y="true" :style="{'height': '100%'}" @scroll="scroll">
 		<view class="userContentWrap">
-			<view class="userContent" style="background: url('../../static/user/bgimg.png') no-repeat top/100%;" v-if="!loading">
+			<view class="userContent" :style="bigImage" v-if="!loading">
 				<view class="userInfo" >
 					<view v-if="userInfo">
 						<view class="fixedTop" :style="{'background': fixedTopBgColor,'position':fixedTopType}">
@@ -13,14 +13,14 @@
 								</view>
 							</view>
 							<view class="fixedRight">
-								<image src="../../static/user/user_set.png" mode="widthFix" class="set"></image>
+								<image src="../../static/user_set.png" mode="widthFix" class="set"></image>
 							</view>
 						</view>
 						<view class="userImage">
 							<image :src="userInfo.avatar_url|imageUrlReset(200,80)" mode="aspectFill" class="userAvatarImage" :lazy-load="true"></image>
 							<image :src="userInfo.pendant|imageUrlReset(200,80)" :lazy-load="true" mode="aspectFill" class="userAvatarFrameImage" v-if="userInfo.pendant"></image>
 							<image v-if="userInfo.certification && userInfo.certification.type"
-								:src="`../../static/poseRequlay/certificate${userInfo.certification.type}.png`" mode="widthFix" class="certificate">
+								:src="`${imageBaseUrl}poseRequlay/certificate${userInfo.certification.type}.png`" mode="widthFix" class="certificate">
 							</image>
 						</view>
 						<view class="message">
@@ -41,7 +41,7 @@
 								IP:{{userInfo.ip_region}}
 							</view>
 							<view class="certifiType" v-if="userInfo.certification && userInfo.certification.type">
-								<image :src="`../../static/poseRequlay/certificate${userInfo.certification.type}.png`" mode="widthFix" class="icon"></image>
+								<image :src="`${imageBaseUrl}poseRequlay/certificate${userInfo.certification.type}.png`" mode="widthFix" class="icon"></image>
 								{{userInfo.certification.label}}
 							</view>
 						</view>
@@ -94,7 +94,7 @@
 				<img-pop-up></img-pop-up>
 				
 			</view>
-			<image src="../../static/search/loading1.gif" mode="aspectFit" class="loading" v-if="loading"></image>
+			<image src="http://8.138.116.67:5230/miyoushe/search/loading1.gif" mode="aspectFit" class="loading" v-if="loading"></image>
 		</view>
 	</scroll-view>
 </template>
@@ -133,7 +133,10 @@
 			} 
 		},
 		computed: {
-			...mapState(['windowHeight','rpxNum'])
+			...mapState(['windowHeight','rpxNum','imageBaseUrl']),
+			bigImage() {
+				return  `background: url('${this.imageBaseUrl}user/bgimg.png') no-repeat top/100%;`
+			}
 		},
 		created() {
 			this.getUserInfo()
@@ -151,9 +154,9 @@
 				this.gameCard = res.data.list
 			},
 			fittlerImageSrc(id) {
-				if(id === 2) return '../../static/user/ys.png'
-				if(id === 1) return '../../static/user/bh3.png'
-				if(id === 6) return '../../static/user/sr.png'
+				if(id === 2) return this.imageBaseUrl + 'user/ys.png'
+				if(id === 1) return this.imageBaseUrl + 'user/bh3.png'
+				if(id === 6) return this.imageBaseUrl + 'user/sr.png'
 			},
 			openMeun() {
 				this.$nextTick(function() {
@@ -206,7 +209,6 @@
 	}
 }
 .userContent{
-	background: url(../../static/user/bgimg.png) no-repeat top/100%;
 	position: relative;
 	// #ifdef MP-WEIXIN
 	padding-top: 80rpx;
@@ -260,6 +262,10 @@
 				transform: translateY(-50%);
 				display: flex;
 				align-items: center;
+				/* #ifdef MP-WEIXIN */
+				padding-top: 90rpx;
+				margin-right: 200rpx;
+				/* #endif */
 				
 				.meun{
 					width: 40rpx;

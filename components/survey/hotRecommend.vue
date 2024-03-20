@@ -27,7 +27,7 @@
 		data() {
 			return {
 				moduleTitle: {
-					src: '../../static/survey/hot.png',
+					src: 'http://8.138.116.67:5230/miyoushe/survey/hot.png',
 					url: '',
 					name: '热门推荐'
 				}
