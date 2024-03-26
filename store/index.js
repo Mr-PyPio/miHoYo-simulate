@@ -18,11 +18,8 @@ export default new Vuex.Store({
 		imgList: [],
 		imgShowIndex: 0,
 		
-		myselfData: {},
 		myselfUid: '19084220',
 		limitTime: Date.now(),
-		
-		actionPage: {},
 		
 		emotion: null,
 		emotionKey: null,
@@ -54,18 +51,6 @@ export default new Vuex.Store({
 		},
 		updateImgShowIndex(state, index) {
 			state.imgShowIndex = index
-		},
-		updateMyselfData(state,data) {
-			state.myselfData[data.name] = data.data
-		},
-		clearMyselfState(state,data) {
-			state.myselfData = {}
-		},
-		updateActionPage(state,data) {
-			state.actionPage[data.name] = data.data
-		},
-		clearActionPageState(state,data) {
-			state.actionPage = {}
 		},
 	},
 	actions: {

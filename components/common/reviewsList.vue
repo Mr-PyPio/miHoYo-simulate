@@ -4,6 +4,10 @@
 			<ReviewsListItem :item="item"></ReviewsListItem>
 		</view>
 		
+		<view class="loading" v-if="!allShow">
+			<u-loading-icon mode="circle" size="42"></u-loading-icon>
+		</view>
+		
 		<view class="reviewFold" v-if="foldReplyNum > 0 && is_last && !showFoldReply" @tap.stop="showFoldReplyEvent">
 			{{foldReplyNum}}条评论被折叠 <u-icon name="arrow-down" color="#b3b3b3" size="24" style="position: relative;top: 3rpx;left: 3px;"></u-icon>
 		</view>
@@ -58,7 +62,6 @@
 				only_master: false,
 				is_last: false,
 				reviewsData: null,
-				loading: false,
 				foldReplyNum: 0,
 				showFoldReply: false,
 				reviewsFoldData: null,
@@ -81,8 +84,7 @@
 					this.last_id = 0
 				}
 				if(isChange) this.is_last = false
-				if(this.loading || this.is_last) return
-				this.loading = true
+				if(this.is_last) return
 				const {data: res} = await postReplaiesApi(this.post_id,this.is_hot,this.order_type,this.last_id,this.only_master)
 				this.last_id =  res.data.last_id
 				this.is_last = res.data.is_last
@@ -95,7 +97,6 @@
 				if(callBack) {
 					callBack()
 				}
-				this.loading = false
 			},
 			async getFoldedPostReply() {
 				const {data: res} = await foldedPostRepliesApi(this.post_id,true)
@@ -115,12 +116,20 @@
 </script>
 
 <style lang="scss" scoped>
+	
+	.loading{
+		display: flex;
+		justify-content: center;
+		padding: 40rpx 0;
+		background: #fff;
+	}
+	
 	.reviewsList{
 		padding:0 24rpx;
 		width: 750rpx;
 		box-sizing: border-box;
 		overflow: hidden;
-		padding-bottom: 50px;
+		padding-bottom: 20px;
 		
 		.reviewFoldReplyState{
 			background: #f2f4f5;
@@ -152,7 +161,7 @@
 		}
 		
 		.reviewEnd{
-			padding: 15px 0 30px;
+			padding: 15px 0 50px;
 			
 			.image{
 				width: 450rpx;

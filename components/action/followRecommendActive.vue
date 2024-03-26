@@ -44,7 +44,7 @@
 </template>
 
 <script>
-	import {mapMutations,mapState} from "vuex"
+	import {mapState} from "vuex"
 	import {recommendActive,follow} from '@/common/api.js'
 	export default{
 		props: {
@@ -62,23 +62,14 @@
 			}
 		},
 		computed: {
-			...mapState(['actionPage','imageBaseUrl'])
+			...mapState(['imageBaseUrl'])
 		},
 		methods: {
-			...mapMutations(['updateActionPage']),
 			async getPostData() {
 				const {data: res} = await recommendActive(this.categroyId)
 				this.postData = res.data.list
 				this.is_last = res.data.is_last
 				this.next_offset = res.data.next_offset
-				this.updateActionPage({
-					name: 'recommendActive',
-					data: {
-						'postData': this.postData,
-						'is_last' : this.is_last,
-						'next_offset' : this.next_offset
-					}
-				})
 			},
 			async loadMoreDate() {
 				if(this.loading) {
@@ -92,14 +83,6 @@
 						this.postData.push(...res.data.list)
 						this.is_last = res.data.is_last
 						this.next_offset = res.data.next_offset
-						this.updateActionPage({
-							name: 'recommendActive',
-							data: {
-								'postData': this.postData,
-								'is_last' : this.is_last,
-								'next_offset' : this.next_offset
-							}
-						})
 						this.loading = false
 					}
 				}
@@ -121,13 +104,7 @@
 			},
 		},
 		created() {
-			if(this.actionPage.recommendActive) {
-				this.postData = this.actionPage.recommendActive.postData
-				this.is_last = this.actionPage.recommendActive.is_last
-				this.next_offset = this.actionPage.recommendActive.next_offset
-			}else{
-				this.getPostData()
-			}
+			this.getPostData()
 		}
 	}
 </script>

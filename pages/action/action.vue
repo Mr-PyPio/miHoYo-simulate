@@ -37,14 +37,14 @@
 				</swiper-item>
 			</swiper>
 		</view>
-		<img-pop-up ></img-pop-up>
 		
 		<ListenOtherModul></ListenOtherModul>
+		<img-pop-up ></img-pop-up>
 	</view>
 </template>
 
 <script>
-	import {mapMutations,mapState} from "vuex"
+	import {mapState} from "vuex"
 	import FollowContent from '@/components/action/followContent.vue'
 	import FindContent from '@/components/action/findContent.vue'
 	import {getTimelineCategory} from '@/common/api.js'
@@ -69,7 +69,7 @@
 			};
 		},
 		computed: {
-			...mapState(['actionPage','windowHeight','rpxNum']),
+			...mapState(['windowHeight','rpxNum']),
 			swiperHeight() {
 				// #ifdef MP-WEIXIN
 				return this.windowHeight*this.rpxNum - 162 + 'rpx'
@@ -85,15 +85,10 @@
 			}
 		},
 		methods: {
-			...mapMutations(['updateActionPage']),
 			async getPostData() {
 				const {data: res} = await getTimelineCategory()
 				if(res.data) {
 					this.timelineCategoryData = res.data.list
-					this.updateActionPage({
-						name: 'category',
-						data: res.data.list
-					})
 					let timer = setTimeout(() => {
 						this.coverImageShow = false
 						uni.showTabBar()
@@ -145,11 +140,7 @@
 			}
 		},
 		onLoad() {
-			if(this.actionPage.category) {
-				this.timelineCategoryData = this.actionPage.category
-			}else{
-				this.getPostData()
-			}
+			this.getPostData()
 		}
 	}
 </script>

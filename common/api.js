@@ -81,7 +81,33 @@ exports.surveyBannerApi = () => {
 }
 
 exports.surveyMapApi = () => {
-	return apiRequest('getSurveyMap')
+	function resetData(arr) {
+		for(let i = 0; i < arr.length; i ++) {
+			if(arr[i].ch_ext) {
+				const arrjson = JSON.parse(arr[i].ch_ext)
+				arr[i].ch_ext = arrjson[2]
+				if(arr[i].children.length > 0) {
+					arr[i].children = resetData(arr[i].children)
+				}
+			}
+		}
+		return arr
+	}
+	return new Promise((resolve,reject) => {
+		uni.request({
+			url: `${baseUrl}getSurveyMap`,
+			method: 'get',
+			success: res => {
+				if(res.statusCode == 200) {
+					const list = resetData(res.data.data.list)
+					resolve(list)
+				}else{
+					reject(res)
+				}
+			},
+		})
+	})
+	// return apiRequest('getSurveyMap')
 }
 
 exports.fanArtTopNApi = () => {
@@ -189,7 +215,7 @@ exports.postReplaiesApi = (post_id,is_hot,order_type = 0,last_id = 0,only_master
 			order_type,
 			is_hot,
 			only_master,
-			size:20,
+			size:6,
 			from_external_link: false,
 		}
 	}else{
@@ -197,7 +223,7 @@ exports.postReplaiesApi = (post_id,is_hot,order_type = 0,last_id = 0,only_master
 			post_id,
 			order_type,
 			is_hot,
-			size:20,
+			size:6,
 			only_master,
 			from_external_link: false,
 		}

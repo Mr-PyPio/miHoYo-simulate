@@ -91,6 +91,7 @@
 			
 			.icon{
 				width: 80rpx;
+				height: 80rpx;
 				margin-top: 40rpx;
 			}
 			

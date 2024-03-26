@@ -26,7 +26,7 @@
 				@scroll="pageScroll" @scrolltolower="scrolltolower" :refresher-enabled="true" :show-scrollbar="true"
 				:refresher-triggered="refresherTrg"  @refresherpulling="scrollPull" :scroll-with-animation='true'
 			>
-				<view :style="{'height': hiddenContainerHeight + 'rpx','width': '750rpx','position':'relative'}" v-if="hiddenContainerHeight">
+				<view :style="{'height': hiddenContainerHeight + 'px','width': '750rpx','position':'relative'}" v-if="hiddenContainerHeight">
 					<image :src="imageBaseUrl + 'poseRequlay/loading.gif'" mode="heightFix" class="loadingGif">
 					</image>
 				</view>
@@ -58,7 +58,7 @@
 							<view class="num">
 								{{item.upvote_cnt|resetNum}}
 							</view>
-							<view class="interactionBiggerImageWrap" v-if="interactionBiggerImageType === index + 1">
+							<view class="interactionBiggerImageWrap" :class="{'active': interactionBiggerImageType === index + 1 }" >
 								<image :src="imageBaseUrl + 'poseRequlay/post_upvote_stat_'+ (index + 1) +'_active.png'" mode="widthFix" class="interactionBiggerImage"></image>
 							</view>
 						</view>
@@ -346,7 +346,7 @@
 						let timer = setTimeout(()=> {
 							this.interactionBiggerImageType = 10
 							clearTimeout(timer)
-						},1500)
+						},3000)
 					}
 				}
 			},
@@ -492,26 +492,26 @@
 					this.scrollHeightChange = refs.scrollHeightChange
 					this.miniHeight = refs.video.miniHeight 
 					this.initHeight = height
-					this.diffHeight = (height - this.miniHeight) / this.rpxNum
-					const height2 = this.windowHeight - this.miniHeight / this.rpxNum
+					this.diffHeight = height - this.miniHeight
+					const height2 = this.windowHeight - this.miniHeight 
 					// #ifdef MP-WEIXIN
 					// #endif
 					if(this.diffHeight > 0) {
 						// #ifdef MP-WEIXIN
-						this.popupHeight = this.windowHeight - this.miniHeight / this.rpxNum - this.weixinTop + 31
+						this.popupHeight = this.windowHeight - this.miniHeight  - this.weixinTop + 31
 						// #endif
 						// #ifdef WEB
-						this.popupHeight = this.windowHeight - this.miniHeight / this.rpxNum - this.weixinTop
+						this.popupHeight = this.windowHeight - this.miniHeight - this.weixinTop
 						// #endif
-						this.fixTop = this.miniHeight / this.rpxNum + this.weixinTop
+						this.fixTop = this.miniHeight  + this.weixinTop
 					}else{
 						// #ifdef MP-WEIXIN
-						this.popupHeight = this.windowHeight - height / this.rpxNum - this.weixinTop + 31
+						this.popupHeight = this.windowHeight - height - this.weixinTop + 31
 						// #endif
 						// #ifdef WEB
-						this.popupHeight = this.windowHeight - height / this.rpxNum - this.weixinTop
+						this.popupHeight = this.windowHeight - height  - this.weixinTop
 						// #endif
-						this.fixTop = this.initHeight / this.rpxNum + this.weixinTop
+						this.fixTop = this.initHeight  + this.weixinTop
 					}
 					let timer = setInterval(() => {
 						const ref = uni.createSelectorQuery().in(this).select(".reviewsTopRef");
@@ -524,7 +524,6 @@
 							}
 						}).exec()
 					},100)
-					this.judgeTop2 = this.diffHeight > 0 ? this.miniHeight / this.rpxNum : this.initHeight / this.rpxNum
 				})
 			},
 			pageScroll(e) {
@@ -696,8 +695,8 @@
 		top: 0;
 		left: 0;
 		width: 750rpx;
-		background: rgba(0, 0, 0, 0.1);
-		height: 60rpx;
+		background: #004887;
+		height: 70rpx;
 		z-index: 101;
 		// #ifdef MP-WEIXIN
 		height: 170rpx;
@@ -706,10 +705,15 @@
 		// #endif
 		
 		.goBack{
+			width: 48rpx;
+			height: 48rpx;
+			display: flex;
+			align-items: center;
+			justify-content: center;
 			position: absolute;
 			left: 12rpx;
 			// #ifdef MP-WEIXIN
-			top: 90rpx;
+			bottom: 8px;
 			// #endif
 			/* #ifndef MP-WEIXIN */
 			top: 50%;
@@ -722,7 +726,7 @@
 	.loadingGif{
 		height: 60px;
 		position: absolute;
-		bottom: -8px;
+		bottom: 0;
 		left: 50%;
 		transform: translateX(-50%);
 	}
@@ -819,9 +823,14 @@
 					transform: translate(-50%,-50%);
 					width: 460rpx;
 					z-index: 100;
+					display: none;
 					
 					.interactionBiggerImage{
 						width: 460rpx;
+					}
+					
+					&.active{
+						display: block;
 					}
 				}
 			}

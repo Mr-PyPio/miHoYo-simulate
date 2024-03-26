@@ -10,15 +10,15 @@
 		<view  v-if="topBanner.length > 0" >
 			<banner :topBanner="topBanner" ref="swiperBanner"></banner>
 		</view>
-		<view  v-if="mapShowData.length > 0">
-			<survey-catalogicon :mapShowData="mapShowData" ref="mapIcon"></survey-catalogicon> 
+		<view  v-if="mapData.length > 0">
+			<survey-catalogicon :mapShowData=" mapData.children.slice(0,7)" ref="mapIcon"></survey-catalogicon> 
 		</view>
 		<view  v-if="hotRecommendData.list && hotRecommendData.list.length > 0">
 			<hot-recommend ref="hotRecommend" :hotRecommendData="hotRecommendData"></hot-recommend>
 		</view>
 		
-		<view v-if="gameplayExplorationShowData && gameplayExplorationShowData.length > 0" >
-			<game-play :gameplayExplorationShowData="gameplayExplorationShowData" ref="gameplay"></game-play>
+		<view v-if="gameplayExplorationData && gameplayExplorationData.length > 0" >
+			<game-play :gameplayExplorationShowData="gameplayExplorationData.children.slice(0,4)" ref="gameplay"></game-play>
 		</view>
 		<view v-if="cardGroupWalkthroughData.children && cardGroupWalkthroughData.children.length > 0">
 			<card-group :cardGroupData="cardGroupWalkthroughData"></card-group>
@@ -107,13 +107,8 @@
 				NPC_challenge_data:  {},
 				latestContentData:  {},
 				videoWalkthroughData:  {},
-				themeRecommendData:  {},
-				selectGuideData: {},
 				fanContentData: {},
-				cardGroupVideoData: {},
 				indexSortData: {},
-				tournamentInterviewData: {},
-				sevenSacredData: {},
 				gameSwiperOption: {
 					slidesPerView : 1.3,
 					spaceBetween: 10
@@ -133,40 +128,20 @@
 				this.topBanner = res.data.list
 			},
 			async getSurveyMap() {
-				const {data: res} = await surveyMapApi()
-				const list = this.resetData(res.data.list)
+				const list = await surveyMapApi()
+				console.log(list)
 				if(this.pageLoading) {
 					this.pageLoading = false
 				}
 				this.mapData = list[0]
-				this.mapShowData = list[0].children.slice(0,7)
 				this.hotRecommendData = list[1]
 				this.gameplayExplorationData = list[2]
-				this.gameplayExplorationShowData = list[2].children.slice(0,4)
 				this.cardGroupWalkthroughData = list[3]
 				this.NPC_challenge_data = list[4]
 				this.latestContentData = list[5]
 				this.videoWalkthroughData = list[6]
-				this.themeRecommendData = list[7]
-				this.selectGuideData = list[8]
 				this.fanContentData = list[9]
-				this.cardGroupVideoData = list[10]
 				this.indexSortData = list[11]
-				this.tournamentInterviewData = list[12]
-				this.sevenSacredData = list[13]
-			},
-
-			resetData(arr) {
-				for(let i = 0; i < arr.length; i ++) {
-					if(arr[i].ch_ext) {
-						const arrjson = JSON.parse(arr[i].ch_ext)
-						arr[i].ch_ext = arrjson[2]
-						if(arr[i].children.length > 0) {
-							arr[i].children = this.resetData(arr[i].children)
-						}
-					}
-				}
-				return arr
 			},
 			tochMoveStop(event) {
 				event.stopPropagation();

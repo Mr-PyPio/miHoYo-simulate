@@ -91,8 +91,6 @@
 				
 				<user-about v-if="uid" :uid = "uid" :showCategoryMode="false"></user-about>
 				
-				<img-pop-up></img-pop-up>
-				
 			</view>
 			<image src="http://8.138.116.67:5230/miyoushe/search/loading1.gif" mode="aspectFit" class="loading" v-if="loading"></image>
 		</view>
@@ -101,15 +99,11 @@
 
 <script>
 	import {mapState} from 'vuex'
-	import UserPopup from '../../components/user/userPopup.vue'
 	import {getGameRecordCard,getUserFullInfo} from '../../common/api.js'
 	import UserAbout from '../../components/user/userAbout.vue'
-	import ImgPopUp from '@/components/common/imgPopUp.vue'
 	export default {
 		components: {
 			UserAbout,
-			UserPopup,
-			ImgPopUp
 		},
 		props: {
 			uid:{

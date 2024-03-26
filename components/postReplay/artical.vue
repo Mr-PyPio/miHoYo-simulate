@@ -1,7 +1,7 @@
 <template>
 	<view class="postReplayContent">
 		<template v-if="!pageLoading">
-			<view class="reviewsTop fixed" :style="{'top' : fixTop + 'px','display': reviewsTopFixed}">
+			<view class="reviewsTop fixed" :style="{'top' : fixTop,'display': reviewsTopFixed}">
 					<view class="topLeft">
 						<view class="topLeftItem" :class="{'active' : reviewsTop.leftType === 0}" @tap="typeSelectLeft()">
 							全部评论
@@ -27,13 +27,7 @@
 					<view class="goBack" @tap.stop="goBack">
 						<u-icon name="arrow-left" color="#FFFFFF" size="36"></u-icon>
 					</view>
-				</view>
-				
-			<scroll-view :scroll-y="scrollY" :style="{'height': windowHeight + 'px'}" :scroll-top="scrollTop"
-				@scroll="pageScroll" @scrolltolower="scrolltolower" :refresher-enabled="true" :show-scrollbar="true"
-				:refresher-triggered="refresherTrg"  @refresherpulling="scrollPull" :scroll-with-animation='true'
-			>
-				<view class="postContent" v-if="postDetail.post">
+					
 					<view class="userMessageWrap" v-if="userData" @tap.stop="navigateToUser(userData.uid)">
 						<view class="userImage">
 							<image :src="userData.avatar_url|imageUrlReset(50,80)" mode="aspectFill" class="userAvatarImage"></image>
@@ -44,7 +38,9 @@
 						</view>
 						<view class="userMessage">
 							<view class="userName">
-								{{userData.nickname}}
+								<view class="text">
+									{{userData.nickname}}
+								</view>
 								<image :src="`https://bbs-static.miyoushe.com/level/level${userData.level_exp.level}.png`" 
 									mode="heightFix" class="levelLogo">
 								</image>
@@ -57,6 +53,13 @@
 							已关注
 						</view>
 					</view>
+				</view>
+				
+			<scroll-view :scroll-y="scrollY" :style="{'height': windowHeight*rpxNum - scrollPadding + 'rpx'}" :scroll-top="scrollTop"
+				@scroll="pageScroll" @scrolltolower="scrolltolower" :refresher-enabled="true" :show-scrollbar="true"
+				:refresher-triggered="refresherTrg"  @refresherpulling="scrollPull" :scroll-with-animation='true'
+			>
+				<view class="postContent" v-if="postDetail.post">
 					<view class="postSubject">
 						<view class="left" v-if="forumType != 'COS'">
 							{{postDetail.post.subject}}
@@ -109,6 +112,9 @@
 							</view>
 							<view class="num">
 								{{item.upvote_cnt|resetNum}}
+							</view>
+							<view class="interactionBiggerImageWrap" v-if="interactionBiggerImageType === index + 1">
+								<image :src="imageBaseUrl + 'poseRequlay/post_upvote_stat_'+ (index + 1) +'_active.png'" mode="widthFix" class="interactionBiggerImage"></image>
 							</view>
 						</view>
 					</view>
@@ -170,18 +176,16 @@
 				</view>
 			</view>
 		</template>
-		<image src="http://8.138.116.67:5230/miyoushe/search/loading1.gif" mode="aspectFit" class="loading" v-if="pageLoading"></image>
+		<image src="http://8.138.116.67:5230/miyoushe/search/loading1.gif" mode="aspectFit" class="pageloading" v-if="pageLoading"></image>
 	</view>
 </template>
 
 <script>
 	import {mapState} from 'vuex'
 	import {postFullApi,upvoteApi,follow,unfollow,collectPost} from "../../common/api.js"
-	import VideoFull from "../../components/postReplay/videoFull.vue"
 	import ReviewsList from '../../components/common/reviewsList.vue'
 	export default {
 		components: {
-			VideoFull,
 			ReviewsList
 		},
 		props: {
@@ -199,6 +203,7 @@
 				is_following: false,
 				is_collected: false,
 				choose_upvote_type: 0,
+				interactionBiggerImageType: 0,
 				userLabel: '',
 				reviewsTop: {
 					reviewNum: 0,
@@ -234,6 +239,12 @@
 				structured_content: '',
 				pageLoading: true,
 				weixinTop: 0,
+				// #ifdef WEB
+				scrollPadding: 100,
+				// #endif
+				// #ifdef MP-WEIXIN
+				scrollPadding: 260,
+				// #endif
 			}
 		},
 		created() {
@@ -279,10 +290,10 @@
 				const video = this.postDetail.vod_list[0]
 				
 				// #ifdef WEB
-				this.fixTop = 30
+				this.fixTop = 100 + 'rpx'
 				// #endif
 				// #ifdef MP-WEIXIN
-				this.fixTop = this.weixinTop
+				this.fixTop = this.weixinTop + 'px'
 				// #endif
 				
 				this.$nextTick(function() {
@@ -323,6 +334,13 @@
 						}else{
 							this.likeUrl = `${this.imageBaseUrl}poseRequlay/post_upvote_stat_${type}.png`
 						}
+					}
+					if(!is_cancel) {
+						this.interactionBiggerImageType = type
+						let timer = setTimeout(()=> {
+							this.interactionBiggerImageType = 10
+							clearTimeout(timer)
+						},1500)
 					}
 				}
 			},
@@ -444,9 +462,11 @@
 				}).exec()
 			},
 			scrolltolower() {
-				this.$nextTick(() => {
-					this.$refs.reviewsListRef.getPostReplayData('update')
-				})
+				if(!this.loading) {
+					this.$nextTick(() => {
+						this.$refs.reviewsListRef.getPostReplayData('update')
+					})
+				}
 			},
 			scrollPull(e) {
 				//#ifdef MP-WEIXIN
@@ -601,7 +621,7 @@
 </script>
 
 <style lang="scss" scoped>
-.loading{
+.pageloading{
 	width: 400rpx;
 	position: absolute;
 	top: 50%;
@@ -622,25 +642,120 @@
 		top: 0;
 		left: 0;
 		width: 750rpx;
-		background: rgba(0, 0, 0, 0.1);
-		height: 60rpx;
+		background: #004887;
+		height: 100rpx;
 		z-index: 10;
 		// #ifdef MP-WEIXIN
 		height: 170rpx;
 		box-sizing: border-box;
 		padding-top: 90rpx;
 		// #endif
+		display: flex;
+		align-items:center;
 		
 		.goBack{
-			position: absolute;
-			left: 12rpx;
-			// #ifdef MP-WEIXIN
-			top: 90rpx;
-			// #endif
-			/* #ifndef MP-WEIXIN */
-			top: 50%;
-			transform: translateY(-50%);
-			/* #endif */
+			width: 50rpx;
+			height: 50rpx;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			margin-right: 30rpx;
+			margin-left: 20rpx;
+		}
+		
+		.userMessageWrap{
+			display: flex;
+			align-items: center;
+			
+			.userImage{
+				width: 72rpx;
+				height: 72rpx;
+				position: relative;
+				font-size: 0;
+				
+				.userAvatarImage{
+					width: 72rpx;
+					height: 72rpx;
+					border-radius: 72rpx;
+				}
+				
+				.userAvatarFrameImage{
+					width: 84rpx;
+					height: 84rpx;
+					position: absolute;
+					left: -6rpx;
+					top: -6rpx;
+				}
+				
+				.certificate{
+					position: absolute;
+					right: -4rpx;
+					bottom: -4rpx;
+					width: 20rpx;
+					height: 20rpx;
+				}
+			}
+			
+			.userMessage{
+				padding-left: 12rpx;
+				max-width: 500rpx;
+				
+				.userName{
+					font-size: 24rpx;
+					color: #fff;
+					height: 42rpx;
+					display: flex;
+					align-items: center;
+					margin-top: 6rpx;
+					
+					
+					.levelLogo{
+						height: 24rpx;
+						margin-left: 5px;
+					}
+					
+					/* #ifdef MP-WEIXIN */
+					.text{
+						max-width: 140rpx;
+						overflow: hidden;
+						text-overflow: ellipsis;
+						white-space: nowrap;
+					}
+					/* #endif */
+				}
+				
+				.userLabel{
+					font-size: 22rpx;
+					color: #ddd;
+					line-height: 32rpx;
+				}
+			}
+			
+			.follow{
+				padding: 3px;
+				width: 40px;
+				border-radius: 3px;
+				background: #fff;
+				color: #3c9cff;
+				text-align: center;
+				font-size: 20rpx;
+				position: absolute;
+				right: 32rpx;
+				top: 50%;
+				transform: translateY(-50%);
+				margin-top: 8rpx;
+				border: 1px solid #3c9cff;
+				line-height: 1.5em;
+				/* #ifdef MP-WEIXIN */
+				right: 220rpx;
+				margin-top: 40rpx;
+				/* #endif */
+				
+				&.unfollow{
+					color: #ddd;
+					border: 1px solid #ddd;
+				}
+			}
 		}
 	}
 	
@@ -655,7 +770,9 @@
 	
 	.postContent{
 		padding: 24rpx;
-		padding-bottom: 70rpx;
+		/* #ifdef WEB */
+		padding-top: 120rpx;
+		/* #endif */
 		
 		.postSubject{
 			position: relative;
@@ -663,7 +780,7 @@
 			.left{
 				width: 100%;
 				line-height: 40rpx;
-				font-size: 34rpx;
+				font-size: 42rpx;
 				line-height: 1.5em;
 				color: #333;
 				font-weight: 600;
@@ -794,92 +911,6 @@
 					font-size: 20rpx;
 					color: #999;
 					padding-left: 4rpx;
-				}
-			}
-		}
-		
-		.userMessageWrap{
-			display: flex;
-			align-items: center;
-			position: relative;
-			margin-bottom: 8px;
-			// #ifndef MP-WEIXIN
-			padding-top: 60rpx;
-			// #endif
-			
-			.userImage{
-				width: 72rpx;
-				height: 72rpx;
-				position: relative;
-				font-size: 0;
-				
-				.userAvatarImage{
-					width: 72rpx;
-					height: 72rpx;
-					border-radius: 72rpx;
-				}
-				
-				.userAvatarFrameImage{
-					width: 84rpx;
-					height: 84rpx;
-					position: absolute;
-					left: -6rpx;
-					top: -6rpx;
-				}
-				
-				.certificate{
-					position: absolute;
-					right: -4rpx;
-					bottom: -4rpx;
-					width: 20rpx;
-					height: 20rpx;
-				}
-			}
-			
-			.userMessage{
-				padding-left: 12rpx;
-				max-width: 500rpx;
-				
-				.userName{
-					font-size: 24rpx;
-					color: #000;
-					height: 42rpx;
-					display: flex;
-					align-items: center;
-					margin-top: 6rpx;
-					
-					.levelLogo{
-						height: 24rpx;
-						margin-left: 5px;
-					}
-				}
-				
-				.userLabel{
-					font-size: 22rpx;
-					color: #ddd;
-					line-height: 32rpx;
-				}
-			}
-			
-			.follow{
-				padding: 3px;
-				width: 40px;
-				border-radius: 3px;
-				background: #fff;
-				color: #3c9cff;
-				text-align: center;
-				font-size: 20rpx;
-				position: absolute;
-				right: 0;
-				top: 50%;
-				transform: translateY(-50%);
-				margin-top: 8rpx;
-				border: 1px solid #3c9cff;
-				line-height: 1.5em;
-				
-				&.unfollow{
-					color: #ddd;
-					border: 1px solid #ddd;
 				}
 			}
 		}

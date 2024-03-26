@@ -1,11 +1,11 @@
 <template>
-	<view class="vodieList" :class="{'fixed': video.initEnd}" v-if="video.videoUrl" :style="{'height': video.videoHeight +'rpx','top': video.top}">
-		<view :style="{'width': '100%', 'height': video.videoHeight +'rpx'}" class="videoBackgroung">
+	<view class="vodieList" :class="{'fixed': video.initEnd}" v-if="video.videoUrl" :style="{'height': video.videoHeight +'px','top': video.top}">
+		<view class="videoBackgroung">
 			<video :src="video.videoUrl"  :id="'video'+ video.videoId" :class="'videoDetail'+video.videoId"  :ref="'video'+ video.videoId"
 				:autoplay="true" :muted="video.videoMute" :initial-time="video.currentTime" :loop="false"
 				object-fit="cover" :show-center-play-btn="false"  :show-fullscreen-btn="false"
 				:poster="video.cover" :controls="false"  :show-mute-btn="false"
-				:style="{'width': video.videoWidth +'rpx', 'height': video.videoHeight +'rpx'}" 
+				:style="{'width': video.videoWidth +'px', 'height': video.videoHeight +'px'}" 
 				@ended = "videoEnded"  @timeupdate="timeupdate"
 				>
 			</video>
@@ -89,7 +89,7 @@
 					initHeight: 0,
 					initEnd: false,
 					heightIsChange: false,
-					miniHeight: 600,
+					miniHeight: 300,
 					top: 0
 				}, 
 				is_following: this.userData.is_following,
@@ -168,8 +168,8 @@
 						resolutions = video.resolutions[0]
 					}
 					this.video.aspectRatio = resolutions.width / resolutions.height
-					const InitHeight = this.windowWidth*this.rpxNum / this.video.aspectRatio
-					const MaxHeight = parseInt(this.windowHeight*this.rpxNum * 0.6)
+					const InitHeight = this.windowWidth / this.video.aspectRatio
+					const MaxHeight = parseInt(this.windowHeight * 0.6)
 					if(InitHeight > MaxHeight) {
 						this.video.videoHeight = MaxHeight
 						this.video.videoWidth = this.video.videoHeight * this.video.aspectRatio
@@ -223,7 +223,7 @@
 				}
 				this.oldScrollTop = top
 				if(this.video.videoHeight > this.video.miniHeight || change) {
-					this.video.videoHeight = this.video.initHeight - top * this.rpxNum 
+					this.video.videoHeight = this.video.initHeight - top 
 					this.video.videoWidth = this.video.videoHeight * this.video.aspectRatio
 				}
 			}
@@ -244,6 +244,8 @@
 		}
 		
 		.videoBackgroung{
+			width: 100%;
+			height: 100%;
 			background: #000;
 			display: flex;
 			justify-content: center;

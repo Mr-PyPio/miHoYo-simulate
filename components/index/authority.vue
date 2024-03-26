@@ -28,7 +28,7 @@
 					
 					<view class="postList">
 						<template v-if="tabType1 != 2">
-							<view class="postListItems" v-for="(item,index) of postList" :key="item.post.post_id"  @tap.stop="navigatePostReplay(item.post.post_id)">
+							<view class="postListItems" v-for="(item,index) of postList" :key="item.post.post_id"  @tap.stop="navigatePostReplay(item.post.post_id,item.post.view_type)">
 								<view class="itemsLeftDesc">
 									<view class="subject">
 										{{item.post.subject}}
@@ -43,7 +43,7 @@
 							</view>
 						</template>
 						<template v-if="tabType1 === 2">
-							<view class="postListItems2" v-for="(item,index) of postList" :key="item.post.post_id"  @tap.stop="navigatePostReplay(item.post.post_id)">
+							<view class="postListItems2" v-for="(item,index) of postList" :key="item.post.post_id"  @tap.stop="navigatePostReplay(item.post.post_id,item.post.view_type)">
 								<view class="itemsRightImage2">
 									<image :src="item.image_list[0].url|imageUrlReset(500,80)" mode="widthFix" class="image"></image>
 								</view>
@@ -157,6 +157,7 @@
 				}
 			},
 			navigatePostReplay(post_id,type) {
+				console.log(post_id,type)
 				if(type === 5) {
 					// uni.navigateTo({
 					// 	url: `/subPackages/postReplay/postReplay?post_id=${post_id}`,
