@@ -2,7 +2,7 @@
 	<view class="videoWalkthrough">
 		<ModuleTitle :moduleTitle="moduleTitle"></ModuleTitle>
 		<view class="videoWalkthroughLine" style="height: 1px;"></view>
-		<view class="tabAndSwiper" v-if="swiperData.length > 0" @touchmove.stop="tochMoveStop">
+		<view class="tabAndSwiper" v-if="swiperData.length > 0">
 			<view class="tab">
 				<view v-for="(item,index) in swiperData" :key="index" :class="{'active': index === current}"
 					@tap.stop="tabClick(index)" class="tabItems" >
@@ -54,9 +54,6 @@
 			},
 			swiperChange(e) {
 				this.current = e.detail.current
-			},
-			tochMoveStop(event) {
-				event.stopPropagation();
 			},
 		},
 		mounted() {

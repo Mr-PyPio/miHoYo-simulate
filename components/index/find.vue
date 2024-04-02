@@ -1,5 +1,5 @@
 <template>
-	<scroll-view class="itemContent" @scroll="scroll" @scrolltolower="scrollBottom"
+	<scroll-view class="itemContent"  @scrolltolower="scrollBottom"
 			:refresher-triggered="find.findRefresherTrg"  :scroll-y="find.scrollY" 
 			:refresher-enabled="find.findRefresherAble"
 			@refresherpulling="scrollPull" :refresher-threshold="100" >
@@ -26,7 +26,7 @@
 			
 			<view class="consultDiscover" v-if="consultDiscoverData.length">
 				<view class="consultDiscoverItem" v-for="(item,index) in consultDiscoverData" :key="item.post.post_id">
-					<PostItems :item="item"></PostItems>
+					<PostItems :item="item" ></PostItems>
 					<view class="message_hotTips" v-if="index === 4">
 						<view class="hotTipsTop">
 							<text>大家都在聊</text>
@@ -127,13 +127,6 @@
 				this.filter = Object.keys(databox)
 				const newList = list
 				this.consultDiscoverData.push(...newList)
-			},
-			scroll(e) {
-				// if(this.swiperHeight) {
-				// 	const top = e.detail.scrollTop
-				// 	this.updateSwiperScrollTop(top)
-				// 	this.updateScrollProp(top)
-				// }
 			},
 			scrollBottom() {
 				this.upDateDiscover()

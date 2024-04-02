@@ -215,7 +215,7 @@ exports.postReplaiesApi = (post_id,is_hot,order_type = 0,last_id = 0,only_master
 			order_type,
 			is_hot,
 			only_master,
-			size:6,
+			size,
 			from_external_link: false,
 		}
 	}else{
@@ -223,7 +223,7 @@ exports.postReplaiesApi = (post_id,is_hot,order_type = 0,last_id = 0,only_master
 			post_id,
 			order_type,
 			is_hot,
-			size:6,
+			size,
 			only_master,
 			from_external_link: false,
 		}
@@ -231,12 +231,12 @@ exports.postReplaiesApi = (post_id,is_hot,order_type = 0,last_id = 0,only_master
 	return apiRequest('getPostReplaies',data)
 }
 
-exports.foldedPostRepliesApi = (post_id,is_hot,order_type = 0,size,only_master) => {
+exports.foldedPostRepliesApi = (post_id,is_hot,size,order_type = 0,only_master) => {
 	const data = {
 		post_id,
 		order_type,
 		is_hot,
-		size:20,
+		size,
 		only_master: false,
 	}
 	return apiRequest('getFoldedPostReplies',data)

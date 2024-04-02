@@ -156,7 +156,7 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		z-index: 10000;
+		z-index: 100;
 		top: 0;
 		left: 0;
 		/* #ifdef MP-WEIXIN */

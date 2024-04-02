@@ -1,5 +1,5 @@
 <template>
-	<view class="tabAndSwiper" v-if="swiperData.length > 0" @touchmove.stop="tochMoveStop">
+	<view class="tabAndSwiper" v-if="swiperData.length > 0">
 		<view class="tabAndSwiperLine" style="height: 1px;"></view>
 		<view class="tab">
 			<view v-for="(item,index) in swiperData" :key="index" :class="{'active': index === current}"
@@ -63,10 +63,7 @@
 			swiperChange(e) {
 				this.current = e.detail.current
 				this.$refs[`recommend${e.detail.current}`][0].loading = true
-			},
-			tochMoveStop(event) {
-				event.stopPropagation();
-			},
+			}
 		},
 		mounted() {
 			this.$nextTick(function() {

@@ -4,7 +4,7 @@
 		next-margin="24rpx" :circular="true" style="height:172rpx">
 			<swiper-item v-for="(item,index) in topBanner" :key="index">
 				<view class="swiper-item">
-					<LazyImageTwo :src="item.image|imageUrlReset(500,80)" mode="widthFix" :index="item.id"></LazyImageTwo>
+					<LazyImageTwo :src="item.image|imageUrlReset(200,80)" mode="widthFix" :index="item.id"></LazyImageTwo>
 				</view>
 			</swiper-item>
 		</swiper>

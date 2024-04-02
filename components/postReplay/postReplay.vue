@@ -1,11 +1,17 @@
 <template>
 	<view class="postReplayContent">
 		<template v-if="!pageLoading">
-			<video-full :videoData="defaultVideoData" :userData="userData" v-if="defaultVideoData"
-					@followUser="followUser" @setHiddenContainerStyle="setHiddenContainerStyle" ref="videoFullRef">
-				</video-full>
+				<view class="videoWrapper" :style="{'top': videoTop}">
+					<view class="videoBackgroung" 
+						:style="{'width': dataInitWidth + 'rpx','height': dataInitHeight + 'px'}"
+						:data-initheight="dataInitHeight" :data-aspectratio="dataAspectRatio">
+						<video-full :videoData="defaultVideoData" :userData="userData" v-if="defaultVideoData" class="videoFull"
+								@followUser="followUser" @setHiddenContainerStyle="setHiddenContainerStyle" ref="videoFullRef">
+						</video-full>
+					</view>
+				</view>
 				
-				<view class="reviewsTop fixed" :style="{'top' : fixTop - 2 + 'px','display': reviewsTopFixed}">
+				<view class="reviewsTop fixed reviewsTopFixed">
 					<view class="topLeft" @tap.stop="showSort($event,'left')">
 						{{reviewsTop.leftText}}
 						<u-icon name="arrow-down-fill" color="#222" size="18" style="margin-left: 3px;"></u-icon>
@@ -16,80 +22,93 @@
 					</view>
 				</view>
 				
-				<view class="topTitleTab">
-					<view class="goBack" @tap.stop="goBack">
+				<view class="topTitleTab" @tap.stop="goBack">
+					<view class="goBack" @tap="test.init">
 						<u-icon name="arrow-left" color="#FFFFFF" size="36"></u-icon>
 					</view>
 				</view>
-				
+			
+			
 			<scroll-view :scroll-y="scrollY" :style="{'height': scrollWrapHeight}" :scroll-top="scrollTop"
-				@scroll="pageScroll" @scrolltolower="scrolltolower" :refresher-enabled="true" :show-scrollbar="true"
+				@scroll="test.pageScroll" @scrolltolower="scrolltolower" :refresher-enabled="true" :show-scrollbar="true"
 				:refresher-triggered="refresherTrg"  @refresherpulling="scrollPull" :scroll-with-animation='true'
 			>
 				<view :style="{'height': hiddenContainerHeight + 'px','width': '750rpx','position':'relative'}" v-if="hiddenContainerHeight">
+					
+					<!-- #ifdef MP-WEIXIN -->
+					<view class="loadingGif" style="height: 40px;">
+						<u-loading-icon mode="circle" size="42"></u-loading-icon>
+					</view>
+					<!-- #endif -->
+					<!-- #ifdef WEB -->
 					<image :src="imageBaseUrl + 'poseRequlay/loading.gif'" mode="heightFix" class="loadingGif">
 					</image>
+					<!-- #endif -->
 				</view>
 				<view class="postContent" v-if="postDetail.post">
-					<view class="postSubject">
-						<view class="left">
-							{{postDetail.post.subject}}
-						</view>
-						<view class="right" @tap="showSubjectDetail">
-							<u-icon name="arrow-down" color="#aaa" size="32"></u-icon>
-						</view>
-					</view>
-					<view class="postTip">
-						{{postDetail.post.created_at|changeMonAndDay}}
-						{{postTip}}
-					</view>
-					<view class="postTip2" v-if="postDetail.topics.length">
-						<view class="postTipitem" v-for="(item,index) in postDetail.topics" :key="index">
-							{{item.name}}
-						</view>
-					</view>
-					<view class="interaction">
-						<view class="interactionItems"  @tap.stop="interactionClick(item.upvote_type)" 
-						:class="{'active': choose_upvote_type === index + 1}"
-						v-for="(item,index) in postDetail.stat.post_upvote_stat" :key="index">
-							<view class="imagLogo">
-								<image :src="imageBaseUrl + 'poseRequlay/post_upvote_stat_'+ (index + 1) +'.png'" mode="heightFix" class="image"></image>
+					<view class="postContentCenterWrap">
+						<view class="postSubject">
+							<view class="left">
+								{{postDetail.post.subject}}
 							</view>
-							<view class="num">
-								{{item.upvote_cnt|resetNum}}
-							</view>
-							<view class="interactionBiggerImageWrap" :class="{'active': interactionBiggerImageType === index + 1 }" >
-								<image :src="imageBaseUrl + 'poseRequlay/post_upvote_stat_'+ (index + 1) +'_active.png'" mode="widthFix" class="interactionBiggerImage"></image>
+							<view @tap.stop="showSubjectDetail">
+								<view class="right" @tap="test.moveScroll">
+									<u-icon name="arrow-down" color="#aaa" size="32"></u-icon>
+								</view>
 							</view>
 						</view>
-					</view>
-					
-					<view class="userMessageWrap" v-if="userData" @tap.stop="navigateToUser(userData.uid)">
-						<view class="userImage">
-							<image :src="userData.avatar_url|imageUrlReset(50,80)" mode="aspectFill" class="userAvatarImage"></image>
-							<image :src="userData.pendant|imageUrlReset(50,80)" mode="aspectFill" class="userAvatarFrameImage" v-if="userData.pendant"></image>
-								<image v-if="userData.certification && userData.certification.type"
-								:src="`${imageBaseUrl}poseRequlay/certificate${userData.certification.type}.png`" mode="widthFix" class="certificate">
-							</image>
+						<view class="postTip">
+							{{postDetail.post.created_at|changeMonAndDay}}
+							{{postTip}}
 						</view>
-						<view class="userMessage">
-							<view class="userName">
-								{{userData.nickname}}
-								<image :src="`https://bbs-static.miyoushe.com/level/level${userData.level_exp.level}.png`" 
-									mode="heightFix" class="levelLogo">
+						<view class="postTip2" v-if="postDetail.topics.length">
+							<view class="postTipitem" v-for="(item,index) in postDetail.topics" :key="index">
+								{{item.name}}
+							</view>
+						</view>
+						<view class="interaction">
+							<view class="interactionItems"  @tap.stop="interactionClick(item.upvote_type)" 
+							:class="{'active': choose_upvote_type === index + 1}"
+							v-for="(item,index) in postDetail.stat.post_upvote_stat" :key="index">
+								<view class="imagLogo">
+									<image :src="imageBaseUrl + 'poseRequlay/post_upvote_stat_'+ (index + 1) +'.png'" mode="heightFix" class="image"></image>
+								</view>
+								<view class="num">
+									{{item.upvote_cnt|resetNum}}
+								</view>
+								<view class="interactionBiggerImageWrap" :class="{'active': interactionBiggerImageType === index + 1 }" >
+									<image :src="imageBaseUrl + 'poseRequlay/post_upvote_stat_'+ (index + 1) +'_active.png'" mode="widthFix" class="interactionBiggerImage"></image>
+								</view>
+							</view>
+						</view>
+						
+						<view class="userMessageWrap" v-if="userData" @tap.stop="navigateToUser(userData.uid)">
+							<view class="userImage">
+								<image :src="userData.avatar_url|imageUrlReset(50,80)" mode="aspectFill" class="userAvatarImage"></image>
+								<image :src="userData.pendant|imageUrlReset(50,80)" mode="aspectFill" class="userAvatarFrameImage" v-if="userData.pendant"></image>
+									<image v-if="userData.certification && userData.certification.type"
+									:src="`${imageBaseUrl}poseRequlay/certificate${userData.certification.type}.png`" mode="widthFix" class="certificate">
 								</image>
 							</view>
-							<view class="userLabel">
-								{{userData|getUserLabel}}
+							<view class="userMessage">
+								<view class="userName">
+									{{userData.nickname}}
+									<image :src="`https://bbs-static.miyoushe.com/level/level${userData.level_exp.level}.png`" 
+										mode="heightFix" class="levelLogo">
+									</image>
+								</view>
+								<view class="userLabel">
+									{{userData|getUserLabel}}
+								</view>
 							</view>
-						</view>
-						
-						
-						<view class="follow" @tap.stop="followUser(userData.uid)" v-if="!is_following">
-							+ 关注
-						</view>
-						<view class="follow unfollow" @tap.stop="followUser(userData.uid)" v-if="is_following">
-							已关注
+							
+							
+							<view class="follow" @tap.stop="followUser(userData.uid)" v-if="!is_following">
+								+ 关注
+							</view>
+							<view class="follow unfollow" @tap.stop="followUser(userData.uid)" v-if="is_following">
+								已关注
+							</view>
 						</view>
 					</view>
 					
@@ -113,24 +132,26 @@
 			</scroll-view>
 			
 				
-			<view class="fixWrapp" v-show="reviewsTop.show" @click="fixWrappClick" >
-				<view class="Warp" v-show="reviewsTop.leftWarp" :style="{'top':`${reviewsTop.sortListTop}px`,'left': `${reviewsTop.sortListLeft}px`}">
-					<view class="warpItem" :class="{'active' : reviewsTop.leftType === 0}" @tap="typeSelectLeft(0)">
-						全部评论
+			<view v-show="reviewsTop.show" @click.stop="fixWrappClick" >
+				<view class="fixWrapp"  @tap="test.moveScroll">
+					<view class="Warp" v-show="reviewsTop.leftWarp" :style="{'top':`${reviewsTop.sortListTop}px`,'left': `${reviewsTop.sortListLeft}px`}">
+						<view class="warpItem" :class="{'active' : reviewsTop.leftType === 0}" @tap="typeSelectLeft(0)">
+							全部评论
+						</view>
+						<view class="warpItem" :class="{'active' : reviewsTop.leftType === 1}"  @tap="typeSelectLeft(1)">
+							只看楼主
+						</view>
 					</view>
-					<view class="warpItem" :class="{'active' : reviewsTop.leftType === 1}"  @tap="typeSelectLeft(1)">
-						只看楼主
-					</view>
-				</view>
-				<view class="Warp" v-show="reviewsTop.rightWarp" :style="{'top':`${reviewsTop.sortListTop}px`,'right': `${reviewsTop.sortListRight}px`}">
-					<view class="warpItem" :class="{'active' : reviewsTop.rightType === 0}"  @tap="typeSelectRight(0)">
-						热门
-					</view>
-					<view class="warpItem" :class="{'active' : reviewsTop.rightType === 1}"  @tap="typeSelectRight(1)">
-						最早
-					</view>
-					<view class="warpItem" :class="{'active' : reviewsTop.rightType === 2}"  @tap="typeSelectRight(2)">
-						最新
+					<view class="Warp" v-show="reviewsTop.rightWarp" :style="{'top':`${reviewsTop.sortListTop}px`,'right': `${reviewsTop.sortListRight}px`}">
+						<view class="warpItem" :class="{'active' : reviewsTop.rightType === 0}"  @tap="typeSelectRight(0)">
+							热门
+						</view>
+						<view class="warpItem" :class="{'active' : reviewsTop.rightType === 1}"  @tap="typeSelectRight(1)">
+							最早
+						</view>
+						<view class="warpItem" :class="{'active' : reviewsTop.rightType === 2}"  @tap="typeSelectRight(2)">
+							最新
+						</view>
 					</view>
 				</view>
 			</view>
@@ -198,6 +219,101 @@
 	</view>
 </template>
 
+
+<script module="test" lang="wxs">
+	var isFirst = 1
+	var initHeight = 0
+	var aspectratio = 0
+	var height = 0
+	var diffHeight = 0
+	var topFixDiff = 0
+	var topFix = 0
+	var fixTopDom = null
+	var videoDom = null
+	
+	var initData = function(e,ins) {
+		videoDom = ins.selectComponent('.videoBackgroung')
+		var videoData = videoDom.getDataset()
+		initHeight = Number(videoData.initheight)
+		aspectratio = Number(videoData.aspectratio)
+		height = initHeight
+		diffHeight = height - 300
+		isFirst = 0
+		fixTopDom = ins.selectComponent('.reviewsTopFixed')
+		var topFixTop = ins.selectComponent('.reviewsTopRef').getBoundingClientRect().top
+		if(initHeight >= 300) {
+			topFixDiff = topFixTop - 300
+			// #ifdef MP-WEIXIN
+			topFix = 385
+			// #endif
+			// #ifdef WEB
+			topFix = 300
+			// #endif
+		}else{
+			topFixDiff = topFixTop - initHeight
+			topFix = initHeight
+			// #ifdef MP-WEIXIN
+			topFix = initHeight + 85
+			// #endif
+			// #ifdef WEB
+			topFix = initHeight
+			// #endif
+		}
+	}
+	
+	var pageScroll = function(e,ins) {
+		var scrollTop = e.detail.scrollTop
+		if(isFirst === 1) {
+			initData(e,ins)
+		}
+		if(scrollTop > topFixDiff) {
+			fixTopDom.setStyle({
+				'display': 'flex',
+				'top': topFix + 'px',
+			})
+		}else{
+			fixTopDom.setStyle({
+				'display': 'none'
+			})
+		}
+		if(initHeight >= 300 && scrollTop > 0) {
+			if(scrollTop < diffHeight ) {
+				height = initHeight - scrollTop
+				var width = height * aspectratio
+				videoDom.setStyle({
+					'height':  height + 'px',
+					'width':  width + 'px',
+					'transition-duration': '0ms'
+				})
+			}
+		}
+	}
+	
+	var init = function(e,ins) {
+		isFirst = 1
+	}
+	
+	var moveScroll = function(e,ins) {
+		if(isFirst === 1) {
+			initData(e,ins)
+		}
+		if(initHeight > 300) {
+			var width = 300 * aspectratio
+			videoDom.setStyle({
+				'height': '300px',
+				'width':  width + 'px',
+				'transition-duration': '200ms'
+			})
+		}
+	}
+	
+	module.exports = {
+		pageScroll: pageScroll,
+		init: init,
+		moveScroll: moveScroll
+	}
+</script>
+
 <script>
 	import {mapState} from 'vuex'
 	import {postFullApi,upvoteApi,follow,unfollow,collectPost} from "../../common/api.js"
@@ -249,8 +365,6 @@
 				subjectPopupShow: false,
 				popupHeight: 0,
 				scrollTop: 0,
-				reviewsTopFixed: 'none',
-				fixTop: 0,
 				bookUrl:'http://8.138.116.67:5230/miyoushe/poseRequlay/book.png',
 				bookUrl1:'http://8.138.116.67:5230/miyoushe/poseRequlay/book.png',
 				bookUrl2:'http://8.138.116.67:5230/miyoushe/poseRequlay/book2.png',
@@ -259,16 +373,22 @@
 				likeUrl2:'http://8.138.116.67:5230/miyoushe//poseRequlay/like2.png',
 				pageLoading: true,
 				weixinTop: 0,
-				scrollWrapHeight: '100%'
+				scrollWrapHeight: '100%',
+				dataInitHeight: 0,
+				dataAspectRatio: 0,
+				dataInitWidth: 0,
+				videoTop: 0,
+				oldScrollTop: 0,
 			}
 		},
 		computed: {
-			...mapState(['windowHeight','rpxNum','emotion','emotionKey','imageBaseUrl'])
+			...mapState(['windowHeight','rpxNum','emotion','emotionKey','imageBaseUrl']),
 		},
 		created() {
 			// #ifdef MP-WEIXIN
 			this.weixinTop = 170 / this.rpxNum
 			this.scrollWrapHeight = this.windowHeight - this.weixinTop + 'px'
+			this.videoTop = '170rpx'
 			// #endif
 			this.getPostFullData()
 		},
@@ -414,16 +534,13 @@
 					this.reviewsTop.leftWarp = false
 					this.reviewsTop.rightWarp = true
 				}
-				// #ifdef MP-WEIXIN
 				this.reviewsTop.sortListTop = event.touches[0].clientY + 15
-				// #endif
-				// #ifndef MP-WEIXIN
-				this.reviewsTop.sortListTop = event.touches[0].clientY + 60
-				// #endif
 			},
-			fixWrappClick() {
+			fixWrappClick(e) {
 				this.reviewsTop.show = false
 				this.scrollY = true
+				e.preventDefault()
+				e.stopPropagation()
 			},
 			typeSelectLeft(type) {
 				if(this.reviewsTop.leftType === type) return
@@ -454,7 +571,7 @@
 				})
 			},
 			typeSelectRight(type) {
-				if(this.reviewsTop.leftType === type) return
+				if(this.reviewsTop.rightType === type) return
 				this.$nextTick(() => {
 					this.$refs.reviewsListRef.only_master = false
 					if(type === 1) {
@@ -477,25 +594,22 @@
 							this.reviewsTop.rightText = `热门`
 						}
 						this.reviewsTop.rightType = type
-						this.scrollTop = this.oldScrollTop
-						this.$nextTick(function() {
-							this.scrollTop = this.judgeTop
-						})
+						this.scrollReset()
 					},true)
 				})
 			},
 			setHiddenContainerStyle(height) {
 				this.hiddenContainerHeight = height
-				this.$nextTick(function() {
+				this.dataInitHeight = height
+				this.$nextTick(() => {
 					const refs =  this.$refs.videoFullRef
+					this.dataAspectRatio = refs.video.aspectRatio
+					this.dataInitWidth = refs.video.videoWidth * this.rpxNum
 					this.heightIsChange = refs.video.heightIsChange
 					this.scrollHeightChange = refs.scrollHeightChange
 					this.miniHeight = refs.video.miniHeight 
-					this.initHeight = height
 					this.diffHeight = height - this.miniHeight
 					const height2 = this.windowHeight - this.miniHeight 
-					// #ifdef MP-WEIXIN
-					// #endif
 					if(this.diffHeight > 0) {
 						// #ifdef MP-WEIXIN
 						this.popupHeight = this.windowHeight - this.miniHeight  - this.weixinTop + 31
@@ -503,7 +617,6 @@
 						// #ifdef WEB
 						this.popupHeight = this.windowHeight - this.miniHeight - this.weixinTop
 						// #endif
-						this.fixTop = this.miniHeight  + this.weixinTop
 					}else{
 						// #ifdef MP-WEIXIN
 						this.popupHeight = this.windowHeight - height - this.weixinTop + 31
@@ -511,35 +624,22 @@
 						// #ifdef WEB
 						this.popupHeight = this.windowHeight - height  - this.weixinTop
 						// #endif
-						this.fixTop = this.initHeight  + this.weixinTop
 					}
-					let timer = setInterval(() => {
-						const ref = uni.createSelectorQuery().in(this).select(".reviewsTopRef");
-						ref.fields({
-						  rect: true
-						}, data => {
-							if(data) {
-								 this.judgeTop = data.top
-								 clearInterval(timer)
-							}
-						}).exec()
-					},100)
-				})
-			},
-			pageScroll(e) {
-				this.$nextTick(function() {
-					let scrollTop = e.detail.scrollTop
-					this.oldScrollTop = scrollTop
-					let newJudgeTop = this.judgeTop - this.fixTop
-					if(this.judgeTop && scrollTop > newJudgeTop)  {
-						this.reviewsTopFixed = 'flex'
-					}else{
-						this.reviewsTopFixed = 'none'
-					}
-					if(scrollTop > this.diffHeight) scrollTop = this.diffHeight
-					if(this.heightIsChange) {	
-						this.scrollHeightChange(scrollTop)
-					}
+					
+					let view = uni.createSelectorQuery().in(this).select(".postContentCenterWrap");
+					view.fields(
+						  {
+							  size: true
+						  },
+					    (data) => {
+						  if(this.diffHeight > 0) {
+							  this.judgeTop = this.diffHeight + data.height + 24
+						  }else{
+							  this.judgeTop = data.height + 24
+						  }
+					    }
+					  )
+					  .exec();
 				})
 			},
 			scrolltolower() {
@@ -573,26 +673,21 @@
 				this.subjectPopupShow = true
 				if(this.diffHeight > 0) {
 					this.scrollTop = this.oldScrollTop
-					this.$nextTick(function() {
+					this.$nextTick(()=> {
 						this.scrollTop = this.diffHeight
-					})
+						this.oldScrollTop = this.scrollTop - 1
+					}) 
 				}
 			},
 			closePopup() {
 				this.subjectPopupShow = false
 			},
 			scrollReset() {
-				let fixTop
-				if(this.diffHeight > 0) {
-					fixTop = this.miniHeight / this.rpxNum
-				}else{
-					fixTop = this.initHeight / this.rpxNum
-				}
-				const judge = this.judgeTop - fixTop
 				this.scrollTop = this.oldScrollTop
-				this.$nextTick(function() {
-					this.scrollTop = judge
-				})
+				this.$nextTick(()=> {
+					this.scrollTop = this.judgeTop
+					this.oldScrollTop = this.scrollTop - 1
+				}) 
 			},
 			textParse(text) {
 				const regex = /_\((.*?)\)/g;
@@ -681,6 +776,24 @@
 	width: 100%;
 	background: #fff;
 	
+	.videoWrapper{
+		display: inline-block;
+		width: 100%;
+		background: #000;
+		z-index: 10;
+		position: absolute;
+		left: 0;
+		font-size: 0;
+		
+		.videoBackgroung{
+			margin: 0 auto;
+			
+			&.animate{
+				transition-duration: 300ms;
+			}
+		}
+	}
+	
 	.loading{
 		width: 400rpx;
 		position: absolute;
@@ -695,7 +808,7 @@
 		top: 0;
 		left: 0;
 		width: 750rpx;
-		background: #004887;
+		background: rgba(0, 72, 135, 0.5);
 		height: 70rpx;
 		z-index: 101;
 		// #ifdef MP-WEIXIN
@@ -749,8 +862,8 @@
 				position: absolute;
 				right: 8rpx;
 				top: 4rpx;
-				width: 32rpx;
-				height: 32rpx;
+				width: 40rpx;
+				height: 40rpx;
 			}
 		}
 		
@@ -938,9 +1051,9 @@
 		z-index: 10;
 		
 		&.fixed{
-			position: fixed;
-			left: 0;
-			
+			position: absolute;
+			right: 0;
+			display: none;
 		}
 	}
 	
@@ -965,7 +1078,7 @@
 	}
 	
 	.fixWrapp{
-		position: fixed;
+		position: absolute;
 		top: 0;
 		left: 0;
 		width: 100%;

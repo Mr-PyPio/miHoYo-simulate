@@ -129,7 +129,6 @@
 			},
 			async getSurveyMap() {
 				const list = await surveyMapApi()
-				console.log(list)
 				if(this.pageLoading) {
 					this.pageLoading = false
 				}
@@ -142,6 +141,7 @@
 				this.videoWalkthroughData = list[6]
 				this.fanContentData = list[9]
 				this.indexSortData = list[11]
+				console.log(this.gameplayExplorationData)
 			},
 			tochMoveStop(event) {
 				event.stopPropagation();

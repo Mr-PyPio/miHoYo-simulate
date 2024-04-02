@@ -109,7 +109,7 @@ import {mapState,mapGetters,mapMutations} from "vuex"
 				this.tavernPostList = list
 				if(callBack) callBack()
 			},
-			async updateStrategyPostList(page,sort_type,page_size=20) {
+			async updateStrategyPostList(page,sort_type,page_size=5) {
 				const {data:res} = await strategyPostList(page,page_size,sort_type)
 				let list
 				if(sort_type === 5) {
@@ -139,7 +139,7 @@ import {mapState,mapGetters,mapMutations} from "vuex"
 					if(this.scrollMessage.loadingEnd) return
 					this.scrollMessage.loadingEnd = true
 					this.scrollMessage.refresherTrg = true
-					this.getStrategyPostList(1,5,20,() => {
+					this.getStrategyPostList(1,5,5,() => {
 						this.scrollMessage.refresherTrg = false
 						this.scrollMessage.loadingEnd = false
 					})
@@ -162,7 +162,7 @@ import {mapState,mapGetters,mapMutations} from "vuex"
 		created() {
 			this.getStrategyTopTabApi()
 			this.getStrategyTopPost()
-			this.getStrategyPostList(1,5,20)
+			this.getStrategyPostList(1,5,5)
 		}
 	}
 </script>

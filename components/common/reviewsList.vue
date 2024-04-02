@@ -1,5 +1,5 @@
 <template>
-	<view class="reviewsList">
+	<view class="reviewsList"  :style="{'min-height': windowHeight - 350 + 'px'}">
 		<view class="reviewsItem" v-for="(item,index) in reviewsData" :key="item.reply.reply_id" v-if="reviewsData">
 			<ReviewsListItem :item="item"></ReviewsListItem>
 		</view>
@@ -69,7 +69,7 @@
 			}
 		},
 		computed: {
-			...mapState(['imageBaseUrl']),
+			...mapState(['imageBaseUrl','windowHeight']),
 			allShow() {
 				if(this.foldReplyNum) {
 					return this.showFoldReply && this.is_last
@@ -85,7 +85,7 @@
 				}
 				if(isChange) this.is_last = false
 				if(this.is_last) return
-				const {data: res} = await postReplaiesApi(this.post_id,this.is_hot,this.order_type,this.last_id,this.only_master)
+				const {data: res} = await postReplaiesApi(this.post_id,this.is_hot,this.order_type,this.last_id,this.only_master,5)
 				this.last_id =  res.data.last_id
 				this.is_last = res.data.is_last
 				this.foldReplyNum = res.data.fold_reply_num
@@ -99,7 +99,7 @@
 				}
 			},
 			async getFoldedPostReply() {
-				const {data: res} = await foldedPostRepliesApi(this.post_id,true)
+				const {data: res} = await foldedPostRepliesApi(this.post_id,true,10)
 				this.last_id =  res.data.last_id
 				this.is_last = res.data.is_last
 				this.reviewsFoldData = res.data.list

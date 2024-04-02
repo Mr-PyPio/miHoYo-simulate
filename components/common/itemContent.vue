@@ -1,11 +1,7 @@
 <template>
 	<view class="itemDetailImage">
-			<view v-if="item.image_list.length > 0 && !item.vod_list.length" class="imageList" :class="'imageList'+ item.image_list[0].entity_id">
-				<!-- <view v-if="item.image_list.length >= 2" class="image2">
-					<image :src="item.image_list[0].url|imageUrlReset(300,80)" mode="aspectFill" class="showImage" :lazy-load="true" @tap.stop="showImage(0)"></image>
-					<image :src="item.image_list[1].url|imageUrlReset(300,80)" mode="aspectFill" class="showImage" :lazy-load="true" @tap.stop="showImage(1)"></image>
-				</view> -->
-				
+			<view v-if="item.image_list.length > 0 && !videoUrl" class="imageList" :class="'imageList'+ item.image_list[0].entity_id">
+			
 				<view v-if="item.image_list.length >= 2" class="image2">
 					<view class="showImage" @tap.stop="showImage(0)" >
 						<LazyImage :imageData="item.image_list[0]" :width="346 / rpxNum"></LazyImage>
@@ -16,7 +12,6 @@
 				</view>
 				
 				<view v-if="item.image_list.length < 2" class="image1">
-					<!-- <image :src="item.image_list[0].url|imageUrlReset(300,80)" mode="aspectFill" class="showImage" :lazy-load="true" @tap.stop="showImage(0)"></image> -->
 					<view class="showImage" @tap.stop="showImage(0)" >
 						<LazyImage :imageData="item.image_list[0]"  :width="460 / rpxNum"></LazyImage>
 					</view>
@@ -25,12 +20,12 @@
 					{{item.image_list.length}}
 				</view>
 			</view>
-			<view v-if="item.vod_list.length > 0" class="vodieList" :style="{'width': videoWidth, 'height': videoHeight+'rpx'}">
-				<video :src="videoUrl"  :id="'video'+ item.vod_list[0].id" v-if="videoUrl"
-					:autoplay="false" :muted="!videoMute" :ref="'video'+ item.vod_list[0].id"
+			<view  v-if="videoUrl" class="vodieList" :style="{'width': videoWidth, 'height': videoHeight+'rpx'}">
+				<video :src="videoUrl"  :id="'video'+ videoId"
+					:autoplay="false" :muted="!videoMute" :ref="'video'+ videoId"
 					object-fit="cover" :show-center-play-btn="false"  :show-fullscreen-btn="false"
-					:poster="item.vod_list[0].cover" :controls="false"  :show-mute-btn="false"
-					:style="{'width': videoWidth, 'height': videoHeight +'rpx'}" :class="'videoDetail'+item.vod_list[0].id" 
+					:poster="videoCover" :controls="false"  :show-mute-btn="false"
+					:style="{'width': videoWidth, 'height': videoHeight +'rpx'}" :class="'videoDetail'+videoId" 
 					@ended = "videoEnded"  @timeupdate="timeupdate"
 					>
 				</video>
@@ -38,6 +33,9 @@
 					<view class="muteBtn" @tap.stop="controlVideoMute">
 						<u-icon name="volume" color="#ffffff" size="28" v-if="videoMute"></u-icon>
 						<u-icon name="volume-off" color="#ffffff" size="28"  v-if="!videoMute"></u-icon>
+					</view>
+					<view class="pauseBtn" @tap.stop="controlVideoPause">
+						<u-icon name="pause" color="#ffffff" size="28"></u-icon>
 					</view>
 					<view class="progress">
 						<view class="progressLine" :style="{'width': viddeoPercentage + '%'}"></view>
@@ -48,7 +46,7 @@
 					{{videoStep}}
 				</view>
 				
-				 <view class="videoWrapp" v-if="is_stop" @tap.stop="videoStart(item.vod_list[0].id)"></view>
+				 <view class="videoWrapp" v-if="is_stop" @tap.stop="videoStart(videoId)"></view>
 				 
 				 <view class="videoEndedWrap" v-if="videoEnd && item.user">
 				 	<view class="videoEndedWraper">
@@ -98,9 +96,8 @@
 				videoHeight: 500,
 				videoId: null,
 				intervalTimer: null,
-				imageId: null,
 				intersectionObserverVideo: null,
-				videoUrl: '',
+				videoUrl: ''
 			}
 		},
 		computed: {
@@ -109,7 +106,6 @@
 		methods: {
 			...mapMutations(['updateVideoMute','updateImageData']),
 			showImage(index) {
-				// uni.$emit('openImgPopUp',this.item.image_list,index)
 				const listData = this.item.image_list
 				this.updateImageData({
 					show: true,
@@ -138,29 +134,27 @@
 				}
 			},
 			videoStart(type) {
-				this.$nextTick(function () {
-					const ref = 'video' + this.videoId
-					this.is_stop = false
-					let videoContext
-					// #ifdef MP-WEIXIN
-					videoContext = uni.createVideoContext(ref,this)
-					// #endif
-					// #ifndef MP-WEIXIN
-					videoContext = this.$refs[ref]
-					// #endif
-					if(videoContext) {
-						if(type === 'replay') {
-							this.videoEnd = false
-							videoContext.pause()
-							videoContext.currentTime = 0	
-							videoContext.play()
-						}else{
-							this.videoEnd = false
-							videoContext.play()
-						}
+				const ref = 'video' + this.videoId
+				this.is_stop = false
+				let videoContext
+				// #ifdef MP-WEIXIN
+				videoContext = uni.createVideoContext(ref,this)
+				// #endif
+				// #ifndef MP-WEIXIN
+				videoContext = this.$refs[ref]
+				// #endif
+				if(videoContext) {
+					if(type === 'replay') {
+						this.videoEnd = false
+						videoContext.pause()
+						videoContext.currentTime = 0	
+						videoContext.play()
+					}else{
+						this.videoEnd = false
+						videoContext.play()
 					}
-
-				})
+					this.addListen()
+				}
 			},
 			replayVideo() {
 				this.videoStart('replay')
@@ -170,30 +164,33 @@
 			},
 			videoStop() {
 				const id = this.videoId
-				this.$nextTick(function () {
-					if(!this.is_stop) {
-						const ref = 'video' + this.videoId
-						this.is_stop = true
-						// #ifdef MP-WEIXIN
-						const videoContext = uni.createVideoContext(ref,this)
-						videoContext.pause();
-						// #endif
-						// #ifndef MP-WEIXIN
-						this.$refs[ref].pause()
-						// #endif
-					}
-			
-				})
-			
+				if(!this.is_stop) {
+					const ref = 'video' + this.videoId
+					this.is_stop = true
+					// #ifdef MP-WEIXIN
+					const videoContext = uni.createVideoContext(ref,this)
+					videoContext.pause();
+					// #endif
+					// #ifndef MP-WEIXIN
+					this.$refs[ref].pause()
+					// #endif
+				}
 			},
 			controlVideoMute() {
 				const oldVideoMute = this.videoMute
 				this.updateVideoMute(!oldVideoMute)
 			},
 			
-			
+			controlVideoPause() {
+				this.videoStop()
+				this.intersectionObserverVideo.disconnect()
+			},
 			
 			resetWH() {
+				this.videoEnd=false
+				this.is_stop=true
+				this.videoStep=0
+				this.videoId = null
 				if(this.item.vod_list.length) {
 					const video = this.item.vod_list[0]
 					let resolutions
@@ -202,7 +199,7 @@
 					}else{
 						resolutions = video.resolutions[0]
 					}
-					this.videoDetail = video
+					this.videoCover = video.cover
 					this.videoUrl = resolutions.url
 					const width = resolutions.width
 					const height = resolutions.height
@@ -213,16 +210,11 @@
 						this.videoWidth = '400rpx'
 						this.videoHeight = 400 * height / width
 					}
-					const id = video.id
-					this.videoId = id
+					this.videoId = video.id
+					const time = Number(video.duration)
+					this.videoStep = this.getStep(time)
 				}else if(this.item.image_list.length){
 					this.imageId = this.item.image_list[0].entity_id
-				}
-			},
-			resetDurationTime() {
-				if(this.item.vod_list.length) {
-					const time = Number(this.item.vod_list[0].duration)
-					this.videoStep = this.getStep(time)
 				}
 			},
 			getStep(time) {
@@ -254,28 +246,20 @@
 			entryUserHome(userId) {
 				uni.$emit('navPage','user',uid)
 			},
-			
+			addListen() {
+				this.intersectionObserverVideo = uni.createIntersectionObserver(this);
+				const top = this.windowHeight / 2 - 30
+				this.intersectionObserverVideo.relativeToViewport({bottom:-300,top:-top,left:0,right: 0}).observe(`.videoDetail${this.videoId}`, (res) => {
+				  if (res.intersectionRatio <= 0) {
+					this.videoStop()
+					this.intersectionObserverVideo.disconnect()
+				  }
+				});
+			},
 		},
 		created() {
 			this.resetWH()
-			this.resetDurationTime()
-		},
-		// 视频自动播放,切换页面会报错,待修复
-		mounted() {
-			this.$nextTick(function () {
-				if(this.videoId) {
-					this.intersectionObserverVideo = uni.createIntersectionObserver(this);
-					const top = this.windowHeight / 2 - 30
-					this.intersectionObserverVideo.relativeToViewport({bottom:-300,top:-top,left:0,right: 0}).observe(`.videoDetail${this.videoId}`, (res) => {
-					  if (res.intersectionRatio > 0) {
-						this.videoStart()
-					  } else{
-						this.videoStop()
-					  }
-					});
-				}
-			})
-		},
+		}
 	}
 </script>
 
@@ -348,7 +332,6 @@
 			
 			.videoButton{
 				display: flex;
-				justify-content: space-between;
 				position: absolute;
 				bottom: 0;
 				left: 0;
@@ -357,8 +340,8 @@
 				align-items: center;
 				box-sizing: border-box;
 				
-				.muteBtn{
-					width: 30px;
+				.muteBtn,.pauseBtn{
+					width: 24px;
 					height: 30px;
 					display: flex;
 					align-items: center;

@@ -38,14 +38,14 @@
 									</view>
 								</view>
 								<view class="itemsRightImage">
-									<image :src="item.image_list[0].url|imageUrlReset(500,80)" mode="widthFix" class="image"></image>
+									<image :src="item.image_list[0].url|imageUrlReset(200,80)" mode="widthFix" class="image"></image>
 								</view>
 							</view>
 						</template>
 						<template v-if="tabType1 === 2">
 							<view class="postListItems2" v-for="(item,index) of postList" :key="item.post.post_id"  @tap.stop="navigatePostReplay(item.post.post_id,item.post.view_type)">
 								<view class="itemsRightImage2">
-									<image :src="item.image_list[0].url|imageUrlReset(500,80)" mode="widthFix" class="image"></image>
+									<image :src="item.image_list[0].url|imageUrlReset(200,80)" mode="widthFix" class="image"></image>
 								</view>
 								<view class="itemsLeftDesc2">
 									<view class="subject">
