@@ -1,187 +1,204 @@
 <template>
 	<view class="postReplayContent">
-		<template v-if="!pageLoading">
-			<view class="reviewsTop fixed" :style="{'top' : fixTop + 'px','display': reviewsTopFixed}">
-					<view class="topLeft">
-						<view class="topLeftItem" :class="{'active' : reviewsTop.leftType === 0}" @tap="typeSelectLeft()">
-							全部评论
-						</view>
-						<view class="topLeftItem"  :class="{'active' : reviewsTop.leftType === 1}"  @tap="typeSelectLeft(1)">
-							只看楼主
-						</view>
+		<view class="reviewsTop fixed" :style="{'top' : fixTop,'display': reviewsTopFixed}">
+				<view class="topLeft">
+					<view class="topLeftItem" :class="{'active' : reviewsTop.leftType === 0}" @tap="typeSelectLeft()">
+						全部评论
 					</view>
-					<view class="topRight" v-show="reviewsTop.rightTop">
-						<view class="topLeftItem" :class="{'active' : reviewsTop.rightType === 0}"  @tap="typeSelectRight(0)">
-							热门
-						</view>|
-						<view class="topLeftItem" :class="{'active' : reviewsTop.rightType === 1}"  @tap="typeSelectRight(1)">
-							最早
-						</view>|
-						<view class="topLeftItem" :class="{'active' : reviewsTop.rightType === 2}"  @tap="typeSelectRight(2)">
-							最新
-						</view>
+					<view class="topLeftItem"  :class="{'active' : reviewsTop.leftType === 1}"  @tap="typeSelectLeft(1)">
+						只看楼主
 					</view>
 				</view>
-				
-				<view class="topTitleTab">
-					<view class="goBack" @tap.stop="goBack">
-						<u-icon name="arrow-left" color="#FFFFFF" size="36"></u-icon>
-					</view>
-				</view>
-				
-			<scroll-view :scroll-y="scrollY" :style="{'height': windowHeight + 'px'}" :scroll-top="scrollTop"
-				@scroll="pageScroll" @scrolltolower="scrolltolower" :refresher-enabled="true" :show-scrollbar="true"
-				:refresher-triggered="refresherTrg"  @refresherpulling="scrollPull" :scroll-with-animation='true'
-			>
-				<view class="postContent" v-if="postDetail.post">
-					<view class="userMessageWrap" v-if="userData" @tap.stop="navigateToUser(userData.uid)">
-						<view class="userImage">
-							<image :src="userData.avatar_url|imageUrlReset(50,80)" mode="aspectFill" class="userAvatarImage"></image>
-							<image :src="userData.pendant|imageUrlReset(50,80)" mode="aspectFill" class="userAvatarFrameImage" v-if="userData.pendant"></image>
-								<image v-if="userData.certification && userData.certification.type"
-								:src="`${imageBaseUrl}poseRequlay/certificate${userData.certification.type}.png`" mode="widthFix" class="certificate">
-							</image>
-						</view>
-						<view class="userMessage">
-							<view class="userName">
-								{{userData.nickname}}
-								<image :src="`https://bbs-static.miyoushe.com/level/level${userData.level_exp.level}.png`" 
-									mode="heightFix" class="levelLogo">
-								</image>
-							</view>
-						</view>
-						<view class="follow" @tap.stop="followUser(userData.uid)" v-if="!this.is_following">
-							+ 关注
-						</view>
-						<view class="follow unfollow" @tap.stop="followUser(userData.uid)" v-if="this.is_following">
-							已关注
-						</view>
-					</view>
-					<view class="postSubject">
-						<view class="left" v-if="forumType != 'COS'">
-							{{postDetail.post.subject}}
-						</view>
-						<view class="content">
-							<view v-if="forumType != 'COS'" v-html="textParse(postDetail.post.content,'100%')">
-								
-							</view>
-							<view v-if="forumType === 'COS' && newImageList && swiperHeight" style="width: 750rpx;margin-left: -24rpx;position: relative;">
-								<swiper :style="{'height': swiperHeight + 'rpx'}" @change="swiperChange">
-									<swiper-item v-for="(item,index) in newImageList" :key="index">
-										<view class="swiper-item" v-if="index <= swiperCurrent + 2">
-											<image :src="item.url" mode="widthFix" :style="{'width': item.width + 'rpx'}" class="image"></image>
-										</view>
-									</swiper-item>
-								</swiper>
-								<view class="swiperNum">
-									{{swiperCurrent + 1}}/{{newImageList.length}}
-								</view>
-								<view class="swiperIndicator">
-									<view class="swiperIndicatorWrap" :style="{'transform' : `translate(${indiTran}, 0px) translateZ(0px)`}">
-										<view class="swiper-item-i" :class="{'select': index === swiperCurrent,'scale': scale.includes(index) }"
-											v-for="(item,index) in newImageList" :key="index">
-											
-										</view>
-									</view>
-								</view>
-							</view>
-						</view>
-						<view class="left" v-if="forumType === 'COS'" style="margin-top: 8px;">
-							{{postDetail.post.subject}}
-						</view>
-						<view class="content" v-if="forumType === 'COS'" style="margin-top: 8px;">
-							<view v-html="structured_content">
-								
-							</view>
-						</view>
-					</view>
-					<view class="postTip2" v-if="postDetail.topics.length">
-						<view class="postTipitem" v-for="(item,index) in postDetail.topics" :key="index">
-							{{item.name}}
-						</view>
-					</view>
-					<view class="interaction">
-						<view class="interactionItems"  @tap.stop="interactionClick(item.upvote_type)" 
-						:class="{'active': choose_upvote_type === index + 1}"
-						v-for="(item,index) in postDetail.stat.post_upvote_stat" :key="index">
-							<view class="imagLogo">
-								<image :src="imageBaseUrl + 'poseRequlay/post_upvote_stat_'+ (index + 1) +'.png'" mode="heightFix" class="image"></image>
-							</view>
-							<view class="num">
-								{{item.upvote_cnt|resetNum}}
-							</view>
-						</view>
-					</view>
-					<view class="postTip">
-						发布于{{postDetail.post.created_at|changeMonAndDay}}
-					</view>
-					
-					<view class="reviews">
-						<view style="width: 750rpx;height: 74rpx;" class="reviewsTopRef">
-							<view class="reviewsTop">
-								<view class="topLeft">
-									<view class="topLeftItem" :class="{'active' : reviewsTop.leftType === 0}" @tap="typeSelectLeft(0)">
-										全部评论
-									</view>
-									<view class="topLeftItem"  :class="{'active' : reviewsTop.leftType === 1}"  @tap="typeSelectLeft(1)">
-										只看楼主
-									</view>
-								</view>
-								<view class="topRight" v-show="reviewsTop.rightTop">
-									<view class="topLeftItem" :class="{'active' : reviewsTop.rightType === 0}"  @tap="typeSelectRight(0)">
-										热门
-									</view>|
-									<view class="topLeftItem" :class="{'active' : reviewsTop.rightType === 1}"  @tap="typeSelectRight(1)">
-										最早
-									</view>|
-									<view class="topLeftItem" :class="{'active' : reviewsTop.rightType === 2}"  @tap="typeSelectRight(2)">
-										最新
-									</view>
-								</view>
-							</view>
-						</view>
-						
-						<reviews-list v-if="post_id" :post_id="post_id" ref="reviewsListRef"> </reviews-list>
-					</view>
-				</view>
-			</scroll-view>
-				
-			<view class="bottomInput" v-if="postDetail.post">
-				<view class="input">
-					我有话要说...
-				</view>
-				<view class="review" :class="{'active': choose_upvote_type}" @tap="interactionClick(1,'all')">
-					<image src="../../static/message.png" mode="widthFix" class="image"></image>
-					<view class="num">
-						{{reviewsTop.reviewNum|resetNum}}
-					</view>
-				</view>
-				<view class="like" :class="{'active': choose_upvote_type}" @tap="interactionClick(1,'all')">
-					<image :src="likeUrl" mode="widthFix" class="image"></image>
-					<view class="num">
-						{{postDetail.stat.like_num|resetNum}}
-					</view>
-				</view>
-				<view class="book" :class="{'active': is_collected}" @tap="bookUpdate">
-					<image :src="bookUrl" mode="widthFix" class="image"></image>
-					<view class="num">
-						{{postDetail.stat.bookmark_num|resetNum}}
+				<view class="topRight" v-show="reviewsTop.rightTop">
+					<view class="topLeftItem" :class="{'active' : reviewsTop.rightType === 0}"  @tap="typeSelectRight(0)">
+						热门
+					</view>|
+					<view class="topLeftItem" :class="{'active' : reviewsTop.rightType === 1}"  @tap="typeSelectRight(1)">
+						最早
+					</view>|
+					<view class="topLeftItem" :class="{'active' : reviewsTop.rightType === 2}"  @tap="typeSelectRight(2)">
+						最新
 					</view>
 				</view>
 			</view>
-		</template>
-		<image src="http://8.138.116.67:5230/miyoushe/search/loading1.gif" mode="aspectFit" class="loading" v-if="pageLoading"></image>
+			
+			<view class="topTitleTab">
+				<view class="goBack" @tap.stop="goBack">
+					<u-icon name="arrow-left" color="#FFFFFF" size="36"></u-icon>
+				</view>
+				
+				<view class="userMessageWrap" v-if="userData" @tap.stop="navigateToUser(userData.uid)">
+					<view class="userImage">
+						<image :src="userData.avatar_url|imageUrlReset(50,80)" mode="aspectFill" class="userAvatarImage"></image>
+						<image :src="userData.pendant|imageUrlReset(50,80)" mode="aspectFill" class="userAvatarFrameImage" v-if="userData.pendant"></image>
+							<image v-if="userData.certification && userData.certification.type"
+							:src="`${imageBaseUrl}poseRequlay/certificate${userData.certification.type}.png`" mode="widthFix" class="certificate">
+						</image>
+					</view>
+					<view class="userMessage">
+						<view class="userName">
+							<view class="text">
+								{{userData.nickname}}
+							</view>
+							<image :src="`https://bbs-static.miyoushe.com/level/level${userData.level_exp.level}.png`" 
+								mode="heightFix" class="levelLogo">
+							</image>
+						</view>
+					</view>
+					<view class="follow" @tap.stop="followUser(userData.uid)" v-if="!this.is_following">
+						+ 关注
+					</view>
+					<view class="follow unfollow" @tap.stop="followUser(userData.uid)" v-if="this.is_following">
+						已关注
+					</view>
+				</view>
+			</view>
+			
+		<scroll-view :scroll-y="scrollY" :style="{'height': windowHeight*rpxNum - scrollPadding + 'rpx'}" :scroll-top="scrollTop"
+			@scroll="pageScroll" @scrolltolower="scrolltolower" :refresher-enabled="true" :show-scrollbar="true"
+			:refresher-triggered="refresherTrg"  @refresherpulling="scrollPull" :scroll-with-animation='true'
+		>
+			<view class="postContent" v-if="postDetail.post">
+				<view class="postSubject">
+					<view class="left" v-if="forumType != 'COS'">
+						{{postDetail.post.subject}}
+					</view>
+					<view class="content">
+						<view v-if="forumType != 'COS'" v-html="textParse(postDetail.post.content,'100%')">
+							
+						</view>
+						<view v-if="forumType === 'COS' && newImageList && swiperHeight" style="width: 750rpx;margin-left: -24rpx;position: relative;">
+							<swiper :style="{'height': swiperHeight + 'rpx'}" @change="swiperChange">
+								<swiper-item v-for="(item,index) in newImageList" :key="index">
+									<view class="swiper-item" v-if="index <= swiperCurrent + 2">
+										<image :src="item.url" mode="widthFix" :style="{'width': item.width + 'rpx'}" class="image"></image>
+									</view>
+								</swiper-item>
+							</swiper>
+							<view class="swiperNum">
+								{{swiperCurrent + 1}}/{{newImageList.length}}
+							</view>
+							<view class="swiperIndicator">
+								<view class="swiperIndicatorWrap" :style="{'transform' : `translate(${indiTran}, 0px) translateZ(0px)`}">
+									<view class="swiper-item-i" :class="{'select': index === swiperCurrent,'scale': scale.includes(index) }"
+										v-for="(item,index) in newImageList" :key="index">
+										
+									</view>
+								</view>
+							</view>
+						</view>
+					</view>
+					<view class="left" v-if="forumType === 'COS'" style="margin-top: 8px;">
+						{{postDetail.post.subject}}
+					</view>
+					<view class="content" v-if="forumType === 'COS'" style="margin-top: 8px;">
+						<view v-html="structured_content">
+							
+						</view>
+					</view>
+				</view>
+				<view class="postTip2" v-if="postDetail.topics.length">
+					<view class="postTipitem" v-for="(item,index) in postDetail.topics" :key="index">
+						{{item.name}}
+					</view>
+				</view>
+				<view class="interaction">
+					<view class="interactionItems"  @tap.stop="interactionClick(item.upvote_type)" 
+					:class="{'active': choose_upvote_type === index + 1}"
+					v-for="(item,index) in statObject" :key="index">
+						<view class="imagLogo">
+							<image :src="imageBaseUrl + 'poseRequlay/post_upvote_stat_'+ (index + 1) +'.png'" mode="heightFix" class="image"></image>
+						</view>
+						<view class="num">
+							{{item.upvote_cnt|resetNum}}
+						</view>
+					</view>
+				</view>
+				<view class="postTip">
+					发布于{{postDetail.post.created_at|changeMonAndDay}}
+				</view>
+				
+				<view class="reviews">
+					<view style="width: 750rpx;height: 74rpx;" class="reviewsTopRef">
+						<view class="reviewsTop">
+							<view class="topLeft">
+								<view class="topLeftItem" :class="{'active' : reviewsTop.leftType === 0}" @tap="typeSelectLeft(0)">
+									全部评论
+								</view>
+								<view class="topLeftItem"  :class="{'active' : reviewsTop.leftType === 1}"  @tap="typeSelectLeft(1)">
+									只看楼主
+								</view>
+							</view>
+							<view class="topRight" v-show="reviewsTop.rightTop">
+								<view class="topLeftItem" :class="{'active' : reviewsTop.rightType === 0}"  @tap="typeSelectRight(0)">
+									热门
+								</view>|
+								<view class="topLeftItem" :class="{'active' : reviewsTop.rightType === 1}"  @tap="typeSelectRight(1)">
+									最早
+								</view>|
+								<view class="topLeftItem" :class="{'active' : reviewsTop.rightType === 2}"  @tap="typeSelectRight(2)">
+									最新
+								</view>
+							</view>
+						</view>
+					</view>
+					
+					<reviews-list v-if="post_id && reviewLoading" :post_id="post_id" ref="reviewsListRef"> </reviews-list>
+				</view>
+			</view>
+		</scroll-view>
+			
+		<view class="bottomInput" v-if="postDetail.post">
+			<view class="input">
+				我有话要说...
+			</view>
+			<view class="review" >
+				<image src="../../static/message.png" mode="widthFix" class="image"></image>
+				<view class="num">
+					{{reviewsTop.reviewNum|resetNum}}
+				</view>
+			</view>
+			<view class="like" :class="{'active': choose_upvote_type}" @tap="interactionClick(1,'all')">
+				<image :src="likeUrl" mode="widthFix" class="image"></image>
+				<view class="num">
+					{{likeNum|resetNum}}
+				</view>
+			</view>
+			<view class="book" :class="{'active': is_collected}" @tap="bookUpdate">
+				<image :src="bookUrl" mode="widthFix" class="image"></image>
+				<view class="num">
+					{{bookMarkNum|resetNum}}
+				</view>
+			</view>
+		</view>
+		
+		<view class="interactionBiggerImageWrap" v-if="reviewLoading">
+			<view class="interactionBiggerImage" :class="{'active': interactionBiggerImageType === 1}" >
+				<image :src="imageBaseUrl + 'poseRequlay/post_upvote_stat_1_active.png'" mode="widthFix" class="image"></image>
+			</view>
+			<view class="interactionBiggerImage" :class="{'active': interactionBiggerImageType === 2}" >
+				<image :src="imageBaseUrl + 'poseRequlay/post_upvote_stat_2_active.png'" mode="widthFix" class="image"></image>
+			</view>
+			<view class="interactionBiggerImage" :class="{'active': interactionBiggerImageType === 3}" >
+				<image :src="imageBaseUrl + 'poseRequlay/post_upvote_stat_3_active.png'" mode="widthFix" class="image"></image>
+			</view>
+			<view class="interactionBiggerImage" :class="{'active': interactionBiggerImageType === 4}" >
+				<image :src="imageBaseUrl + 'poseRequlay/post_upvote_stat_4_active.png'" mode="widthFix" class="image"></image>
+			</view>
+			<view class="interactionBiggerImage" :class="{'active': interactionBiggerImageType === 5}" >
+				<image :src="imageBaseUrl + 'poseRequlay/post_upvote_stat_5_active.png'" mode="widthFix" class="image"></image>
+			</view>
+		</view>
+		<image src="http://8.138.116.67:5230/miyoushe/search/loading1.gif" mode="aspectFit" class="pageloading" v-if="pageLoading"></image>
 	</view>
 </template>
 
 <script>
 	import {mapState} from 'vuex'
 	import {postFullApi,upvoteApi,follow,unfollow,collectPost} from "../../common/api.js"
-	import VideoFull from "../../components/postReplay/videoFull.vue"
 	import ReviewsList from '../../components/common/reviewsList.vue'
 	export default {
 		components: {
-			VideoFull,
 			ReviewsList
 		},
 		props: {
@@ -199,6 +216,7 @@
 				is_following: false,
 				is_collected: false,
 				choose_upvote_type: 0,
+				interactionBiggerImageType: 0,
 				userLabel: '',
 				reviewsTop: {
 					reviewNum: 0,
@@ -234,6 +252,16 @@
 				structured_content: '',
 				pageLoading: true,
 				weixinTop: 0,
+				reviewLoading: false,
+				statObject: {},
+				likeNum: null,
+				bookMarkNum: null,
+				// #ifdef WEB
+				scrollPadding: 100,
+				// #endif
+				// #ifdef MP-WEIXIN
+				scrollPadding: 260,
+				// #endif
 			}
 		},
 		created() {
@@ -253,6 +281,9 @@
 				this.userData = this.postDetail.user
 				this.is_following = this.postDetail.user.is_following
 				this.is_collected = this.postDetail.self_operation.is_collected
+				this.statObject = this.postDetail.stat.post_upvote_stat
+				this.likeNum = this.postDetail.stat.like_num
+				this.bookMarkNum = this.postDetail.stat.bookmark_num
 				if(this.postDetail.forum &&this.postDetail.forum.name === 'COS') {
 					this.resetSwiperHeight(this.postDetail.image_list)
 					const content = JSON.parse(this.postDetail.post.content)
@@ -279,10 +310,10 @@
 				const video = this.postDetail.vod_list[0]
 				
 				// #ifdef WEB
-				this.fixTop = 30
+				this.fixTop = 100 + 'rpx'
 				// #endif
 				// #ifdef MP-WEIXIN
-				this.fixTop = this.weixinTop
+				this.fixTop = this.weixinTop + 'px'
 				// #endif
 				
 				this.$nextTick(function() {
@@ -296,6 +327,7 @@
 					}).exec()
 				})
 				this.pageLoading = false
+				this.reviewLoading = true
 			},
 			async interactionClick(type,other) {
 				let is_cancel
@@ -314,15 +346,30 @@
 				const {data: res} = await upvoteApi(data)
 				if(res.message === 'OK') {
 					if(is_cancel) {
+						this.statObject[this.choose_upvote_type - 1].upvote_cnt -= 1
 						this.choose_upvote_type = 0
 						this.likeUrl = this.likeUrl1
+						this.likeNum -= 1
 					}else{
+						if(this.choose_upvote_type) {
+							this.statObject[this.choose_upvote_type - 1].upvote_cnt -= 1
+						}else{
+							this.likeNum += 1
+						}
+						this.statObject[type - 1].upvote_cnt += 1
 						this.choose_upvote_type = type
 						if(type === 1) {
 							this.likeUrl = this.likeUrl2
 						}else{
 							this.likeUrl = `${this.imageBaseUrl}poseRequlay/post_upvote_stat_${type}.png`
 						}
+					}
+					if(!is_cancel) {
+						this.interactionBiggerImageType = type
+						let timer = setTimeout(()=> {
+							this.interactionBiggerImageType = 0
+							clearTimeout(timer)
+						},1600)
 					}
 				}
 			},
@@ -340,12 +387,14 @@
 					}
 				const {data: res} = await collectPost(data)
 				if(res.message === 'OK') {
-					this.is_collected = !is_collected
 					if(this.is_collected) {
-						this.bookUrl = this.bookUrl2
-					}else{
 						this.bookUrl = this.bookUrl1
+						this.bookMarkNum -= 1
+					}else{
+						this.bookUrl = this.bookUrl2
+						this.bookMarkNum += 1
 					}
+					this.is_collected = !is_collected
 				}
 			},
 			screenPostTip() {
@@ -444,9 +493,11 @@
 				}).exec()
 			},
 			scrolltolower() {
-				this.$nextTick(() => {
-					this.$refs.reviewsListRef.getPostReplayData('update')
-				})
+				if(!this.loading) {
+					this.$nextTick(() => {
+						this.$refs.reviewsListRef.getPostReplayData('update')
+					})
+				}
 			},
 			scrollPull(e) {
 				//#ifdef MP-WEIXIN
@@ -601,7 +652,7 @@
 </script>
 
 <style lang="scss" scoped>
-.loading{
+.pageloading{
 	width: 400rpx;
 	position: absolute;
 	top: 50%;
@@ -622,25 +673,120 @@
 		top: 0;
 		left: 0;
 		width: 750rpx;
-		background: rgba(0, 0, 0, 0.1);
-		height: 60rpx;
+		background: #004887;
+		height: 100rpx;
 		z-index: 10;
 		// #ifdef MP-WEIXIN
 		height: 170rpx;
 		box-sizing: border-box;
 		padding-top: 90rpx;
 		// #endif
+		display: flex;
+		align-items:center;
 		
 		.goBack{
-			position: absolute;
-			left: 12rpx;
-			// #ifdef MP-WEIXIN
-			top: 90rpx;
-			// #endif
-			/* #ifndef MP-WEIXIN */
-			top: 50%;
-			transform: translateY(-50%);
-			/* #endif */
+			width: 50rpx;
+			height: 50rpx;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			margin-right: 30rpx;
+			margin-left: 20rpx;
+		}
+		
+		.userMessageWrap{
+			display: flex;
+			align-items: center;
+			
+			.userImage{
+				width: 72rpx;
+				height: 72rpx;
+				position: relative;
+				font-size: 0;
+				
+				.userAvatarImage{
+					width: 72rpx;
+					height: 72rpx;
+					border-radius: 72rpx;
+				}
+				
+				.userAvatarFrameImage{
+					width: 84rpx;
+					height: 84rpx;
+					position: absolute;
+					left: -6rpx;
+					top: -6rpx;
+				}
+				
+				.certificate{
+					position: absolute;
+					right: -4rpx;
+					bottom: -4rpx;
+					width: 20rpx;
+					height: 20rpx;
+				}
+			}
+			
+			.userMessage{
+				padding-left: 12rpx;
+				max-width: 500rpx;
+				
+				.userName{
+					font-size: 24rpx;
+					color: #fff;
+					height: 42rpx;
+					display: flex;
+					align-items: center;
+					margin-top: 6rpx;
+					
+					
+					.levelLogo{
+						height: 24rpx;
+						margin-left: 5px;
+					}
+					
+					/* #ifdef MP-WEIXIN */
+					.text{
+						max-width: 140rpx;
+						overflow: hidden;
+						text-overflow: ellipsis;
+						white-space: nowrap;
+					}
+					/* #endif */
+				}
+				
+				.userLabel{
+					font-size: 22rpx;
+					color: #ddd;
+					line-height: 32rpx;
+				}
+			}
+			
+			.follow{
+				padding: 3px;
+				width: 40px;
+				border-radius: 3px;
+				background: #fff;
+				color: #3c9cff;
+				text-align: center;
+				font-size: 20rpx;
+				position: absolute;
+				right: 32rpx;
+				top: 50%;
+				transform: translateY(-50%);
+				margin-top: 8rpx;
+				border: 1px solid #3c9cff;
+				line-height: 1.5em;
+				/* #ifdef MP-WEIXIN */
+				right: 220rpx;
+				margin-top: 40rpx;
+				/* #endif */
+				
+				&.unfollow{
+					color: #ddd;
+					border: 1px solid #ddd;
+				}
+			}
 		}
 	}
 	
@@ -655,7 +801,9 @@
 	
 	.postContent{
 		padding: 24rpx;
-		padding-bottom: 70rpx;
+		/* #ifdef WEB */
+		padding-top: 120rpx;
+		/* #endif */
 		
 		.postSubject{
 			position: relative;
@@ -663,7 +811,7 @@
 			.left{
 				width: 100%;
 				line-height: 40rpx;
-				font-size: 34rpx;
+				font-size: 42rpx;
 				line-height: 1.5em;
 				color: #333;
 				font-weight: 600;
@@ -798,92 +946,6 @@
 			}
 		}
 		
-		.userMessageWrap{
-			display: flex;
-			align-items: center;
-			position: relative;
-			margin-bottom: 8px;
-			// #ifndef MP-WEIXIN
-			padding-top: 60rpx;
-			// #endif
-			
-			.userImage{
-				width: 72rpx;
-				height: 72rpx;
-				position: relative;
-				font-size: 0;
-				
-				.userAvatarImage{
-					width: 72rpx;
-					height: 72rpx;
-					border-radius: 72rpx;
-				}
-				
-				.userAvatarFrameImage{
-					width: 84rpx;
-					height: 84rpx;
-					position: absolute;
-					left: -6rpx;
-					top: -6rpx;
-				}
-				
-				.certificate{
-					position: absolute;
-					right: -4rpx;
-					bottom: -4rpx;
-					width: 20rpx;
-					height: 20rpx;
-				}
-			}
-			
-			.userMessage{
-				padding-left: 12rpx;
-				max-width: 500rpx;
-				
-				.userName{
-					font-size: 24rpx;
-					color: #000;
-					height: 42rpx;
-					display: flex;
-					align-items: center;
-					margin-top: 6rpx;
-					
-					.levelLogo{
-						height: 24rpx;
-						margin-left: 5px;
-					}
-				}
-				
-				.userLabel{
-					font-size: 22rpx;
-					color: #ddd;
-					line-height: 32rpx;
-				}
-			}
-			
-			.follow{
-				padding: 3px;
-				width: 40px;
-				border-radius: 3px;
-				background: #fff;
-				color: #3c9cff;
-				text-align: center;
-				font-size: 20rpx;
-				position: absolute;
-				right: 0;
-				top: 50%;
-				transform: translateY(-50%);
-				margin-top: 8rpx;
-				border: 1px solid #3c9cff;
-				line-height: 1.5em;
-				
-				&.unfollow{
-					color: #ddd;
-					border: 1px solid #ddd;
-				}
-			}
-		}
-		
 		
 		.reviews{
 			margin: 12px -24rpx 0;
@@ -980,16 +1042,12 @@
 		
 		.review{
 			.image{
-				width: 52rpx;
-				height: 52rpx;
+				width: 46rpx;
+				height: 46rpx;
 			}
 			
 			.num{
 				margin-top: -8rpx;
-			}
-			
-			&.active{
-				color: #ffcd69;
 			}
 		}
 		
@@ -1006,6 +1064,33 @@
 				color: #ffcd69;
 			}
 		}
+	}
+	.interactionBiggerImageWrap{
+		position: absolute;
+		height: 100%;
+		width: 750rpx;
+		background: transparent;
+		top: 0;
+		z-index: 10;
+		right: -150%;
+		
+		
+		.interactionBiggerImage{
+			width: 460rpx;
+			position: absolute;
+			left: 0;
+			top:50%;
+			transform: translateY(-50%);
+			
+			.image{
+				width: 460rpx;
+			}
+			
+			&.active{
+				left: -130%;
+			}
+		}
+		
 	}
 }
 

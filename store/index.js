@@ -18,16 +18,13 @@ export default new Vuex.Store({
 		imgList: [],
 		imgShowIndex: 0,
 		
-		myselfData: {},
 		myselfUid: '19084220',
 		limitTime: Date.now(),
-		
-		actionPage: {},
 		
 		emotion: null,
 		emotionKey: null,
 		
-		imageBaseUrl : 'http://8.138.116.67:5230/miyoushe/'
+		imageBaseUrl : 'http://8.138.116.67:5230/miyoushe/',
 	},
 	mutations: {
 		updateEmotion(state,data) {
@@ -54,19 +51,7 @@ export default new Vuex.Store({
 		},
 		updateImgShowIndex(state, index) {
 			state.imgShowIndex = index
-		},
-		updateMyselfData(state,data) {
-			state.myselfData[data.name] = data.data
-		},
-		clearMyselfState(state,data) {
-			state.myselfData = {}
-		},
-		updateActionPage(state,data) {
-			state.actionPage[data.name] = data.data
-		},
-		clearActionPageState(state,data) {
-			state.actionPage = {}
-		},
+		}
 	},
 	actions: {
 		async initEmotionData({ commit }) {

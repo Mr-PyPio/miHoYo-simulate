@@ -172,7 +172,7 @@
 				})
 			},
 			resetSrc(index) {
-				return `url('${imageBaseUrl}cosNo${index+1}.png')`
+				return `url('${this.imageBaseUrl}cosNo${index+1}.png')`
 			}
 		},
 		created() {

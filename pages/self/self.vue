@@ -80,9 +80,9 @@
 			
 			<user-popup :uid = "uid" ref="userPopup"></user-popup>
 			
-			<img-pop-up ></img-pop-up>
+			<ListenOtherModul ref="listenOtherModul"></ListenOtherModul>
 			
-			<ListenOtherModul></ListenOtherModul>
+			<img-pop-up ></img-pop-up>
 		</view>
 	</scroll-view>
 </template>
@@ -111,7 +111,7 @@
 			}
 		},
 		computed: {
-			...mapState(['myselfData','imageBaseUrl','windowHeight','rpxNum']),
+			...mapState(['imageBaseUrl','windowHeight','rpxNum']),
 			bigImage() {
 				return  `background: url('${this.imageBaseUrl}user/bgimg.png') no-repeat top/100%;`
 			},
@@ -123,23 +123,14 @@
 			}
 		},
 		methods: {
-			...mapMutations(['updateMyselfData']),
 			async getUserInfo() {
 				const {data: res} = await getUserFullInfo(this.uid)
 				this.userInfo = res.data.user_info
-				this.updateMyselfData({
-					name: 'userInfo',
-					data: this.userInfo
-				})
 			},
 			// getGameRecordCard 请求回来的数据为固定数据
 			async getGameCard() {
 				const {data: res} =await getGameRecordCard(this.uid)
 				this.gameCard = res.data.list
-				this.updateMyselfData({
-					name: 'gameCard',
-					data: this.gameCard
-				})
 			},
 			fittlerImageSrc(id) {
 				if(id === 2) return this.imageBaseUrl + 'user/ys.png'
@@ -166,15 +157,16 @@
 			}
 		},
 		onLoad() {
-			if(this.myselfData.userInfo) {
-				this.userInfo = this.myselfData.userInfo
-			}else{
-				this.getUserInfo()
-			}
-			if(this.myselfData.gameCard) {
-				this.gameCard = this.myselfData.gameCard
-			}else{
-				this.getGameCard()
+			this.getUserInfo()
+			this.getGameCard()
+		},
+		onHide() {
+			uni.$off('navPage')
+			uni.$off('navGoBack')
+		},
+		onShow() {
+			if(this.$refs.listenOtherModul) {
+				this.$refs.listenOtherModul.initListenFunction()
 			}
 		},
 }

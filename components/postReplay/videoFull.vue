@@ -1,48 +1,49 @@
 <template>
-	<view class="vodieList" :class="{'fixed': video.initEnd}" v-if="video.videoUrl" :style="{'height': video.videoHeight +'rpx','top': video.top}">
-		<view :style="{'width': '100%', 'height': video.videoHeight +'rpx'}" class="videoBackgroung">
-			<video :src="video.videoUrl"  :id="'video'+ video.videoId" :class="'videoDetail'+video.videoId"  :ref="'video'+ video.videoId"
-				:autoplay="true" :muted="video.videoMute" :initial-time="video.currentTime" :loop="false"
-				object-fit="cover" :show-center-play-btn="false"  :show-fullscreen-btn="false"
-				:poster="video.cover" :controls="false"  :show-mute-btn="false"
-				:style="{'width': video.videoWidth +'rpx', 'height': video.videoHeight +'rpx'}" 
-				@ended = "videoEnded"  @timeupdate="timeupdate"
-				>
-			</video>
-		</view>
+	<view class="vodieList" v-if="video.initEnd">
+		<video :src="video.videoUrl"  :id="'video'+ video.videoId" :class="'videoDetail'+video.videoId"  :ref="'video'+ video.videoId"
+			:autoplay="true" :muted="video.videoMute" :initial-time="video.currentTime" :loop="false"
+			object-fit="cover" :show-center-play-btn="false"  :show-fullscreen-btn="false"
+			:poster="video.cover" :controls="false"  :show-mute-btn="false"
+			:style="{'width': '100%', 'height': '100%'}" 
+			@ended = "videoEnded"  @timeupdate="timeupdate"
+			>
+		</video>
 		<view class="videoButton" v-if="!video.is_stop">
 			<view class="muteBtn" @tap="controlVideoMute">
 				<u-icon name="volume" color="#ffffff" size="28" v-if="!video.videoMute"></u-icon>
 				<u-icon name="volume-off" color="#ffffff" size="28"  v-if="video.videoMute"></u-icon>
 			</view>
+			<view class="pauseBtn" @tap.stop="videoStop">
+				<u-icon name="pause" color="#ffffff" size="28"></u-icon>
+			</view>
 			<view class="progress">
 				<view class="progressLine" :style="{'width': video.viddeoPercentage + '%'}"></view>
 			</view>
+			<view class="videoStep" v-if="video.videoStep">
+				{{video.videoStep}}
+			</view>
 		</view>
 		
-		<view class="videoStep" v-if="video.videoStep">
-			{{video.videoStep}}
-		</view>
 		
 		 <view class="videoWrapp" v-if="video.is_stop" @tap="videoStart(video.id)"></view>
 		 
 		 <view class="videoEndedWrap" v-if="video.videoEnd && userData">
-		 	<view class="videoEndedWraper"  v-if="!is_following">
-		 		<view class="userImage" @tap.stop="entryUserHome(userData.uid)">
-		 			<image :src="userData.avatar_url|imageUrlReset(50,80)" mode="aspectFill" class="userAvatarImage" :lazy-load="true"></image>
-		 			<image :src="userData.pendant|imageUrlReset(50,80)" :lazy-load="true" mode="aspectFill" class="userAvatarFrameImage" v-if="userData.pendant"></image> 
-		 		</view>
-		 		<view class="userName">
-		 			{{userData.nickname}}
-		 		</view>
-		 		<view class="follow" @tap.stop="followUser(userData.uid)">
-		 			+ 关注
-		 		</view>
-		 		<view class="replayVideo" @tap.stop="replayVideo">
-		 			<image src="../../static/replay.png" mode="aspectFill" class="image"></image>
-		 			重播
-		 		</view>
-		 	</view>
+			<view class="videoEndedWraper"  v-if="!is_following">
+				<view class="userImage" @tap.stop="entryUserHome(userData.uid)">
+					<image :src="userData.avatar_url|imageUrlReset(50,80)" mode="aspectFill" class="userAvatarImage" :lazy-load="true"></image>
+					<image :src="userData.pendant|imageUrlReset(50,80)" :lazy-load="true" mode="aspectFill" class="userAvatarFrameImage" v-if="userData.pendant"></image> 
+				</view>
+				<view class="userName">
+					{{userData.nickname}}
+				</view>
+				<view class="follow" @tap.stop="followUser(userData.uid)">
+					+ 关注
+				</view>
+				<view class="replayVideo" @tap.stop="replayVideo">
+					<image src="../../static/replay.png" mode="aspectFill" class="image"></image>
+					重播
+				</view>
+			</view>
 			
 			<view class="is_following" v-if="is_following" @tap.stop="replayVideo">
 				<image class="mhy-video-player-svg-icon" src="../../static/videoReply.png" mode="widthFix" ></image>
@@ -78,8 +79,8 @@
 					is_stop: false,
 					videoStep: '',
 					viddeoPercentage: 0,
-					videoWidth: 750,
-					videoHeight: 500,
+					videoWidth: 375,
+					videoHeight: 300,
 					videoId: this.videoData.detail.id,
 					videoEnd: false,
 					videoMute: true,
@@ -89,7 +90,7 @@
 					initHeight: 0,
 					initEnd: false,
 					heightIsChange: false,
-					miniHeight: 600,
+					miniHeight: 300,
 					top: 0
 				}, 
 				is_following: this.userData.is_following,
@@ -104,9 +105,6 @@
 			if(durationTime != currentTime) {
 				this.video.currentTime = currentTime
 			}
-			// #ifdef MP-WEIXIN
-			this.video.top = '170rpx'
-			// #endif
 			this.resetWH()
 		},
 		methods: {
@@ -168,8 +166,8 @@
 						resolutions = video.resolutions[0]
 					}
 					this.video.aspectRatio = resolutions.width / resolutions.height
-					const InitHeight = this.windowWidth*this.rpxNum / this.video.aspectRatio
-					const MaxHeight = parseInt(this.windowHeight*this.rpxNum * 0.6)
+					const InitHeight = this.windowWidth / this.video.aspectRatio
+					const MaxHeight = parseInt(this.windowHeight * 0.6)
 					if(InitHeight > MaxHeight) {
 						this.video.videoHeight = MaxHeight
 						this.video.videoWidth = this.video.videoHeight * this.video.aspectRatio
@@ -214,28 +212,14 @@
 			entryUserHome(userId) {
 				uni.$emit('navPage','user',userId)
 			},
-			scrollHeightChange(top) {
-				let change = false
-				if(top < this.oldScrollTop){
-					change = true
-				}else{
-					change = false
-				}
-				this.oldScrollTop = top
-				if(this.video.videoHeight > this.video.miniHeight || change) {
-					this.video.videoHeight = this.video.initHeight - top * this.rpxNum 
-					this.video.videoWidth = this.video.videoHeight * this.video.aspectRatio
-				}
-			}
 		}
 	}
 </script>
 
 <style lang="scss" scoped>
 	.vodieList{
-		overflow: hidden;
-		position: relative;
-		width: 750rpx;
+		width: 100%;
+		height: 100%;
 		
 		&.fixed{
 			position: absolute;
@@ -243,19 +227,22 @@
 			z-index: 100;
 		}
 		
-		.videoBackgroung{
-			background: #000;
-			display: flex;
-			justify-content: center;
+		.controlBtnWrap{
+			width: 750rpx;
+			position: absolute;
+			bottom: 0;
+			left: 50%;
+			transform: translateX(-50%);
 		}
 		
 		.videoWrapp{
-			width: 100%;
+			width: 750rpx;
 			height: 100%;
 			position: absolute;
 			background-color: rgba(0, 0, 0, 0.5);
 			top: 0;
-			left: 0;
+			left: 50%;
+			transform: translateX(-50%);
 			background-image: url("../../static/videoIcon.png");
 			background-size: 72rpx 72rpx;
 			background-position: center center;
@@ -264,17 +251,17 @@
 		
 		.videoButton{
 			display: flex;
-			justify-content: space-between;
 			position: absolute;
 			bottom: 0;
-			left: 0;
+			left: 50%;
+			transform: translateX(-50%);
 			height: 30px;
-			width: 100%;
+			width: 750rpx;
 			align-items: center;
 			box-sizing: border-box;
 			
-			.muteBtn{
-				width: 30px;
+			.muteBtn,.pauseBtn{
+				width: 24px;
 				height: 30px;
 				display: flex;
 				align-items: center;
@@ -311,10 +298,11 @@
 		
 		.videoEndedWrap{
 			position: absolute;
-			left: 0;
+			left: 50%;
+			transform: translateX(-50%);
 			top:0;
 			text-align: center;
-			width: 100%;
+			width: 750rpx;
 			height: 100%;
 			background: #000;
 			

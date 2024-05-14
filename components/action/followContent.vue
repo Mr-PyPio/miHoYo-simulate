@@ -104,7 +104,7 @@
 </template>
 
 <script>
-	import {mapMutations,mapState} from 'vuex'
+	import {mapState} from 'vuex'
 	import {getTimelineList} from '@/common/api.js'
 	import ItemContent from '../../components/common/itemContent.vue'
 	import UserInstantItems2 from '../../components/user/userInstantItems2.vue'
@@ -125,27 +125,18 @@
 			}
 		},
 		computed: {
-			...mapState(['actionPage','imageBaseUrl']),
+			...mapState(['imageBaseUrl']),
 			allShow() {
 				return this.is_last
 			},
 		},
 		methods: {
-			...mapMutations(['updateActionPage']),
 			async getPostData(id) {
 				const {data: res} = await getTimelineList(id)
 				if(res.data) {
 					this.postData = res.data.list
 					this.is_last = res.data.is_last
 					this.next_offset = res.data.next_offset
-					this.updateActionPage({
-						name: 'follow',
-						data: {
-							'postData': this.postData,
-							'is_last' : this.is_last,
-							'next_offset' : this.next_offset
-						}
-					})
 				}
 			},
 			async loadMoreDate() {
@@ -160,14 +151,6 @@
 						this.postData.push(...res.data.list)
 						this.is_last = res.data.is_last
 						this.next_offset = res.data.next_offset
-						this.updateActionPage({
-							name: 'follow',
-							data: {
-								'postData': this.postData,
-								'is_last' : this.is_last,
-								'next_offset' : this.next_offset
-							}
-						})
 						this.loading = false
 					}
 				}
@@ -193,13 +176,7 @@
 			}
 		},
 		created() {
-			if(this.actionPage.follow) {
-				this.postData = this.actionPage.follow.postData
-				this.is_last = this.actionPage.follow.is_last
-				this.next_offset = this.actionPage.follow.next_offset
-			}else{
-				this.getPostData(this.categroyId)
-			}
+			this.getPostData(this.categroyId)
 		},
 		filters: {
 			changeMonAndDay(value,id) {

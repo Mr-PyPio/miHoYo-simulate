@@ -132,14 +132,12 @@
 				</view>
 			</view>
 		</view>
-			<img-pop-up></img-pop-up>
 	</view>
 </template>
 
 <script>
 	import {searchNew,getSiteHotKeyword,searchPreKeyword,predictUGC} from '../../common/api.js'
 	import SearchPost from '../../components/search/searchPost.vue'
-	import ImgPopUp from '@/components/common/imgPopUp.vue'
 	import {mapState} from 'vuex'
 	export default {
 		props: {
@@ -173,7 +171,6 @@
 		},
 		components: {
 			SearchPost,
-			ImgPopUp
 		},
 		computed: {
 			...mapState(['windowHeight','rpxNum'])

@@ -7,7 +7,7 @@
 						<image :src="item.user.avatar_url|imageUrlReset(50,80)" mode="aspectFill" class="userAvatarImage" :lazy-load="true"></image>
 						<image :src="item.user.pendant|imageUrlReset(50,80)" :lazy-load="true" mode="aspectFill" class="userAvatarFrameImage" v-if="item.user.pendant"></image>
 						<image v-if="item.user.certification && item.user.certification.type"
-							:src="`${imageBaseUrl}poseRequlay/certificate${item.user.certification.type}.png`" mode="widthFix" class="certificate">
+							:src="`http://8.138.116.67:5230/miyoushe/poseRequlay/certificate${item.user.certification.type}.png`" mode="widthFix" class="certificate">
 						</image>
 					</view>
 					<view class="userMessage">
@@ -30,8 +30,7 @@
 				<text class="itemDetailTextContent" v-if="item.post.content">
 					{{item.post.content}}...
 				</text>
-				
-				<item-content :item="item" ref="itemContent"></item-content>
+				<item-content :item="item" ref="itemContent" ></item-content>
 			</view>
 			<view class="itemDetailBottom">
 				<view class="topicsName" v-if="item.topics.length > 0">
@@ -66,32 +65,25 @@
 				}
 			}
 		},
-		data() {
-			return {
-			};
-		},
 		computed: {
-			...mapState(['imageBaseUrl'])
+			...mapState(['imageBaseUrl']),
+		},
+		beforeUpdate() {
+			this.$refs.itemContent.videoUrl = ''
+		},
+		updated() {
+			this.$refs.itemContent.resetWH()
 		},
 		methods: {
 			navigatePostReplay(post_id) {
 				const videoUrl = this.$refs.itemContent.videoUrl
 				if(videoUrl) {
-					// uni.navigateTo({
-					// 	url: `/subPackages/postReplay/postReplay?post_id=${post_id}`,
-					// })
 					uni.$emit('navPage','postReplay',post_id)
 				}else{
-					// uni.navigateTo({
-					// 	url: `/subPackages/artical/artical?post_id=${post_id}`,
-					// })
 					uni.$emit('navPage','artical',post_id)
 				}
 			},
 			navigateToUser(uid) {
-				// uni.navigateTo({
-				// 	url: `/subPackages/user/user?uid=${uid}`,
-				// })
 				uni.$emit('navPage','user',uid)
 			}
 		},

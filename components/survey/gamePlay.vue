@@ -51,6 +51,9 @@
 				}
 			};
 		},
+		created() {
+			console.log(this.gameplayExplorationShowData)
+		}
 	}
 </script>
 

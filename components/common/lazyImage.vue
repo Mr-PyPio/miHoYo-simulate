@@ -16,7 +16,7 @@
 <script>
 	export default {
 		props: {
-			imageData: {
+			imageData : {
 				type: Object,
 				default() {
 					return {}
@@ -57,7 +57,7 @@
 			preload() {
 				let image = new Image()
 				if(this.imageData) {
-					const url = this.imageUrlReset(this.imageData.url,300,80)
+					const url = this.imageUrlReset(this.imageData.url,200,60)
 					image.src = url
 					image.onload = () => {
 						this.imageSrc = url
@@ -68,7 +68,6 @@
 						this.intersectionObserver.disconnect()
 					}
 				}
-
 			},
 			imageUrlReset(url,s,q) {
 				const reg = /.gif/g

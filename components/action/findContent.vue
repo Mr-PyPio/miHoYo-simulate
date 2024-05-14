@@ -106,10 +106,9 @@
 			}
 		},
 		computed: {
-			...mapState(['actionPage','imageBaseUrl'])
+			...mapState(['imageBaseUrl'])
 		},
 		methods: {
-			...mapMutations(['updateActionPage']),
 			async getPostData() {
 				const {data: res} = await discover()
 				if(res.data) {
@@ -117,15 +116,6 @@
 					this.hotPost = res.data.hot_posts
 					this.hotSearch = res.data.hot_keywords
 					this.channel = res.data.forum_games
-					this.updateActionPage({
-						name: 'find',
-						data: {
-							'toBanner': this.toBanner,
-							'hotPost' : this.hotPost,
-							'hotSearch' : this.hotSearch,
-							'channel' : this.channel,
-						}
-					})
 				}
 			},
 			search(keyword) {
@@ -136,14 +126,7 @@
 			}
 		},
 		created() {
-			if(this.actionPage.find) {
-				this.toBanner = this.actionPage.find.toBanner
-				this.hotPost = this.actionPage.find.hotPost
-				this.hotSearch = this.actionPage.find.hotSearch
-				this.channel = this.actionPage.find.channel
-			}else{
-				this.getPostData()
-			}
+			this.getPostData()
 		}
 	}
 </script>

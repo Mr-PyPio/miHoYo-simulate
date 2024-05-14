@@ -10,7 +10,7 @@
 					<image :src="pop.icon|imageUrlReset(50,80)" mode="aspectFill" v-if="loading" class="image"></image>
 				</view>
 				<view class="line"></view>
-				<view class="itemRecImage" :style="imageBaseUrl + 'survey/itemRecImage.png'">
+				<view class="itemRecImage" :style="{'background': 'url(' + imageBaseUrl + 'survey/itemRecImage.png) 100%/100%'}">
 					<view class="itemRecImageWrapp"  v-if="loading">
 						<image v-for="(item,index) in pop.ext.list" :key="index"  class="image"
 							:src="item|imageUrlReset(36,80)" mode="aspectFill"></image>

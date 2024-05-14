@@ -2,7 +2,7 @@
 	<view class="fanContent">
 		<ModuleTitle :moduleTitle="moduleTitle"></ModuleTitle>
 		<view class="fanContentLine" style="height: 1px;"></view>
-		<view class="tabAndSwiper" v-if="swiperData.length > 0" @touchmove.stop="tochMoveStop">
+		<view class="tabAndSwiper" v-if="swiperData.length > 0">
 			<view class="tab">
 				<view v-for="(item,index) in swiperData" :key="index" :class="{'active': index === current}"
 					@tap.stop="tabClick(index)" class="tabItems" >
@@ -75,9 +75,6 @@
 				}else{
 					this.swiperHeight = 716
 				}
-			},
-			tochMoveStop(event) {
-				event.stopPropagation();
 			},
 		},
 		created() {

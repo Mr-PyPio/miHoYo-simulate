@@ -79,7 +79,6 @@
 		},
 		created() {
 			this.resetData(this.challengeData.children)
-			console.log(this.challengeData)
 		}
 	}
 </script>

@@ -80,11 +80,11 @@
 					</view>
 				</view>
 			</view>
-			<img-pop-up ></img-pop-up>
 			
-			<ListenOtherModul></ListenOtherModul>
+			<ListenOtherModul ref="listenOtherModul"></ListenOtherModul>
 		</template>
 		<image src="http://8.138.116.67:5230/miyoushe/coverImage.png" mode="widthFix" class="coverImage" v-if="coverImageShow"></image>
+		<img-pop-up ></img-pop-up>
 	</view>
 </template>
 
@@ -120,7 +120,6 @@ export default {
 	},
 	data() {
 		return {
-			topTabData: null,
 			topTabBackground: null,
 			topTabNav: {},
 			// tab配置
@@ -155,6 +154,15 @@ export default {
 		this.getIndexConsult()
 		this.addEventListen()
 	},
+	onHide() {
+		uni.$off('navPage')
+		uni.$off('navGoBack')
+	},
+	onShow() {
+		if(this.$refs.listenOtherModul) {
+			this.$refs.listenOtherModul.initListenFunction()
+		}
+	},
 	methods: {
 		addEventListen() {
 			uni.$on('openWrap',(data,x,y,type = 'T') => {
@@ -171,7 +179,6 @@ export default {
 		async getIndexTopTab(){
 			const res = await getHomeNew('1,3,4')
 			const data = res.data.data
-			this.topTabData = data
 			this.topTabBackground = data.background
 			this.topTabNav = data.navigator
 		},
