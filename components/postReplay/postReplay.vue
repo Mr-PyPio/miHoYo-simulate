@@ -229,6 +229,10 @@
 				<image :src="imageBaseUrl + 'poseRequlay/post_upvote_stat_5_active.png'" mode="widthFix" class="image"></image>
 			</view>
 		</view>
+		
+		<view class="">
+			
+		</view>
 	</view>
 </template>
 
