@@ -95,7 +95,7 @@
 			matchText(text,type) {
 				const reg = new RegExp(`${this.keyWord}`,'g')
 				if(this.item.user.certification && this.item.user.certification.type === 1 && type === 1) {
-					text = `<img class="logoImage" src="${imageBaseUrl}search/certificate01.png" style="width: 20px;height: 20px;font-size: 0;vertical-align: bottom;"/>${text}`
+					text = `<img class="logoImage" src="${this.imageBaseUrl}search/certificate01.png" style="width: 20px;height: 20px;font-size: 0;vertical-align: bottom;"/>${text}`
 				}
 				if(type === 2) {
 					text = `${text}...`

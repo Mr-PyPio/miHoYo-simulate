@@ -1,221 +1,234 @@
 <template>
-	<view class="postReplayContent">
-		<template v-if="!pageLoading">
-				<view class="videoWrapper" :style="{'top': videoTop}">
-					<view class="videoBackgroung" 
-						:style="{'width': dataInitWidth + 'rpx','height': dataInitHeight + 'px'}"
-						:data-initheight="dataInitHeight" :data-aspectratio="dataAspectRatio">
-						<video-full :videoData="defaultVideoData" :userData="userData" v-if="defaultVideoData" class="videoFull"
-								@followUser="followUser" @setHiddenContainerStyle="setHiddenContainerStyle" ref="videoFullRef">
-						</video-full>
-					</view>
-				</view>
+	<view class="postReplayContent" >
+		<view class="videoWrapper" :style="{'top': videoTop}">
+			<view class="videoBackgroung" 
+				:style="{'width': dataInitWidth + 'rpx','height': dataInitHeight + 'px'}"
+				:data-initheight="dataInitHeight" :data-aspectratio="dataAspectRatio">
+				<video-full :videoData="defaultVideoData" :userData="userData" v-if="defaultVideoData" class="videoFull"
+						@followUser="followUser" @setHiddenContainerStyle="setHiddenContainerStyle" ref="videoFullRef">
+				</video-full>
+			</view>
+		</view>
+		
+		<view class="reviewsTop fixed reviewsTopFixed">
+			<view class="topLeft" @tap.stop="showSort($event,'left')">
+				{{reviewsTop.leftText}}
+				<u-icon name="arrow-down-fill" color="#222" size="18" style="margin-left: 3px;"></u-icon>
+			</view>
+			<view class="topRight" @tap.stop="showSort($event,'right')" v-show="reviewsTop.rightTop">
+				{{reviewsTop.rightText}}
+				<image src="../../static/screen.png" mode="heightFix" class="image"></image>
+			</view>
+		</view>
+		
+		<view class="topTitleTab" @tap.stop="goBack">
+			<view class="goBack" @tap="test.init">
+				<u-icon name="arrow-left" color="#FFFFFF" size="36"></u-icon>
+			</view>
+		</view>
+		
+		
+		<scroll-view :scroll-y="scrollY" :style="{'height': scrollWrapHeight}" :scroll-top="scrollTop"
+			@scroll="test.pageScroll" @scrolltolower="scrolltolower" :refresher-enabled="true" :show-scrollbar="true"
+			:refresher-triggered="refresherTrg"  @refresherpulling="scrollPull" :scroll-with-animation='true'
+		>
+			<view :style="{'height': hiddenContainerHeight + 'px','width': '750rpx','position':'relative'}" v-if="hiddenContainerHeight">
 				
-				<view class="reviewsTop fixed reviewsTopFixed">
-					<view class="topLeft" @tap.stop="showSort($event,'left')">
-						{{reviewsTop.leftText}}
-						<u-icon name="arrow-down-fill" color="#222" size="18" style="margin-left: 3px;"></u-icon>
-					</view>
-					<view class="topRight" @tap.stop="showSort($event,'right')" v-show="reviewsTop.rightTop">
-						{{reviewsTop.rightText}}
-						<image src="../../static/screen.png" mode="heightFix" class="image"></image>
-					</view>
+				<!-- #ifdef MP-WEIXIN -->
+				<view class="loadingGif" style="height: 40px;">
+					<u-loading-icon mode="circle" size="42"></u-loading-icon>
 				</view>
-				
-				<view class="topTitleTab" @tap.stop="goBack">
-					<view class="goBack" @tap="test.init">
-						<u-icon name="arrow-left" color="#FFFFFF" size="36"></u-icon>
+				<!-- #endif -->
+				<!-- #ifdef WEB -->
+				<image :src="imageBaseUrl + 'poseRequlay/loading.gif'" mode="heightFix" class="loadingGif">
+				</image>
+				<!-- #endif -->
+			</view>
+			<view class="postContent" v-if="postDetail">
+				<view class="postContentCenterWrap">
+					<view class="postSubject">
+						<view class="left">
+							{{postDetail.post.subject}}
+						</view>
+						<view @tap.stop="showSubjectDetail">
+							<view class="right" @tap="test.moveScroll">
+								<u-icon name="arrow-down" color="#aaa" size="32"></u-icon>
+							</view>
+						</view>
 					</view>
-				</view>
-			
-			
-			<scroll-view :scroll-y="scrollY" :style="{'height': scrollWrapHeight}" :scroll-top="scrollTop"
-				@scroll="test.pageScroll" @scrolltolower="scrolltolower" :refresher-enabled="true" :show-scrollbar="true"
-				:refresher-triggered="refresherTrg"  @refresherpulling="scrollPull" :scroll-with-animation='true'
-			>
-				<view :style="{'height': hiddenContainerHeight + 'px','width': '750rpx','position':'relative'}" v-if="hiddenContainerHeight">
+					<view class="postTip">
+						{{postDetail.post.created_at|changeMonAndDay}}
+						{{postTip}}
+					</view>
+					<view class="postTip2" v-if="postDetail.topics.length">
+						<view class="postTipitem" v-for="(item,index) in postDetail.topics" :key="index">
+							{{item.name}}
+						</view>
+					</view>
+					<view class="interaction">
+						<view class="interactionItems"  @tap.stop="interactionClick(item.upvote_type)" 
+						:class="{'active': choose_upvote_type === index + 1}"
+						v-for="(item,index) in statObject" :key="index">
+							<view class="imagLogo">
+								<image :src="imageBaseUrl + 'poseRequlay/post_upvote_stat_'+ (index + 1) +'.png'" mode="heightFix" class="image"></image>
+							</view>
+							<view class="num">
+								{{item.upvote_cnt|resetNum}}
+							</view>
+						</view>
+					</view>
 					
-					<!-- #ifdef MP-WEIXIN -->
-					<view class="loadingGif" style="height: 40px;">
-						<u-loading-icon mode="circle" size="42"></u-loading-icon>
-					</view>
-					<!-- #endif -->
-					<!-- #ifdef WEB -->
-					<image :src="imageBaseUrl + 'poseRequlay/loading.gif'" mode="heightFix" class="loadingGif">
-					</image>
-					<!-- #endif -->
-				</view>
-				<view class="postContent" v-if="postDetail.post">
-					<view class="postContentCenterWrap">
-						<view class="postSubject">
-							<view class="left">
-								{{postDetail.post.subject}}
-							</view>
-							<view @tap.stop="showSubjectDetail">
-								<view class="right" @tap="test.moveScroll">
-									<u-icon name="arrow-down" color="#aaa" size="32"></u-icon>
-								</view>
-							</view>
+					<view class="userMessageWrap" v-if="userData" @tap.stop="navigateToUser(userData.uid)">
+						<view class="userImage">
+							<image :src="userData.avatar_url|imageUrlReset(50,80)" mode="aspectFill" class="userAvatarImage"></image>
+							<image :src="userData.pendant|imageUrlReset(50,80)" mode="aspectFill" class="userAvatarFrameImage" v-if="userData.pendant"></image>
+								<image v-if="userData.certification && userData.certification.type"
+								:src="`${imageBaseUrl}poseRequlay/certificate${userData.certification.type}.png`" mode="widthFix" class="certificate">
+							</image>
 						</view>
-						<view class="postTip">
-							{{postDetail.post.created_at|changeMonAndDay}}
-							{{postTip}}
-						</view>
-						<view class="postTip2" v-if="postDetail.topics.length">
-							<view class="postTipitem" v-for="(item,index) in postDetail.topics" :key="index">
-								{{item.name}}
-							</view>
-						</view>
-						<view class="interaction">
-							<view class="interactionItems"  @tap.stop="interactionClick(item.upvote_type)" 
-							:class="{'active': choose_upvote_type === index + 1}"
-							v-for="(item,index) in postDetail.stat.post_upvote_stat" :key="index">
-								<view class="imagLogo">
-									<image :src="imageBaseUrl + 'poseRequlay/post_upvote_stat_'+ (index + 1) +'.png'" mode="heightFix" class="image"></image>
-								</view>
-								<view class="num">
-									{{item.upvote_cnt|resetNum}}
-								</view>
-								<view class="interactionBiggerImageWrap" :class="{'active': interactionBiggerImageType === index + 1 }" >
-									<image :src="imageBaseUrl + 'poseRequlay/post_upvote_stat_'+ (index + 1) +'_active.png'" mode="widthFix" class="interactionBiggerImage"></image>
-								</view>
-							</view>
-						</view>
-						
-						<view class="userMessageWrap" v-if="userData" @tap.stop="navigateToUser(userData.uid)">
-							<view class="userImage">
-								<image :src="userData.avatar_url|imageUrlReset(50,80)" mode="aspectFill" class="userAvatarImage"></image>
-								<image :src="userData.pendant|imageUrlReset(50,80)" mode="aspectFill" class="userAvatarFrameImage" v-if="userData.pendant"></image>
-									<image v-if="userData.certification && userData.certification.type"
-									:src="`${imageBaseUrl}poseRequlay/certificate${userData.certification.type}.png`" mode="widthFix" class="certificate">
+						<view class="userMessage">
+							<view class="userName">
+								{{userData.nickname}}
+								<image :src="`https://bbs-static.miyoushe.com/level/level${userData.level_exp.level}.png`" 
+									mode="heightFix" class="levelLogo">
 								</image>
 							</view>
-							<view class="userMessage">
-								<view class="userName">
-									{{userData.nickname}}
-									<image :src="`https://bbs-static.miyoushe.com/level/level${userData.level_exp.level}.png`" 
-										mode="heightFix" class="levelLogo">
-									</image>
-								</view>
-								<view class="userLabel">
-									{{userData|getUserLabel}}
-								</view>
+							<view class="userLabel">
+								{{userData|getUserLabel}}
 							</view>
-							
-							
-							<view class="follow" @tap.stop="followUser(userData.uid)" v-if="!is_following">
-								+ 关注
+						</view>
+						
+						
+						<view class="follow" @tap.stop="followUser(userData.uid)" v-if="!is_following">
+							+ 关注
+						</view>
+						<view class="follow unfollow" @tap.stop="followUser(userData.uid)" v-if="is_following">
+							已关注
+						</view>
+					</view>
+				</view>
+				
+				<view class="reviews">
+					<view style="width: 750rpx;height: 74rpx;" class="reviewsTopRef">
+						<view class="reviewsTop">
+							<view class="topLeft" @tap.stop="showSort($event,'left')">
+								{{reviewsTop.leftText}}
+								<u-icon name="arrow-down-fill" color="#222" size="18" style="margin-left: 3px;"></u-icon>
 							</view>
-							<view class="follow unfollow" @tap.stop="followUser(userData.uid)" v-if="is_following">
-								已关注
+							<view class="topRight" @tap.stop="showSort($event,'right')" v-show="reviewsTop.rightTop">
+								{{reviewsTop.rightText}}
+								<image src="../../static/screen.png" mode="heightFix" class="image"></image>
 							</view>
 						</view>
 					</view>
 					
-					<view class="reviews">
-						<view style="width: 750rpx;height: 74rpx;" class="reviewsTopRef">
-							<view class="reviewsTop">
-								<view class="topLeft" @tap.stop="showSort($event,'left')">
-									{{reviewsTop.leftText}}
-									<u-icon name="arrow-down-fill" color="#222" size="18" style="margin-left: 3px;"></u-icon>
-								</view>
-								<view class="topRight" @tap.stop="showSort($event,'right')" v-show="reviewsTop.rightTop">
-									{{reviewsTop.rightText}}
-									<image src="../../static/screen.png" mode="heightFix" class="image"></image>
-								</view>
-							</view>
-						</view>
-						
-						<reviews-list v-if="post_id" :post_id="post_id" ref="reviewsListRef"> </reviews-list>
-					</view>
+					<reviews-list v-if="post_id && reviewLoading" :post_id="post_id" ref="reviewsListRef"> </reviews-list>
 				</view>
-			</scroll-view>
+			</view>
+		</scroll-view>
+		
 			
-				
-			<view v-show="reviewsTop.show" @click.stop="fixWrappClick" >
-				<view class="fixWrapp"  @tap="test.moveScroll">
-					<view class="Warp" v-show="reviewsTop.leftWarp" :style="{'top':`${reviewsTop.sortListTop}px`,'left': `${reviewsTop.sortListLeft}px`}">
-						<view class="warpItem" :class="{'active' : reviewsTop.leftType === 0}" @tap="typeSelectLeft(0)">
-							全部评论
-						</view>
-						<view class="warpItem" :class="{'active' : reviewsTop.leftType === 1}"  @tap="typeSelectLeft(1)">
-							只看楼主
-						</view>
+		<view v-show="reviewsTop.show" @click.stop="fixWrappClick" >
+			<view class="fixWrapp"  @tap="test.moveScroll">
+				<view class="Warp" v-show="reviewsTop.leftWarp" :style="{'top':`${reviewsTop.sortListTop}px`,'left': `${reviewsTop.sortListLeft}px`}">
+					<view class="warpItem" :class="{'active' : reviewsTop.leftType === 0}" @tap="typeSelectLeft(0)">
+						全部评论
 					</view>
-					<view class="Warp" v-show="reviewsTop.rightWarp" :style="{'top':`${reviewsTop.sortListTop}px`,'right': `${reviewsTop.sortListRight}px`}">
-						<view class="warpItem" :class="{'active' : reviewsTop.rightType === 0}"  @tap="typeSelectRight(0)">
-							热门
-						</view>
-						<view class="warpItem" :class="{'active' : reviewsTop.rightType === 1}"  @tap="typeSelectRight(1)">
-							最早
-						</view>
-						<view class="warpItem" :class="{'active' : reviewsTop.rightType === 2}"  @tap="typeSelectRight(2)">
-							最新
-						</view>
+					<view class="warpItem" :class="{'active' : reviewsTop.leftType === 1}"  @tap="typeSelectLeft(1)">
+						只看楼主
+					</view>
+				</view>
+				<view class="Warp" v-show="reviewsTop.rightWarp" :style="{'top':`${reviewsTop.sortListTop}px`,'right': `${reviewsTop.sortListRight}px`}">
+					<view class="warpItem" :class="{'active' : reviewsTop.rightType === 0}"  @tap="typeSelectRight(0)">
+						热门
+					</view>
+					<view class="warpItem" :class="{'active' : reviewsTop.rightType === 1}"  @tap="typeSelectRight(1)">
+						最早
+					</view>
+					<view class="warpItem" :class="{'active' : reviewsTop.rightType === 2}"  @tap="typeSelectRight(2)">
+						最新
 					</view>
 				</view>
 			</view>
-			<u-popup :show="subjectPopupShow"  mode="bottom"  :overlay="false" :safeAreaInsetBottom="false" ref="subjectPopup">
-				<view :style="{'height': popupHeight + 'px','width': '750rpx'}" class="subjectPopup">
-					<view class="popupTop">
-						简介
-						<u-icon name="close" color="#999" size="28" @tap="closePopup"></u-icon>
-					</view>
-					<view class="postContent" v-if="postDetail.post">
-						<view class="postSubject">
-							<view class="left">
-								{{postDetail.post.subject}}
-							</view>
-						</view>
-						<view class="postTip">
-							<u-icon name="clock" color="#999" size="22" style="margin-right: 3px"></u-icon>
-							{{postDetail.post.created_at|changeMonAndDay}}
-						</view>
-						<view class="postTip" style="margin-inl;">
-							{{postTip2}}
-						</view>
-						<view class="postTip2" v-if="postDetail.topics.length">
-							<view class="postTipitem" v-for="(item,index) in postDetail.topics" :key="index">
-								{{item.name}}
-							</view>
-						</view>
-						
-						<view class="content" v-html="textParse(postDetail.post.content)">
-							
-						</view>
-						
-						<view class="waring" v-if="userData.is_creator">
-							<u-icon name="error-circle" color="#ddd" size="20"  style="margin-right: 3px"></u-icon>
-							已开启创作声明，禁止转载或者摘编
-						</view>
-						
-						
-						<view class="reviewEnd">
-							<image :src="imageBaseUrl + 'poseRequlay/reviewEnd.png'" mode="widthFix"  class="image"></image>
-						</view>
+		</view>
+		<view :style="{'height': popupHeight + 'px','bottom': subjectPopupBottom}" class="subjectPopup">
+			<view class="popupTop">
+				简介
+				<u-icon name="close" color="#999" size="28" @tap="closePopup"></u-icon>
+			</view>
+			<view class="postContent" v-if="postDetail && subjectPopupShow">
+				<view class="postSubject">
+					<view class="left">
+						{{postDetail.post.subject}}
 					</view>
 				</view>
-			</u-popup>
+				<view class="postTip">
+					<u-icon name="clock" color="#999" size="22" style="margin-right: 3px"></u-icon>
+					{{postDetail.post.created_at|changeMonAndDay}}
+				</view>
+				<view class="postTip" style="margin-inl;">
+					{{postTip2}}
+				</view>
+				<view class="postTip2" v-if="postDetail.topics.length">
+					<view class="postTipitem" v-for="(item,index) in postDetail.topics" :key="index">
+						{{item.name}}
+					</view>
+				</view>
 				
-			<view class="bottomInput" v-if="postDetail.post">
-				<view class="input">
-					我有话要说...
+				<view class="content" v-html="textParse(postDetail.post.content)">
+					
 				</view>
-				<view class="like" :class="{'active': choose_upvote_type}" @tap="interactionClick(1,'all')">
-					<image :src="likeUrl" mode="widthFix" class="image"></image>
-					<view class="num">
-						{{postDetail.stat.like_num|resetNum}}
-					</view>
+				
+				<view class="waring" v-if="userData.is_creator">
+					<u-icon name="error-circle" color="#ddd" size="20"  style="margin-right: 3px"></u-icon>
+					已开启创作声明，禁止转载或者摘编
 				</view>
-				<view class="book" :class="{'active': is_collected}" @tap="bookUpdate">
-					<image :src="bookUrl" mode="widthFix" class="image"></image>
-					<view class="num">
-						{{postDetail.stat.bookmark_num|resetNum}}
-					</view>
+				
+				
+				<view class="reviewEnd">
+					<image :src="imageBaseUrl + 'poseRequlay/reviewEnd.png'" mode="widthFix"  class="image"></image>
 				</view>
 			</view>
-		</template>
-		<image src="http://8.138.116.67:5230/miyoushe/search/loading1.gif" mode="aspectFit" class="loading" v-if="pageLoading"></image>
+		</view>
+				
+		<view class="bottomInput" v-if="postDetail">
+			<view class="input">
+				我有话要说...
+			</view>
+			<view class="like" :class="{'active': choose_upvote_type}" @tap="interactionClick(1,'all')">
+				<image :src="likeUrl" mode="widthFix" class="image"></image>
+				<view class="num">
+					{{likeNum|resetNum}}
+				</view>
+			</view>
+			<view class="book" :class="{'active': is_collected}" @tap="bookUpdate">
+				<image :src="bookUrl" mode="widthFix" class="image"></image>
+				<view class="num">
+					{{bookMarkNum|resetNum}}
+				</view>
+			</view>
+		</view>
+		<view class="loading"  v-if="pageLoading">
+			<image src="http://8.138.116.67:5230/miyoushe/search/loading1.gif" mode="widthFix" class="loadingImg"></image>
+		</view>
+		
+		<view class="interactionBiggerImageWrap" v-if="reviewLoading">
+			<view class="interactionBiggerImage" :class="{'active': interactionBiggerImageType === 1}" >
+				<image :src="imageBaseUrl + 'poseRequlay/post_upvote_stat_1_active.png'" mode="widthFix" class="image"></image>
+			</view>
+			<view class="interactionBiggerImage" :class="{'active': interactionBiggerImageType === 2}" >
+				<image :src="imageBaseUrl + 'poseRequlay/post_upvote_stat_2_active.png'" mode="widthFix" class="image"></image>
+			</view>
+			<view class="interactionBiggerImage" :class="{'active': interactionBiggerImageType === 3}" >
+				<image :src="imageBaseUrl + 'poseRequlay/post_upvote_stat_3_active.png'" mode="widthFix" class="image"></image>
+			</view>
+			<view class="interactionBiggerImage" :class="{'active': interactionBiggerImageType === 4}" >
+				<image :src="imageBaseUrl + 'poseRequlay/post_upvote_stat_4_active.png'" mode="widthFix" class="image"></image>
+			</view>
+			<view class="interactionBiggerImage" :class="{'active': interactionBiggerImageType === 5}" >
+				<image :src="imageBaseUrl + 'poseRequlay/post_upvote_stat_5_active.png'" mode="widthFix" class="image"></image>
+			</view>
+		</view>
 	</view>
 </template>
 
@@ -244,7 +257,7 @@
 		if(initHeight >= 300) {
 			topFixDiff = topFixTop - 300
 			// #ifdef MP-WEIXIN
-			topFix = 385
+			topFix = 300 + 85
 			// #endif
 			// #ifdef WEB
 			topFix = 300
@@ -277,15 +290,19 @@
 			})
 		}
 		if(initHeight >= 300 && scrollTop > 0) {
-			if(scrollTop < diffHeight ) {
+			var width,height
+			if(scrollTop <= diffHeight ) {
 				height = initHeight - scrollTop
-				var width = height * aspectratio
-				videoDom.setStyle({
-					'height':  height + 'px',
-					'width':  width + 'px',
-					'transition-duration': '0ms'
-				})
+				width = height * aspectratio
+			}else{
+				height = 300
+				width = 300 * aspectratio
 			}
+			videoDom.setStyle({
+				'height':  height + 'px',
+				'width':  width + 'px',
+				'transition-duration': '0ms'
+			})
 		}
 	}
 	
@@ -300,7 +317,7 @@
 		if(initHeight > 300) {
 			var width = 300 * aspectratio
 			videoDom.setStyle({
-				'height': '300px',
+				'height': 300 + 'px',
 				'width':  width + 'px',
 				'transition-duration': '200ms'
 			})
@@ -334,11 +351,12 @@
 		},
 		data() {
 			return {
-				postDetail: {},
+				postDetail: null,
 				userData: null,
 				is_following: false,
 				is_collected: false,
 				choose_upvote_type: 0,
+				interactionBiggerImageZindex: '-100',
 				interactionBiggerImageType: 0,
 				defaultVideoData: null,
 				userLabel: '',
@@ -379,6 +397,11 @@
 				dataInitWidth: 0,
 				videoTop: 0,
 				oldScrollTop: 0,
+				subjectPopupBottom: '-100%',
+				reviewLoading: false,
+				statObject: {},
+				likeNum: null,
+				bookMarkNum: null
 			}
 		},
 		computed: {
@@ -400,11 +423,14 @@
 				this.is_following = res.data.post.user.is_following
 				this.is_collected = res.data.post.self_operation.is_collected
 				this.postDetail = res.data.post
+				this.statObject = this.postDetail.stat.post_upvote_stat
+				this.likeNum = this.postDetail.stat.like_num
+				this.bookMarkNum = this.postDetail.stat.bookmark_num
 				this.choose_upvote_type = res.data.post.self_operation.upvote_type
 				if(this.is_collected) {
 					this.bookUrl = this.bookUrl2
 				}else{
-					this.bookUrl = this.bookUrl2
+					this.bookUrl = this.bookUrl1
 				}
 				if(this.choose_upvote_type === 0) {
 					this.likeUrl = this.likeUrl1
@@ -451,9 +477,17 @@
 				const {data: res} = await upvoteApi(data)
 				if(res.message === 'OK') {
 					if(is_cancel) {
+						this.statObject[this.choose_upvote_type - 1].upvote_cnt -= 1
 						this.choose_upvote_type = 0
 						this.likeUrl = this.likeUrl1
+						this.likeNum -= 1
 					}else{
+						if(this.choose_upvote_type) {
+							this.statObject[this.choose_upvote_type - 1].upvote_cnt -= 1
+						}else{
+							this.likeNum += 1
+						}
+						this.statObject[type - 1].upvote_cnt += 1
 						this.choose_upvote_type = type
 						if(type === 1) {
 							this.likeUrl = this.likeUrl2
@@ -464,9 +498,9 @@
 					if(!is_cancel) {
 						this.interactionBiggerImageType = type
 						let timer = setTimeout(()=> {
-							this.interactionBiggerImageType = 10
+							this.interactionBiggerImageType = 0
 							clearTimeout(timer)
-						},3000)
+						},1600)
 					}
 				}
 			},
@@ -484,12 +518,14 @@
 					}
 				const {data: res} = await collectPost(data)
 				if(res.message === 'OK') {
-					this.is_collected = !is_collected
-					if(this.is_collected) {
-						this.bookUrl = this.bookUrl2
+					if(is_collected) {
+						this.bookUrl = this.bookUrl1
+						this.bookMarkNum -= 1
 					}else{
 						this.bookUrl = this.bookUrl2
+						this.bookMarkNum += 1
 					}
+					this.is_collected = !is_collected
 				}
 			},
 			screenPostTip() {
@@ -640,6 +676,8 @@
 					    }
 					  )
 					  .exec();
+					  
+					  this.reviewLoading = true
 				})
 			},
 			scrolltolower() {
@@ -678,9 +716,11 @@
 						this.oldScrollTop = this.scrollTop - 1
 					}) 
 				}
+				this.subjectPopupBottom = '0'
 			},
 			closePopup() {
 				this.subjectPopupShow = false
+				this.subjectPopupBottom = '-100%'
 			},
 			scrollReset() {
 				this.scrollTop = this.oldScrollTop
@@ -795,12 +835,20 @@
 	}
 	
 	.loading{
-		width: 400rpx;
+		width: 750rpx;
+		height: 100%;
 		position: absolute;
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%,-50%);
+		top: 0;
+		left: 0;
 		z-index: 10;
+		background: #fff;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		
+		.loadingImg{
+			width: 400rpx;
+		}
 	}
 	
 	.topTitleTab{
@@ -927,24 +975,6 @@
 					font-size: 20rpx;
 					color: #999;
 					padding-left: 4rpx;
-				}
-				
-				.interactionBiggerImageWrap{
-					position: fixed;
-					top: 50%;
-					left: 50%;
-					transform: translate(-50%,-50%);
-					width: 460rpx;
-					z-index: 100;
-					display: none;
-					
-					.interactionBiggerImage{
-						width: 460rpx;
-					}
-					
-					&.active{
-						display: block;
-					}
 				}
 			}
 		}
@@ -1120,6 +1150,13 @@
 
 	
 	.subjectPopup{
+		position: absolute;
+		z-index: 10;
+		left: 0;
+		width: 750rpx;
+		background: #fff;
+		transition-duration: 300ms;
+		
 		.popupTop{
 			display: flex;
 			justify-content: space-between;
@@ -1218,6 +1255,34 @@
 				color: #ff7e3d;
 			}
 		}
+	}
+	
+	.interactionBiggerImageWrap{
+		position: absolute;
+		height: 100%;
+		width: 750rpx;
+		background: transparent;
+		top: 0;
+		z-index: 10;
+		right: -150%;
+		
+		
+		.interactionBiggerImage{
+			width: 460rpx;
+			position: absolute;
+			left: 0;
+			top:50%;
+			transform: translateY(-50%);
+			
+			.image{
+				width: 460rpx;
+			}
+			
+			&.active{
+				left: -130%;
+			}
+		}
+		
 	}
 }
 

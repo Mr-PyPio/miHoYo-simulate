@@ -24,7 +24,7 @@ export default new Vuex.Store({
 		emotion: null,
 		emotionKey: null,
 		
-		imageBaseUrl : 'http://8.138.116.67:5230/miyoushe/'
+		imageBaseUrl : 'http://8.138.116.67:5230/miyoushe/',
 	},
 	mutations: {
 		updateEmotion(state,data) {
@@ -51,7 +51,7 @@ export default new Vuex.Store({
 		},
 		updateImgShowIndex(state, index) {
 			state.imgShowIndex = index
-		},
+		}
 	},
 	actions: {
 		async initEmotionData({ commit }) {

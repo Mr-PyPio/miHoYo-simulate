@@ -80,7 +80,7 @@
 			
 			<user-popup :uid = "uid" ref="userPopup"></user-popup>
 			
-			<ListenOtherModul></ListenOtherModul>
+			<ListenOtherModul ref="listenOtherModul"></ListenOtherModul>
 			
 			<img-pop-up ></img-pop-up>
 		</view>
@@ -159,6 +159,15 @@
 		onLoad() {
 			this.getUserInfo()
 			this.getGameCard()
+		},
+		onHide() {
+			uni.$off('navPage')
+			uni.$off('navGoBack')
+		},
+		onShow() {
+			if(this.$refs.listenOtherModul) {
+				this.$refs.listenOtherModul.initListenFunction()
+			}
 		},
 }
 </script>

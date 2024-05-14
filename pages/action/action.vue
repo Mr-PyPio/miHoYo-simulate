@@ -38,7 +38,7 @@
 			</swiper>
 		</view>
 		
-		<ListenOtherModul></ListenOtherModul>
+		<ListenOtherModul ref="listenOtherModul"></ListenOtherModul>
 		<img-pop-up ></img-pop-up>
 	</view>
 </template>
@@ -141,7 +141,16 @@
 		},
 		onLoad() {
 			this.getPostData()
-		}
+		},
+		onHide() {
+			uni.$off('navPage')
+			uni.$off('navGoBack')
+		},
+		onShow() {
+			if(this.$refs.listenOtherModul) {
+				this.$refs.listenOtherModul.initListenFunction()
+			}
+		},
 	}
 </script>
 

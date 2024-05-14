@@ -1,5 +1,5 @@
 <template>
-	<view class="itemContent">
+	<view class="itemContent" @tap.stop="navigateToUser(item.uid)">
 		<view class="userLogo">
 			<image class="userLogoImage" :src="item.avatar_url" mode="widthFix"></image>
 		</view>
@@ -72,6 +72,12 @@
 					}
 				}
 			},
+			navigateToUser(uid) {
+				// uni.navigateTo({
+				// 	url: `/subPackages/user/user?uid=${uid}`,
+				// })
+				uni.$emit('navPage','user',uid)
+			}
 		}
 	}
 </script>

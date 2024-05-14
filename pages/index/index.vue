@@ -81,7 +81,7 @@
 				</view>
 			</view>
 			
-			<ListenOtherModul></ListenOtherModul>
+			<ListenOtherModul ref="listenOtherModul"></ListenOtherModul>
 		</template>
 		<image src="http://8.138.116.67:5230/miyoushe/coverImage.png" mode="widthFix" class="coverImage" v-if="coverImageShow"></image>
 		<img-pop-up ></img-pop-up>
@@ -153,6 +153,15 @@ export default {
 		this.getIndexTopTab()
 		this.getIndexConsult()
 		this.addEventListen()
+	},
+	onHide() {
+		uni.$off('navPage')
+		uni.$off('navGoBack')
+	},
+	onShow() {
+		if(this.$refs.listenOtherModul) {
+			this.$refs.listenOtherModul.initListenFunction()
+		}
 	},
 	methods: {
 		addEventListen() {
